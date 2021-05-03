@@ -44,10 +44,12 @@
               <img *ngIf="juego.Tipo == 'Juego De Cuestionario'" class = "card-img" src="../../assets/img/cuestionariosicon.svg">
               <img *ngIf="juego.Tipo == 'Juego De Geocaching'" class = "card-img" src="../../assets/img/location_icon.svg">
               <img *ngIf="juego.Tipo == 'Juego De Avatar'" class = "card-img" src="../../assets/img/avataricon.svg">
+              
 
               <img *ngIf="juego.Tipo == 'Juego De Votación Uno A Todos'" class = "card-img" src="../../assets/img/votaciones.jpg">
               <img *ngIf="juego.Tipo == 'Juego De Votación Todos A Uno'" class = "card-img" src="../../assets/img/votaciones.jpg"> 
               <img *ngIf="juego.Tipo == 'Juego De Cuestionario de Satisfacción'" class = "card-img" src="../../assets/img/satisfaccion.png">
+              <img *ngIf="juego.Tipo == 'Juego De Escape Room'" class = "card-img" src="../../assets/img/escape.png">
 
                
               <ion-button class="card-btn" expand="full" (click)=JuegoSeleccionado(juego) shape="round">Ver más</ion-button>

@@ -24,6 +24,8 @@ import * as URL from '../URLs/urls';
 import {JuegoDeEvaluacion} from '../clases/JuegoDeEvaluacion';
 import {AlumnoJuegoEvaluado} from '../clases/AlumnoJuegoEvaluado';
 import {EquipoJuegoEvaluado} from '../clases/EquipoJuegoEvaluado';
+import {JuegoDeEscapeRoom} from '../clases/JuegoDeEscapeRoom';
+
 
 @Injectable({
   providedIn: 'root'
@@ -962,7 +964,9 @@ public PonerNotaAlumnoJuegoDeGeocaching(alumnoJuegoDeGeocaching: AlumnoJuegoDeGe
     return this.http.get<JuegoDeVotacionUnoATodos[]>(this.APIUrlAlumnos + '/' + alumnoId + '/juegoDeVotacionUnoATodos');
   }
 
-
+  public DameJuegosDeEscapeRoom(alumnoId: number): Observable<JuegoDeEscapeRoom[]> {
+    return this.http.get<JuegoDeEscapeRoom[]>(this.APIUrlAlumnos + '/' + alumnoId + '/juegoDeEscapeRoom');
+  }
    // Da la inscripción de un alumno concreto
    public DameInscripcionAlumnoJuegoDeVotacionUnoATodos(juegoId: number, alumnoId: number): Observable<AlumnoJuegoDeVotacionUnoATodos[]> {
     return this.http.get<AlumnoJuegoDeVotacionUnoATodos[]>(this.APIUrlAlumnoJuegoDeVotacionUnoATodos

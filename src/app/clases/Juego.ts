@@ -59,7 +59,6 @@ export class Juego {
     this.PreguntasBasicas = PreguntasBasicas;
     this.PreguntasBonus = PreguntasBonus;
     this.idescenario = idescenario;
-
     this.TiempoLimite = TiempoLimite;
   }
 }
