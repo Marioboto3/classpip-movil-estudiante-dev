@@ -76,6 +76,8 @@ export class IniciPage implements OnInit {
       this.sesion.TomaJuegoEvaluacion(juego);
       this.navCtrl.navigateForward('/juego-evaluacion');
     } else if (juego.Tipo === 'Juego De Escape Room') {
+      console.log("ESCAPEEEEEEE: ", juego);
+      this.sesion.TomaJuegoEscape(juego);
       this.navCtrl.navigateForward('/juego-de-escape-room');}
     else {
       this.navCtrl.navigateForward('/juego-colleccion');

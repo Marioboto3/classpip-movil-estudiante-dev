@@ -23,6 +23,7 @@ import { MiAlumnoAMostrarJuegoDeCuestionario } from '../clases/MiAlumnoAMostrarJ
 import { AlumnoJuegoDeCuestionario } from '../clases/AlumnoJuegoDeCuestionario';
 import { JuegoDeEscapeRoom } from '../clases/JuegoDeEscapeRoom';
 import { MALOJuegoDeEscapeRoom } from '../clases/MALOJuegoDeEscapeRoom';
+import { AlumnoJuegoDeEscapeRoom } from '../clases/AlumnoJuegoDeEscapeRoom';
 
 @Injectable({
   providedIn: 'root'
@@ -44,6 +45,7 @@ export class CalculosService {
   puntos: number;
   MiImagenCromo: string;
   juegoMaloEscape: MALOJuegoDeEscapeRoom;
+  alumnoEscape: AlumnoJuegoDeEscapeRoom;
 
   constructor(
     private sesion: SesionService,
@@ -520,6 +522,26 @@ export class CalculosService {
     return InformacionEquipo;
   }
 
+  //Escape room
+
+  public pasarJuegoEscape(juego: JuegoDeEscapeRoom){
+    console.log("¿ID?: ", juego);
+    this.juegoMaloEscape = new MALOJuegoDeEscapeRoom (juego.modo, juego.grupoId, juego.nombreJuego, juego.escenario, juego.juegoActivo, juego.tipo, juego.id);
+  }
+  public añadirPersonaje (alumnoId: number, escapeRoomId: number, personaje: string){
+    console.log("AlumnoId:", alumnoId + ",EscapeId:", escapeRoomId +".");
+    this.peticionesAPI.DameAlumnoDeEscapeRoom(alumnoId, escapeRoomId)
+    .subscribe( juegoDelAlumno => {
+        console.log('Juego del alumno: ', juegoDelAlumno);
+        this.alumnoEscape = new AlumnoJuegoDeEscapeRoom (alumnoId, personaje, escapeRoomId);
+
+        this.peticionesAPI.AñadePersonaje(this.alumnoEscape, juegoDelAlumno[0].id)
+        .subscribe( alumnoDevuelto => {
+            console.log('Alumno: ', alumnoDevuelto);
+        });
+    });
+   
+  }
   public DameAlumnosJuegoDeColecciones(juegoDeColeccionId: number) {
     const alumnosObservables = new Observable(obs => {
     const Alumnos: Alumno[] = [];
@@ -2265,8 +2287,6 @@ export class CalculosService {
       return rankingJuegoDeCompeticion;
   }
 
-  pasarJuegoEscape(juego: JuegoDeEscapeRoom){
-    this.juegoMaloEscape = new MALOJuegoDeEscapeRoom (juego.modo, juego.grupoId, juego.nombreJuego, juego.escenario, juego.juegoActivo, juego.tipo);
-  }
+ 
 }
 

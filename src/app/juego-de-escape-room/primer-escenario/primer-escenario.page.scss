@@ -1,11 +1,14 @@
 ion-content.background{
-    --background: url("../../../assets/escape-room/primer-escenario-dibujo.jpg") 100%;
+    --background: url("../../../assets/escape-room/habitacion.JPG") 100%;
   }
 
 ion-content.secondBackground{
-  --background: url("../../../assets/escape-room/primer-escenario-dibujo-objetos.JPG") 100%;
+  --background: url("../../../assets/escape-room/cocina.jpg") 100%;
 }
 
+ion-content.thirdBackground{
+  --background: url("../../../assets/escape-room/baño.jpg") 100%;
+}
 /*ion-content {
   --background: rgba(44,39,45,0.84);
 }

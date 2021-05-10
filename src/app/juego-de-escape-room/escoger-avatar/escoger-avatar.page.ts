@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Alumno } from 'src/app/clases';
 import { AlumnoJuegoDeEscapeRoom } from 'src/app/clases/AlumnoJuegoDeEscapeRoom';
-import { SesionService } from 'src/app/servicios';
+import { CalculosService, SesionService } from 'src/app/servicios';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -42,7 +42,9 @@ export class EscogerAvatarPage implements OnInit {
     }
   ]*/
   constructor(private router: Router,     
-              private sesion: SesionService) { 
+              private sesion: SesionService,
+              private calculos: CalculosService
+              ) { 
   }
 
   ngOnInit() {
@@ -53,11 +55,13 @@ export class EscogerAvatarPage implements OnInit {
 
     this.alumno = this.sesion.DameAlumno();
     this.juego = this.sesion.DameJuego();
-    this.alumnoEscape = new AlumnoJuegoDeEscapeRoom (this.alumno.id, "empty", this.juego.id);
+    console.log("Juego: ", this.juego);
+    this.alumnoEscape = new AlumnoJuegoDeEscapeRoom (this.alumno.id, "empty", this.juego.JuegoEscapeId);
   }
   cogerpersonaje(name: string){
     this.name = name;
     this.alumnoEscape.personaje = name;
+    console.log("ALUMNO:  ", this.alumnoEscape);
     Swal.fire({
       title: '¿Seguro que quieres este personaje?',
       icon: 'warning',
@@ -67,7 +71,8 @@ export class EscogerAvatarPage implements OnInit {
       confirmButtonText: 'Si, estoy seguro'
     }).then((result) => {
       if (result.value) {
-    this.router.navigateByUrl('primer-escenario');
+          this.calculos.añadirPersonaje(this.alumnoEscape.alumnoId, this.alumnoEscape.juegoEscapeRoomId, this.alumnoEscape.personaje);
+          this.router.navigateByUrl('primer-escenario');
       }
     });
   }

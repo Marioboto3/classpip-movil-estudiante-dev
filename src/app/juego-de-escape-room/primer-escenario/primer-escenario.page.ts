@@ -2,7 +2,11 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { Howl } from 'howler';
+import { Juego } from 'src/app/clases';
 import { Audio } from 'src/app/clases/Audio';
+import { JuegoDeEscapeRoom } from 'src/app/clases/JuegoDeEscapeRoom';
+import { MALOJuegoDeEscapeRoom } from 'src/app/clases/MALOJuegoDeEscapeRoom';
+import { SesionService } from 'src/app/servicios';
 
 @Component({
   selector: 'app-primer-escenario',
@@ -18,15 +22,18 @@ export class PrimerEscenarioPage implements OnInit {
   allTracks: any[]; 
 
   showImage: boolean;
-
+  varEscenario: string;
+  
   sliderOpts = {
     zoom: {
       maxRatio: 2
     }
   }
   audioInicial: Audio = new Audio ("audio-inicial", "../../../assets/escape-room/audio-inicial.m4a");
+  id: number;
+  juegoEscape: MALOJuegoDeEscapeRoom; 
 
-  constructor(private router: Router, private modalController: ModalController) {}
+  constructor(private router: Router, private modalController: ModalController, private sesion: SesionService) {}
 
   playlist: Audio[] = [
     {
@@ -40,6 +47,17 @@ export class PrimerEscenarioPage implements OnInit {
   
   ngOnInit() {  
     this.showImage = null ;
+    this.id = this.sesion.DameAlumno().id;
+    this.juegoEscape = this.sesion.DameJuegoEscape();
+    console.log("Mapa: ", this.juegoEscape.escenario.Mapa);
+    if(this.juegoEscape.escenario.Mapa == "Baño"){
+      this.varEscenario = "thirdBackground";} 
+    if (this.juegoEscape.escenario.Mapa == "Cocina"){
+      this.varEscenario = "secondBackground";} 
+    else {
+    this.varEscenario = "Background";}
+    
+    console.log("Mapa: ", this.varEscenario);
   }
 
   activeTrack: Audio = null;

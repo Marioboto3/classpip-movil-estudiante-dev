@@ -25,6 +25,7 @@ import {JuegoDeEvaluacion} from '../clases/JuegoDeEvaluacion';
 import {AlumnoJuegoEvaluado} from '../clases/AlumnoJuegoEvaluado';
 import {EquipoJuegoEvaluado} from '../clases/EquipoJuegoEvaluado';
 import {JuegoDeEscapeRoom} from '../clases/JuegoDeEscapeRoom';
+import { AlumnoJuegoDeEscapeRoom } from '../clases/AlumnoJuegoDeEscapeRoom';
 
 
 @Injectable({
@@ -73,7 +74,7 @@ export class PeticionesAPIService {
   private APIUrlImagenCromo = this.base + '3000/api/imagenes/ImagenCromo';
   private APIUrlHistorialPuntosAlumno = this.base + '3000/api/HistorialesPuntosAlumno';
 
-
+  private APIUrlAlumnoJuegoDeEscapeRoom = this.base + '3000/api/AlumnoJuegoDeEscapeRooms';
   private APIUrlEquiposJuegoDePuntos = this.base + '3000/api/EquiposJuegosDePuntos';
   private APIUrlHistorialPuntosEquipo = this.base + '3000/api/HistorialesPuntosEquipo';
 
@@ -964,6 +965,18 @@ public PonerNotaAlumnoJuegoDeGeocaching(alumnoJuegoDeGeocaching: AlumnoJuegoDeGe
     return this.http.get<JuegoDeVotacionUnoATodos[]>(this.APIUrlAlumnos + '/' + alumnoId + '/juegoDeVotacionUnoATodos');
   }
 
+  // Escape room
+
+  public AñadePersonaje(alumno: AlumnoJuegoDeEscapeRoom, alumnoId: number): Observable<AlumnoJuegoDeEscapeRoom> {
+    return this.http.post<AlumnoJuegoDeEscapeRoom>(this.APIUrlAlumnoJuegoDeEscapeRoom  + '/' + alumnoId + '/replace' , alumno);
+  }
+  public DameJuegoDeEscapeRoom(alumnoId: number, escapeRoomId: number): Observable<JuegoDeEscapeRoom> {
+    return this.http.get<JuegoDeEscapeRoom>(this.APIUrlAlumnos + '/' + alumnoId + '/juegoDeEscapeRoom' + '?filter[where][juegoDeEscapeRoomId]=' + escapeRoomId);
+  }
+  public DameAlumnoDeEscapeRoom(alumnoId: number, escapeRoomId: number): Observable<JuegoDeEscapeRoom> {
+  
+    return this.http.get<JuegoDeEscapeRoom>(this.APIUrlAlumnoJuegoDeEscapeRoom + '?filter[where][juegoDeEscapeRoomId]=' + escapeRoomId + '&?filter[where][alumnoId]=' + alumnoId);
+  }
   public DameJuegosDeEscapeRoom(alumnoId: number): Observable<JuegoDeEscapeRoom[]> {
     return this.http.get<JuegoDeEscapeRoom[]>(this.APIUrlAlumnos + '/' + alumnoId + '/juegoDeEscapeRoom');
   }
