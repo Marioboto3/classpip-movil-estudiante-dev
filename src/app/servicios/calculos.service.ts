@@ -224,7 +224,9 @@ export class CalculosService {
                console.log('ya tengo los juegos de votacion todos a uno');
                 console.log('voy a por los juegos de Escape');
                 console.log('ALUMNO ID: ',AlumnoId);
-                this.peticionesAPI.DameJuegosDeEscapeRoom(AlumnoId)
+                this.peticionesAPI.DameGruposAlumno(AlumnoId).subscribe (listaGrupos => {
+                  for (let i = 0; i< listaGrupos.length; i++){
+                    this.peticionesAPI.DameJuegosDeEscapeRoomPorGrupo(listaGrupos[i].id)
                 // tslint:disable-next-line:no-shadowed-variable
                 .subscribe( lista => {
                    console.log("tamaño lista con escape: ", lista.length);
@@ -237,7 +239,10 @@ export class CalculosService {
                         this.pasarJuegoEscape(lista[i]);
                         JuegosInactivos.push(this.juegoMaloEscape);
                       }
+                    }
+                  });
                 }
+                
                 console.log('ya tengo los juegos de Escape');
 
                 console.log('voy a por los juegos de cuestionario de satisfaccion');
@@ -369,6 +374,7 @@ export class CalculosService {
                                         }); // equipos del alumno
                                       }); // juegos de evaluacion
                                    }); // juegos de cuestionario de satisfaccion
+                                   
                                  }); // juegos escape room
                                 }); // juegos de votacion todos a uno
                               }); // juegos de votacion uno a todos
@@ -534,8 +540,8 @@ export class CalculosService {
     .subscribe( juegoDelAlumno => {
         console.log('Juego del alumno: ', juegoDelAlumno);
         this.alumnoEscape = new AlumnoJuegoDeEscapeRoom (alumnoId, personaje, escapeRoomId);
-
-        this.peticionesAPI.AñadePersonaje(this.alumnoEscape, juegoDelAlumno[0].id)
+        this.alumnoEscape.id = juegoDelAlumno[0].id;
+        this.peticionesAPI.AñadePersonaje(this.alumnoEscape)
         .subscribe( alumnoDevuelto => {
             console.log('Alumno: ', alumnoDevuelto);
         });

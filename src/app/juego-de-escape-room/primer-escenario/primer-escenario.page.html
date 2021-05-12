@@ -1,17 +1,26 @@
-<ion-content class={{varEscenario}}>   
-  <div *ngIf="!showImage">
-    <ion-grid>
-     <ion-row>
-       <ion-col>
-         <img src="../../../assets/escape-room/profesor.png"> 
-         <mat-icon (click)="start()"> chat_bubble</mat-icon> 
-       </ion-col>
-     </ion-row> 
-  </ion-grid>
-   </div> 
-   <div *ngIf="showImage"> 
+<ion-content>
+  <div id="{{varEscenario}}">
+   <div *ngIf="!showImage">
+       <ion-grid>
+         <ion-row>
+            <ion-col>
+               <img src="../../../assets/escape-room/profesor.png"> 
+               <mat-icon (click)="start()" style="color: blue;">contact_support</mat-icon> 
+           </ion-col>
+         </ion-row> 
+      </ion-grid>
+     </div>
+    <div *ngIf="showImage"> 
+    </div> 
+  </div>
+
+</ion-content>
+
+
+
+<!-- <div *ngIf="showImage"> 
      <button class="mapa" (click)="escribir()"></button>
-     <!--<div class="example-box" cdkDrag>
+     <div class="example-box" cdkDrag>
        Drag me around
-     </div>!-->
-   </div>
+     </div>
+   </div> !-->

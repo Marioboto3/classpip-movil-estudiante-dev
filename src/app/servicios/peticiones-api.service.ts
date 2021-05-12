@@ -967,18 +967,20 @@ public PonerNotaAlumnoJuegoDeGeocaching(alumnoJuegoDeGeocaching: AlumnoJuegoDeGe
 
   // Escape room
 
-  public AñadePersonaje(alumno: AlumnoJuegoDeEscapeRoom, alumnoId: number): Observable<AlumnoJuegoDeEscapeRoom> {
-    return this.http.post<AlumnoJuegoDeEscapeRoom>(this.APIUrlAlumnoJuegoDeEscapeRoom  + '/' + alumnoId + '/replace' , alumno);
+  public AñadePersonaje(alumno: AlumnoJuegoDeEscapeRoom): Observable<AlumnoJuegoDeEscapeRoom> {
+    return this.http.put<AlumnoJuegoDeEscapeRoom>(this.APIUrlAlumnoJuegoDeEscapeRoom, alumno);
   }
   public DameJuegoDeEscapeRoom(alumnoId: number, escapeRoomId: number): Observable<JuegoDeEscapeRoom> {
     return this.http.get<JuegoDeEscapeRoom>(this.APIUrlAlumnos + '/' + alumnoId + '/juegoDeEscapeRoom' + '?filter[where][juegoDeEscapeRoomId]=' + escapeRoomId);
   }
-  public DameAlumnoDeEscapeRoom(alumnoId: number, escapeRoomId: number): Observable<JuegoDeEscapeRoom> {
-  
-    return this.http.get<JuegoDeEscapeRoom>(this.APIUrlAlumnoJuegoDeEscapeRoom + '?filter[where][juegoDeEscapeRoomId]=' + escapeRoomId + '&?filter[where][alumnoId]=' + alumnoId);
+  public DameAlumnoDeEscapeRoom(alumnoId: number, escapeRoomId: number): Observable<AlumnoJuegoDeEscapeRoom> {
+    return this.http.get<AlumnoJuegoDeEscapeRoom>(this.APIUrlAlumnoJuegoDeEscapeRoom + '?filter[where][juegoEscapeRoomId]=' + escapeRoomId + '&?filter[where][alumnoId]=' + alumnoId);
   }
   public DameJuegosDeEscapeRoom(alumnoId: number): Observable<JuegoDeEscapeRoom[]> {
     return this.http.get<JuegoDeEscapeRoom[]>(this.APIUrlAlumnos + '/' + alumnoId + '/juegoDeEscapeRoom');
+  }
+  public DameJuegosDeEscapeRoomPorGrupo(grupoId: number): Observable<JuegoDeEscapeRoom[]> {
+    return this.http.get<JuegoDeEscapeRoom[]>(this.APIUrlGrupos + '/' + grupoId + '/juegoDeEscapeRooms');
   }
    // Da la inscripción de un alumno concreto
    public DameInscripcionAlumnoJuegoDeVotacionUnoATodos(juegoId: number, alumnoId: number): Observable<AlumnoJuegoDeVotacionUnoATodos[]> {

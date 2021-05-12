@@ -1,14 +1,19 @@
-ion-content.background{
-    --background: url("../../../assets/escape-room/habitacion.JPG") 100%;
-  }
-
-ion-content.secondBackground{
-  --background: url("../../../assets/escape-room/cocina.jpg") 100%;
+#containerCocina{
+  background: url("../../../assets/escape-room/cocina.jpg");
+  background-size: cover;
+  position: relative;
+}
+#containerBaño{
+  background: url("../../../assets/escape-room/baño.jpg");
+  background-size: cover;
+  position: relative;
+}
+#containerHabitacion{
+  background: url("../../../assets/escape-room/habitacion.JPG");
+  background-size: cover;
+  position: relative;
 }
 
-ion-content.thirdBackground{
-  --background: url("../../../assets/escape-room/baño.jpg") 100%;
-}
 /*ion-content {
   --background: rgba(44,39,45,0.84);
 }
