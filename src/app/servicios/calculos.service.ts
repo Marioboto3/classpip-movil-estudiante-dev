@@ -46,6 +46,7 @@ export class CalculosService {
   MiImagenCromo: string;
   juegoMaloEscape: MALOJuegoDeEscapeRoom;
   alumnoEscape: AlumnoJuegoDeEscapeRoom;
+  juegoEscape: JuegoDeEscapeRoom;
 
   constructor(
     private sesion: SesionService,
@@ -531,8 +532,11 @@ export class CalculosService {
   //Escape room
 
   public pasarJuegoEscape(juego: JuegoDeEscapeRoom){
-    console.log("¿ID?: ", juego);
-    this.juegoMaloEscape = new MALOJuegoDeEscapeRoom (juego.modo, juego.grupoId, juego.nombreJuego, juego.escenario, juego.juegoActivo, juego.tipo, juego.id);
+    this.juegoMaloEscape = new MALOJuegoDeEscapeRoom (juego.modo, juego.grupoId, juego.nombreJuego, juego.escenario, juego.juegoActivo, juego.tipo, juego.id, juego.estado);
+  }
+  public pasarJuegoMaloABuenoEscape(juego: MALOJuegoDeEscapeRoom){
+    this.juegoEscape = new JuegoDeEscapeRoom (juego.Modo, juego.grupoId, juego.NombreJuego, juego.escenario, juego.JuegoActivo, juego.Tipo, juego.estado);
+    this.juegoEscape.id = juego.JuegoEscapeId;
   }
   public añadirPersonaje (alumnoId: number, escapeRoomId: number, personaje: string){
     console.log("AlumnoId:", alumnoId + ",EscapeId:", escapeRoomId +".");
@@ -544,10 +548,14 @@ export class CalculosService {
         this.peticionesAPI.AñadePersonaje(this.alumnoEscape)
         .subscribe( alumnoDevuelto => {
             console.log('Alumno: ', alumnoDevuelto);
+            this.pasarJuegoMaloABuenoEscape(this.sesion.DameJuegoEscape());
+            this.juegoEscape.estado = true;
+            this.peticionesAPI.ModificaEstadoEscapeRoom(this.juegoEscape)
+            .subscribe( juegoDelAlumno => {})
         });
     });
-   
   }
+
   public DameAlumnosJuegoDeColecciones(juegoDeColeccionId: number) {
     const alumnosObservables = new Observable(obs => {
     const Alumnos: Alumno[] = [];

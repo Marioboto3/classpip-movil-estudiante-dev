@@ -97,7 +97,7 @@ export class PeticionesAPIService {
   private APIUrlEscenarios = this.base + '3000/api/Escenarios';
   private APIUrlPreguntas = this.base + '3000/api/Preguntas';
 
-
+  private APIUrlJuegoDeEscapeRoom = this.base + '3000/api/JuegoDeEscapeRooms'
 
 
 
@@ -967,8 +967,15 @@ public PonerNotaAlumnoJuegoDeGeocaching(alumnoJuegoDeGeocaching: AlumnoJuegoDeGe
 
   // Escape room
 
+  public ModificaEstadoEscapeRoom (juegoDeEscapeRoom: JuegoDeEscapeRoom): Observable<JuegoDeEscapeRoom> {
+    return this.http.put<JuegoDeEscapeRoom>(this.APIUrlJuegoDeEscapeRoom + '/' + juegoDeEscapeRoom.id, juegoDeEscapeRoom);
+
+  }
   public AñadePersonaje(alumno: AlumnoJuegoDeEscapeRoom): Observable<AlumnoJuegoDeEscapeRoom> {
     return this.http.put<AlumnoJuegoDeEscapeRoom>(this.APIUrlAlumnoJuegoDeEscapeRoom, alumno);
+  }
+  public DameJuegoEscapePorGrupo(grupoId: number, escapeRoomId: number): Observable<JuegoDeEscapeRoom> {
+    return this.http.get<JuegoDeEscapeRoom>(this.APIUrlGrupos + '/' + grupoId + '/juegoDeEscapeRooms' + '/' + escapeRoomId);
   }
   public DameJuegoDeEscapeRoom(alumnoId: number, escapeRoomId: number): Observable<JuegoDeEscapeRoom> {
     return this.http.get<JuegoDeEscapeRoom>(this.APIUrlAlumnos + '/' + alumnoId + '/juegoDeEscapeRoom' + '?filter[where][juegoDeEscapeRoomId]=' + escapeRoomId);

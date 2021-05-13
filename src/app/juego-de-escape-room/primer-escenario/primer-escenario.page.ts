@@ -23,7 +23,7 @@ export class PrimerEscenarioPage implements OnInit {
 
   showImage: boolean;
   varEscenario: string;
-  varEscenarioSinDifuminar: string;
+
 
   sliderOpts = {
     zoom: {
@@ -52,17 +52,13 @@ export class PrimerEscenarioPage implements OnInit {
     this.juegoEscape = this.sesion.DameJuegoEscape();
     console.log("Mapa: ", this.juegoEscape.escenario.Mapa);
     if(this.juegoEscape.escenario.Mapa == "Baño"){
-      this.varEscenario = "containerBaño";
-      this.varEscenarioSinDifuminar = "containerBañoSinDifuminar";}
+      this.varEscenario = "containerBaño";}
     else{
       if (this.juegoEscape.escenario.Mapa == "Cocina"){
         this.varEscenario = "containerCocina";
-        this.varEscenarioSinDifuminar = "containerCocinaSinDifuminar";
-        console.log("ENTRA!");
       } 
       else {
-      this.varEscenario = "containerHabitacion";
-      this.varEscenarioSinDifuminar = "containerHabitacionSinDifuminar";}
+      this.varEscenario = "containerHabitacion";}
     }
     console.log("Mapa: ", this.varEscenario);
   }

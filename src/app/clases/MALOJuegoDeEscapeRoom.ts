@@ -9,9 +9,10 @@ export class MALOJuegoDeEscapeRoom {
     JuegoActivo: boolean;
     Tipo: string;
     JuegoEscapeId: number;
+    estado: boolean;
 
   
-    constructor( modo?: string, grupoId?: number, nombreJuego?: string, escenario?: Escenario, juegoActivo?: boolean, tipo?: string, juegoEscapeId?: number) {
+    constructor( modo?: string, grupoId?: number, nombreJuego?: string, escenario?: Escenario, juegoActivo?: boolean, tipo?: string, juegoEscapeId?: number, estado?: boolean) {
       this.grupoId = grupoId;
       this.escenario = escenario;
       this.NombreJuego = nombreJuego;
@@ -19,5 +20,6 @@ export class MALOJuegoDeEscapeRoom {
       this.JuegoActivo=juegoActivo;
       this.Tipo = tipo;
       this.JuegoEscapeId = juegoEscapeId;
+      this.estado = estado;
     }
   }

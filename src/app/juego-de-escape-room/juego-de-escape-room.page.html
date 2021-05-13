@@ -1,6 +1,7 @@
 <ion-content [fullscreen]="true" class="background">
   <div id="container">
-   <ion-button color="warning" (click)="nextpage()">Escoger personaje</ion-button>
+   <ion-button color="warning" *ngIf="estado == false" (click)="nextpageEscojerPersonaje()">Empezar historia</ion-button>
+   <ion-button color="warning" *ngIf="estado != false" (click)="nextpageContinuar()">Continuar historia</ion-button>
   </div>
 </ion-content>
 

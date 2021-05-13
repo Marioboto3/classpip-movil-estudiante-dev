@@ -5,6 +5,7 @@ import { AnonymousSubject } from 'rxjs/internal/Subject';
 import { ReplaySubject } from 'rxjs';
 import {JuegoDeEvaluacion} from '../clases/JuegoDeEvaluacion';
 import { MALOJuegoDeEscapeRoom } from '../clases/MALOJuegoDeEscapeRoom';
+import { JuegoDeEscapeRoom } from '../clases/JuegoDeEscapeRoom';
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +40,9 @@ export class SesionService {
   listaEquiposOrdenadaPorPuntos: any;
   rankingEquiposJuegoDePuntos: any;
 
-  juegoEscapeRoom: MALOJuegoDeEscapeRoom;
+  juegoEscapeRoomMalo: MALOJuegoDeEscapeRoom;
+  juegoEscapeRoom: JuegoDeEscapeRoom;
+
   alumnoJuegoDeColeccion: Alumno;
   alumnosJuegoDeColeccion: Alumno[];
   inscripcionAlumno: any;
@@ -130,12 +133,15 @@ export class SesionService {
     this.juego = juego;
   }
   public TomaJuegoEscape(juegoEscape: MALOJuegoDeEscapeRoom){
-    this.juegoEscapeRoom = juegoEscape;
+    this.juegoEscapeRoomMalo = juegoEscape;
   }
   public DameJuego(): Juego {
     return this.juego;
   }
   public DameJuegoEscape(): MALOJuegoDeEscapeRoom {
+    return this.juegoEscapeRoomMalo;
+  }
+  public DameJuegoEscapeRoom(): JuegoDeEscapeRoom {
     return this.juegoEscapeRoom;
   }
   public TomaJuegoAvatar(juego: JuegoDeAvatar) {
