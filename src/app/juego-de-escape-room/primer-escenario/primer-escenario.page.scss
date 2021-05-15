@@ -1,17 +1,17 @@
 #containerCocina{
   background: url("../../../assets/escape-room/cocina.jpg");
   background-size: cover;
-  position: relative;
+  height: 100%;
 }
 #containerBaño{
   background: url("../../../assets/escape-room/baño.jpg");
   background-size: cover;
-  position: relative;
+  height: 100%;
 }
 #containerHabitacion{
   background: url("../../../assets/escape-room/habitacion.JPG");
   background-size: cover;
-  position: relative;
+  height: 100%;
 }
 
 /*ion-content {
@@ -27,8 +27,8 @@
   mat-icon{
    // height: 425px;
     position: absolute;
-    margin-top: 100px;
-    left: 35%;
+    margin-top: 45px;
+    left: 28%;
   }
 
 /*.container{

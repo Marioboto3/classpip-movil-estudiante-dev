@@ -224,7 +224,7 @@ export class CalculosService {
                }
                console.log('ya tengo los juegos de votacion todos a uno');
                 console.log('voy a por los juegos de Escape');
-                console.log('ALUMNO ID: ',AlumnoId);
+   
                 this.peticionesAPI.DameGruposAlumno(AlumnoId).subscribe (listaGrupos => {
                   for (let i = 0; i< listaGrupos.length; i++){
                     this.peticionesAPI.DameJuegosDeEscapeRoomPorGrupo(listaGrupos[i].id)
@@ -541,10 +541,10 @@ export class CalculosService {
   public añadirPersonaje (alumnoId: number, escapeRoomId: number, personaje: string){
     console.log("AlumnoId:", alumnoId + ",EscapeId:", escapeRoomId +".");
     this.peticionesAPI.DameAlumnoDeEscapeRoom(alumnoId, escapeRoomId)
-    .subscribe( juegoDelAlumno => {
-        console.log('Juego del alumno: ', juegoDelAlumno);
+    .subscribe( alumnoEscapeDevuelto => {
+        console.log('Juego del alumno: ', alumnoEscapeDevuelto);
         this.alumnoEscape = new AlumnoJuegoDeEscapeRoom (alumnoId, personaje, escapeRoomId);
-        this.alumnoEscape.id = juegoDelAlumno[0].id;
+        this.alumnoEscape.id = alumnoEscapeDevuelto[0].id;
         this.peticionesAPI.AñadePersonaje(this.alumnoEscape)
         .subscribe( alumnoDevuelto => {
             console.log('Alumno: ', alumnoDevuelto);

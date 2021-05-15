@@ -1,10 +1,10 @@
-ion-content.background{
-    --background: url("../../assets/escape-room/fondo.jpg") center 100%;
+  #background {
+    background: url("../../assets/escape-room/fondo.jpg") center 100%;
+    height: 100%;
+    background-size: cover;
   }
-  
-  #container {
+  /*#container {
     text-align: center;
-  
     position: absolute;
     left: 0;
     right: 0;
@@ -28,4 +28,4 @@ ion-content.background{
   
   #container a {
     text-decoration: none;
-  }
+  }*/

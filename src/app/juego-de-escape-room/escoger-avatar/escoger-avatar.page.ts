@@ -21,10 +21,10 @@ export class EscogerAvatarPage implements OnInit {
   alumnoEscape: AlumnoJuegoDeEscapeRoom;
   juego: any;
 
-  name1: string;
-  name2: string;
-  name3: string;
-  name4: string;
+  name1: string = "Elvis Tek";
+  name2: string = "Conpa Tatas";
+  name3: string = "Aitor Tugas";
+  name4: string = "Inés Table";
 
   name:string;
   /*slides = [
@@ -48,15 +48,12 @@ export class EscogerAvatarPage implements OnInit {
   }
 
   ngOnInit() {
-    this.name1="Elvis Tek";
-    this.name2="Conpa Tatas";
-    this.name3="Aitor Tugas";
-    this.name4="Inés Table";
 
     this.alumno = this.sesion.DameAlumno();
     this.juego = this.sesion.DameJuego();
     console.log("Juego: ", this.juego);
     this.alumnoEscape = new AlumnoJuegoDeEscapeRoom (this.alumno.id, "empty", this.juego.JuegoEscapeId);
+  
   }
   cogerpersonaje(name: string){
     this.name = name;

@@ -1,8 +1,9 @@
-<ion-content class="background" scroll-y="true">
+<ion-content scroll-y="true">
+  <div id="container">
   <ion-slides pager>
     <ion-slide >
-      <ion-grid>
-        <ion-row>
+      <ion-grid style="width: 95%;">
+        <ion-row style="width: 95%; height: 50%;">
           <ion-col>
             <div *ngIf="verDescripcion2 == undefined">
               <ion-card class="left" >
@@ -63,8 +64,8 @@
       </ion-grid>
     </ion-slide>
     <ion-slide>
-      <ion-grid>
-        <ion-row>
+      <ion-grid style="width: 95%;">
+        <ion-row style="width: 95%; height: 50%;">
           <ion-col>
             <div *ngIf="verDescripcion4 == undefined">
               <ion-card class="left" >
@@ -125,4 +126,5 @@
       </ion-grid>
     </ion-slide>  
   </ion-slides> 
+</div>
 </ion-content>

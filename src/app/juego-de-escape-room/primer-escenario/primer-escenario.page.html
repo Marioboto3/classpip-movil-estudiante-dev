@@ -1,18 +1,19 @@
 <ion-content>
-  <div id="{{varEscenario}}">
-   <div *ngIf="!showImage">
+ 
+ 
+    <div id="{{varEscenario}}">
        <ion-grid>
-         <ion-row>
+         <ion-row>        
             <ion-col>
+              <div *ngIf="showImage == false">
                <img src="../../../assets/escape-room/profesor.png"> 
-               <mat-icon (click)="start()" style="color: blue;">contact_support</mat-icon> 
-           </ion-col>
+               <mat-icon (click)="start()" style="color: blue; zoom: 2.0;">contact_support</mat-icon>
+              </div> 
+           </ion-col>   
          </ion-row> 
-      </ion-grid>
-     </div>
-    <div *ngIf="showImage"> 
-    </div> 
-  </div>
+      </ion-grid>  
+    </div>
+    
 
 </ion-content>
 

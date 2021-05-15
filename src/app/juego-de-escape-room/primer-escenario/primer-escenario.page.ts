@@ -21,7 +21,7 @@ export class PrimerEscenarioPage implements OnInit {
   myTracks: any[];
   allTracks: any[]; 
 
-  showImage: boolean;
+  showImage: boolean = false;
   varEscenario: string;
 
 
@@ -47,7 +47,7 @@ export class PrimerEscenarioPage implements OnInit {
     }];
   
   ngOnInit() {  
-    this.showImage = null ;
+
     this.id = this.sesion.DameAlumno().id;
     this.juegoEscape = this.sesion.DameJuegoEscape();
     console.log("Mapa: ", this.juegoEscape.escenario.Mapa);

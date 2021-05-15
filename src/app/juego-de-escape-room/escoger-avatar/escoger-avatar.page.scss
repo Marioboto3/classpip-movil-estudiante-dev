@@ -1,5 +1,7 @@
-ion-content.background{
-    --background: url("../../../assets/escape-room/fondo.jpg") center 100%;
+
+#container{
+    background: url("../../../assets/escape-room/fondo.jpg") center 100%;
+    background-size: cover;
 }
 ion-slides{
     height: 100%;
@@ -17,4 +19,8 @@ ion-card.right{
 }
 ion-card-title{
     text-align: center;
+    color: black;
+}
+ion-card{
+    background-color: wheat;
 }
