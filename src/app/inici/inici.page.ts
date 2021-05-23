@@ -18,7 +18,7 @@ export class IniciPage implements OnInit {
 
   /* Creamos los array con los juegos activos e inactivos que solicitaremos a la API */
   id: number;
-  JuegosActivos: Juego[] = [];
+  juegosActivos: Juego[] = [];
   disablePrevBtn = true;
   disableNextBtn = false;
 
@@ -45,7 +45,7 @@ export class IniciPage implements OnInit {
     console.log('Este es el id del alumno que se ha logado: ' + this.id);
     this.calculos.DameJuegosAlumno(this.id)
       .subscribe(listas => {
-        this.JuegosActivos = listas.activos;
+        this.juegosActivos = listas.activos;
     });
   }
 
@@ -77,7 +77,8 @@ export class IniciPage implements OnInit {
       this.navCtrl.navigateForward('/juego-evaluacion');
     } else if (juego.Tipo === 'Juego De Escape Room') {
       console.log("ESCAPEEEEEEE: ", juego);
-      this.sesion.TomaJuegoEscape(juego);
+      this.sesion.TomaJuegoEscapeRoom(juego);
+
       this.navCtrl.navigateForward('/juego-de-escape-room');}
     else {
       this.navCtrl.navigateForward('/juego-colleccion');

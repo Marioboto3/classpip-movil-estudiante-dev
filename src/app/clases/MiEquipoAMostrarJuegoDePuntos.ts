@@ -1,11 +1,11 @@
 export class MiEquipoAMostrarJuegoDePuntos {
 
-  PuntosTotalesEquipo: number;
+  puntosTotalesEquipo: number;
   juegoDePuntosId: number;
   id: number;
   // nivelId: number;
-  Nombre: string;
-  FotoEquipo: string;
+  nombre: string;
+  fotoEquipo: string;
   grupoId: number;
 
   constructor(juegoDePuntosId?: number, PuntosTotalesEquipo?: number,
@@ -13,9 +13,9 @@ export class MiEquipoAMostrarJuegoDePuntos {
 
     this.juegoDePuntosId = juegoDePuntosId;
     this.id = id;
-    this.PuntosTotalesEquipo = PuntosTotalesEquipo;
-    this.Nombre = Nombre;
-    this.FotoEquipo = FotoEquipo;
+    this.puntosTotalesEquipo = PuntosTotalesEquipo;
+    this.nombre = Nombre;
+    this.fotoEquipo = FotoEquipo;
     this.grupoId = grupoId;
 
   }

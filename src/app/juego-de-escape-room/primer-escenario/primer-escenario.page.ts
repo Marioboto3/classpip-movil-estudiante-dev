@@ -5,7 +5,6 @@ import { Howl } from 'howler';
 import { Juego } from 'src/app/clases';
 import { Audio } from 'src/app/clases/Audio';
 import { JuegoDeEscapeRoom } from 'src/app/clases/JuegoDeEscapeRoom';
-import { MALOJuegoDeEscapeRoom } from 'src/app/clases/MALOJuegoDeEscapeRoom';
 import { SesionService } from 'src/app/servicios';
 
 @Component({
@@ -32,7 +31,7 @@ export class PrimerEscenarioPage implements OnInit {
   }
   audioInicial: Audio = new Audio ("audio-inicial", "../../../assets/escape-room/audio-inicial.m4a");
   id: number;
-  juegoEscape: MALOJuegoDeEscapeRoom; 
+  juegoEscape: JuegoDeEscapeRoom; 
 
   constructor(private router: Router, private modalController: ModalController, private sesion: SesionService) {}
 
@@ -49,12 +48,12 @@ export class PrimerEscenarioPage implements OnInit {
   ngOnInit() {  
 
     this.id = this.sesion.DameAlumno().id;
-    this.juegoEscape = this.sesion.DameJuegoEscape();
-    console.log("Mapa: ", this.juegoEscape.escenario.Mapa);
-    if(this.juegoEscape.escenario.Mapa == "Baño"){
+    this.juegoEscape = this.sesion.DameJuegoEscapeRoom();
+    console.log("Mapa: ", this.juegoEscape.escenario.mapa);
+    if(this.juegoEscape.escenario.mapa == "Baño"){
       this.varEscenario = "containerBaño";}
     else{
-      if (this.juegoEscape.escenario.Mapa == "Cocina"){
+      if (this.juegoEscape.escenario.mapa == "Cocina"){
         this.varEscenario = "containerCocina";
       } 
       else {

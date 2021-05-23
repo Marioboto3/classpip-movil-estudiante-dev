@@ -43,7 +43,7 @@ export class JuegoVotacionTodosAUnoPage implements OnInit {
   ngOnInit() {
     this.juegoSeleccionado = this.sesion.DameJuego();
     this.alumno = this.sesion.DameAlumno();
-    if (this.juegoSeleccionado.Modo === 'Individual') {
+    if (this.juegoSeleccionado.modo === 'Individual') {
        // Traigo la inscripción del alumno
       this.peticionesAPI.DameInscripcionAlumnoJuegoDeVotacionTodosAUno(this.juegoSeleccionado.id, this.alumno.id)
       .subscribe (inscripcion => {
@@ -68,8 +68,8 @@ export class JuegoVotacionTodosAUnoPage implements OnInit {
     this.alumnos.forEach (alumno => {
       if (alumno.id !== this.alumno.id) {
             // tslint:disable-next-line:max-line-length
-            const votosRecibidos = this.inscripcionAlumnoJuegoDeVotacionTodosAUno.VotosEmitidos.filter (votos => votos.alumnoId === alumno.id)[0];
-            console.log ('votos recibidos por ' + alumno.Nombre);
+            const votosRecibidos = this.inscripcionAlumnoJuegoDeVotacionTodosAUno.votosEmitidos.filter (votos => votos.alumnoId === alumno.id)[0];
+            console.log ('votos recibidos por ' + alumno.nombre);
             console.log (votosRecibidos);
             if (votosRecibidos === undefined) {
               const item = {
@@ -228,10 +228,10 @@ MuestraWheel(indice: number) {
         {
           text: 'SI',
           handler: async () => {
-            this.inscripcionAlumnoJuegoDeVotacionTodosAUno.VotosEmitidos = [];
+            this.inscripcionAlumnoJuegoDeVotacionTodosAUno.votosEmitidos = [];
             this.listaAlumnos.forEach (item => {
                 if (item.votos) {
-                  this.inscripcionAlumnoJuegoDeVotacionTodosAUno.VotosEmitidos.push (
+                  this.inscripcionAlumnoJuegoDeVotacionTodosAUno.votosEmitidos.push (
                     {
                       alumnoId: item.al.id,
                       votos: item.votos

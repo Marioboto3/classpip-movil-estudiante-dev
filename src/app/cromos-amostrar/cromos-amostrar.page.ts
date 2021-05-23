@@ -13,13 +13,13 @@ import { Equipo, Juego, Cromo, Alumno } from '../clases';
 export class CromosAMostrarPage implements OnInit {
 
   juegoSeleccionado: Juego;
-  Miequipo: Equipo;
-  Mialumno: Alumno;
-  MisImagenesCromo: string[] = [];
-  MisCromos: Cromo[] = [];
+  miequipo: Equipo;
+  mialumno: Alumno;
+  misImagenesCromo: string[] = [];
+  misCromos: Cromo[] = [];
   listaCromosSinRepetidos: any [];
-  CromosQueNoTengo: any[] = [];
-  ImagenesCromosQueNoTengo: string[] = [];
+  cromosQueNoTengo: any[] = [];
+  imagenesCromosQueNoTengo: string[] = [];
 
   constructor(
     public navCtrl: NavController,
@@ -30,52 +30,52 @@ export class CromosAMostrarPage implements OnInit {
 
   ngOnInit() {
     this.juegoSeleccionado = this.sesion.DameJuego();
-    if (this.juegoSeleccionado.Modo === 'Individual') {
-      this.Mialumno = this.sesion.DameAlumnoJuegoDeColeccion();
-      this.peticionesAPI.DameInscripcionAlumnoJuegoDeColeccion(this.juegoSeleccionado.id, this.Mialumno.id).subscribe(
+    if (this.juegoSeleccionado.modo === 'Individual') {
+      this.mialumno = this.sesion.DameAlumnoJuegoDeColeccion();
+      this.peticionesAPI.DameInscripcionAlumnoJuegoDeColeccion(this.juegoSeleccionado.id, this.mialumno.id).subscribe(
         InscripcionAlumno => {
           this.peticionesAPI.DameCromosAlumno(InscripcionAlumno[0].id).subscribe(
-            Cromos => {
-              console.log(Cromos);
-              this.MisCromos = Cromos;
-              this.listaCromosSinRepetidos = this.calculos.GeneraListaSinRepetidos(this.MisCromos);
+            cromos => {
+              console.log(cromos);
+              this.misCromos = cromos;
+              this.listaCromosSinRepetidos = this.calculos.GeneraListaSinRepetidos(this.misCromos);
               console.log(this.listaCromosSinRepetidos);
               this.sesion.TomaCromosSinRepetidos(this.listaCromosSinRepetidos);
-              this.MisImagenesCromo = this.calculos.VisualizarLosCromosDelante(this.listaCromosSinRepetidos);
+              this.misImagenesCromo = this.calculos.VisualizarLosCromosDelante(this.listaCromosSinRepetidos);
               this.peticionesAPI.DameCromosColeccion(this.juegoSeleccionado.coleccionId).subscribe(
                 TodosLosCromos => {
-                  this.CromosQueNoTengo = this.calculos.DameCromosQueNoTengo(this.MisCromos, TodosLosCromos);
-                  this.ImagenesCromosQueNoTengo = this.calculos.VisualizarLosCromosDelante(this.CromosQueNoTengo);
+                  this.cromosQueNoTengo = this.calculos.DameCromosQueNoTengo(this.misCromos, TodosLosCromos);
+                  this.imagenesCromosQueNoTengo = this.calculos.VisualizarLosCromosDelante(this.cromosQueNoTengo);
                 });
               console.log('Cromos que no tengo:');
-              console.log(this.CromosQueNoTengo);
+              console.log(this.cromosQueNoTengo);
             });
         });
       // this.listaCromosSinRepetidos = this.calculos.GeneraListaSinRepetidos(this.MisCromos);
-      console.log(this.MisCromos);
+      console.log(this.misCromos);
       console.log(this.listaCromosSinRepetidos);
       // this.listaCromosSinRepetidos.sort((a, b) => a.cromo.Nombre.localeCompare(b.cromo.Nombre));
 
       // this.MisImagenesCromo = this.calculos.VisualizarCromosDelAlumno(this.MisCromos);
     } else {
-      this.Miequipo = this.sesion.DameEquipo();
-      this.peticionesAPI.DameInscripcionEquipoJuegoDeColeccion(this.juegoSeleccionado.id, this.Miequipo.id).subscribe(
+      this.miequipo = this.sesion.DameEquipo();
+      this.peticionesAPI.DameInscripcionEquipoJuegoDeColeccion(this.juegoSeleccionado.id, this.miequipo.id).subscribe(
         InscripcionEquipo => {
           this.peticionesAPI.DameCromosEquipo(InscripcionEquipo[0].id).subscribe(
-            Cromos => {
-              console.log(Cromos);
-              this.MisCromos = Cromos;
-              this.listaCromosSinRepetidos = this.calculos.GeneraListaSinRepetidos(this.MisCromos);
+            cromos => {
+              console.log(cromos);
+              this.misCromos = cromos;
+              this.listaCromosSinRepetidos = this.calculos.GeneraListaSinRepetidos(this.misCromos);
               console.log(this.listaCromosSinRepetidos);
-              this.MisImagenesCromo = this.calculos.VisualizarLosCromosDelante(this.listaCromosSinRepetidos);
+              this.misImagenesCromo = this.calculos.VisualizarLosCromosDelante(this.listaCromosSinRepetidos);
               this.peticionesAPI.DameCromosColeccion(this.juegoSeleccionado.coleccionId).subscribe(
                 TodosLosCromos => {
-                  this.CromosQueNoTengo = this.calculos.DameCromosQueNoTengo(this.MisCromos, TodosLosCromos);
-                  this.ImagenesCromosQueNoTengo = this.calculos.VisualizarLosCromosDelante(this.CromosQueNoTengo);
+                  this.cromosQueNoTengo = this.calculos.DameCromosQueNoTengo(this.misCromos, TodosLosCromos);
+                  this.imagenesCromosQueNoTengo = this.calculos.VisualizarLosCromosDelante(this.cromosQueNoTengo);
                 });
             });
         });
-      console.log(this.MisImagenesCromo);
+      console.log(this.misImagenesCromo);
     }
   }
 

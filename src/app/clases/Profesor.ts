@@ -1,14 +1,14 @@
 export class Profesor {
-  Nombre: string;
-  Apellido: string;
-  ImagenPerfil: string;
+  nombre: string;
+  apellido: string;
+  imagenPerfil: string;
   id: number;
 
   constructor(nombre?: string, apellido?: string, imagenPerfil?: string, id?: number) {
 
-    this.Nombre = nombre;
-    this.Apellido = apellido;
-    this.ImagenPerfil = imagenPerfil;
+    this.nombre = nombre;
+    this.apellido = apellido;
+    this.imagenPerfil = imagenPerfil;
     this.id = id;
   }
 }

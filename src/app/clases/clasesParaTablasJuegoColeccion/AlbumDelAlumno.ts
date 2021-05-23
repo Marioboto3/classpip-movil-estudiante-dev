@@ -1,19 +1,19 @@
 export class AlbumDelAlumno {
-  Nombre: string;
-  Imagen: string;
-  Probabilidad: string;
-  Nivel: string;
+  nombre: string;
+  imagen: string;
+  probabilidad: string;
+  nivel: string;
   id: number;
   coleccionId: number;
   // tslint:disable-next-line:semicolon
-  Tengi: boolean
+  tengi: boolean
 
   constructor(nombre?: string, imagen?: string, probabilidad?: string, nivel?: string, tengi?: boolean) {
 
-    this.Nombre = nombre;
-    this.Imagen = imagen;
-    this.Probabilidad = probabilidad;
-    this.Nivel = nivel;
-    this.Tengi = tengi;
+    this.nombre = nombre;
+    this.imagen = imagen;
+    this.probabilidad = probabilidad;
+    this.nivel = nivel;
+    this.tengi = tengi;
   }
 }

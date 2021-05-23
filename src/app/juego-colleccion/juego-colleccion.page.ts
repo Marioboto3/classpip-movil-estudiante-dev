@@ -86,7 +86,7 @@ export class JuegoColleccionPage implements OnInit {
     this.peticionesAPI.DameColeccionPromise(this.juegoSeleccionado.coleccionId)
     .then (coleccion => this.coleccion = coleccion);
     this.equipo = this.sesion.DameEquipo();
-    if (this.juegoSeleccionado.Modo === 'Individual') {
+    if (this.juegoSeleccionado.modo === 'Individual') {
 
       this.DameLosCromosDelAlumno();
 
@@ -95,14 +95,14 @@ export class JuegoColleccionPage implements OnInit {
 
     }
 
-    if (this.juegoSeleccionado.Modo === 'Individual') {
+    if (this.juegoSeleccionado.modo === 'Individual') {
       this.peticionesAPI.DameAlumnosJuegoDeColeccion(this.juegoSeleccionado.id)
       .subscribe (alumnos => {
             this.alumnosJuegoDeColeccion = alumnos;
             // quito de la lista al alumno que hace el regalo
             this.alumnosJuegoDeColeccion = this.alumnosJuegoDeColeccion.filter (alumno => alumno.id !== this.alumno.id);
       });
-    } else if ((this.juegoSeleccionado.Modo === 'Equipos') && (this.juegoSeleccionado.Asignacion === 'Equipo')) {
+    } else if ((this.juegoSeleccionado.modo === 'Equipos') && (this.juegoSeleccionado.asignacion === 'Equipo')) {
       this.peticionesAPI.DameEquiposJuegoDeColeccion(this.juegoSeleccionado.id)
       .subscribe (equipos => {
             this.equiposJuegoDeColeccion = equipos;
@@ -149,12 +149,12 @@ export class JuegoColleccionPage implements OnInit {
       return new Promise<boolean>((resolve, reject) => {
         const misInputs: any [] = [];
 
-        if (this.juegoSeleccionado.Modo === 'Individual') {
+        if (this.juegoSeleccionado.modo === 'Individual') {
           // preparo las opciones para el radio selector
           this.alumnosJuegoDeColeccion.forEach (alumno => {
             const input = {
               type: 'radio',
-              label: alumno.Nombre + ' ' + alumno.PrimerApellido + ' ' + alumno.SegundoApellido,
+              label: alumno.nombre + ' ' + alumno.primerApellido + ' ' + alumno.segundoApellido,
               value: alumno.id,
               checked: false
             };
@@ -192,12 +192,12 @@ export class JuegoColleccionPage implements OnInit {
             ]
           }).then (res => res.present());
 
-        } else if ((this.juegoSeleccionado.Modo === 'Equipos') && (this.juegoSeleccionado.Asignacion === 'Equipo')) {
+        } else if ((this.juegoSeleccionado.modo === 'Equipos') && (this.juegoSeleccionado.asignacion === 'Equipo')) {
           // preparo las opciones para el radio selector
           this.equiposJuegoDeColeccion.forEach (equipo => {
             const input = {
               type: 'radio',
-              label: equipo.Nombre,
+              label: equipo.nombre,
               value: equipo.id,
               checked: false
             };
@@ -242,7 +242,7 @@ export class JuegoColleccionPage implements OnInit {
           this.alumnosJuegoDeColeccion.forEach (alumno => {
             const input = {
               type: 'radio',
-              label: alumno.Nombre + ' ' + alumno.PrimerApellido + ' ' + alumno.SegundoApellido,
+              label: alumno.nombre + ' ' + alumno.primerApellido + ' ' + alumno.segundoApellido,
               value: alumno.id,
               checked: false
             };
@@ -345,13 +345,13 @@ export class JuegoColleccionPage implements OnInit {
   
                    this.cromosSinRepetidos = this.cromosSinRepetidos.filter (e => e.cromo.id !== elem.cromo.id);
                    this.cromosQueTengoImagenDelante.splice (i , 1);
-                   if (this.coleccion.DosCaras) {
+                   if (this.coleccion.dosCaras) {
                       this.cromosQueTengoImagenDetras.splice (i, 1);
                     }
                    elem.rep = 0; // me quedo sin copias de ese cromo
                    this.cromosQueNoTengo.push (elem);
                    this.cromosQueNoTengoImagenDelante.push ( URL.ImagenesCromo + elem.cromo.ImagenDelante);
-                   if (this.coleccion.DosCaras)  {
+                   if (this.coleccion.dosCaras)  {
                       this.cromosQueNoTengoImagenDetras.push ( URL.ImagenesCromo + elem.cromo.ImagenDetras);
                   }
                    this.cromosQueTengo = this.cromosQueTengo.filter (c => c.id !== elem.cromo.id);
@@ -479,7 +479,7 @@ export class JuegoColleccionPage implements OnInit {
     for (let i = 0; i < this.cromosSinRepetidos.length; i++) {
       const elem = this.cromosSinRepetidos[i];
       this.cromosQueTengoImagenDelante[i] = URL.ImagenesCromo + elem.cromo.ImagenDelante;
-      if (this.coleccion.DosCaras) {
+      if (this.coleccion.dosCaras) {
         this.cromosQueTengoImagenDetras[i] = URL.ImagenesCromo + elem.cromo.ImagenDetras;
       }
     }

@@ -23,7 +23,7 @@ export class IntercambiarCromosPage implements OnInit {
   juegoSeleccionado: Juego;
   alumnosJuegoDeColeccion: Alumno[] = [];
   equiposJuegoDeColeccion: Equipo[] = [];
-  MisCromosSinRepetidos: any[];
+  misCromosSinRepetidos: any[];
   imagenCromo: string;
   alumno: Alumno;
   equipo: Equipo;
@@ -47,15 +47,15 @@ export class IntercambiarCromosPage implements OnInit {
     this.alumno = this.sesion.DameAlumno();
     this.cromo = this.sesion.DameCromo();
     this.equipo = this.sesion.DameEquipo();
-    this.imagenCromo = URL.ImagenesCromo + this.cromo.ImagenDelante;
-    if (this.juegoSeleccionado.Modo === 'Individual') {
+    this.imagenCromo = URL.ImagenesCromo + this.cromo.imagenDelante;
+    if (this.juegoSeleccionado.modo === 'Individual') {
       this.peticionesAPI.DameAlumnosJuegoDeColeccion(this.juegoSeleccionado.id)
       .subscribe (alumnos => {
             this.alumnosJuegoDeColeccion = alumnos;
             // quito de la lista al alumno que hace el regalo
             this.alumnosJuegoDeColeccion = this.alumnosJuegoDeColeccion.filter (alumno => alumno.id !== this.alumno.id);
       });
-    } else if ((this.juegoSeleccionado.Modo === 'Equipos') && (this.juegoSeleccionado.Asignacion === 'Equipo')) {
+    } else if ((this.juegoSeleccionado.modo === 'Equipos') && (this.juegoSeleccionado.asignacion === 'Equipo')) {
       this.peticionesAPI.DameEquiposJuegoDeColeccion(this.juegoSeleccionado.id)
       .subscribe (equipos => {
             this.equiposJuegoDeColeccion = equipos;
@@ -79,12 +79,12 @@ export class IntercambiarCromosPage implements OnInit {
   async RegalarCromo() {
     const misInputs: any [] = [];
 
-    if (this.juegoSeleccionado.Modo === 'Individual') {
+    if (this.juegoSeleccionado.modo === 'Individual') {
         // preparo las opciones para el radio selector
         this.alumnosJuegoDeColeccion.forEach (alumno => {
           const input = {
             type: 'radio',
-            label: alumno.Nombre + ' ' + alumno.PrimerApellido + ' ' + alumno.SegundoApellido,
+            label: alumno.nombre + ' ' + alumno.primerApellido + ' ' + alumno.segundoApellido,
             value: alumno.id,
             checked: false
           };
@@ -128,12 +128,12 @@ export class IntercambiarCromosPage implements OnInit {
         });
 
         await alert.present();
-    } else if ((this.juegoSeleccionado.Modo === 'Equipos') && (this.juegoSeleccionado.Asignacion === 'Equipo')) {
+    } else if ((this.juegoSeleccionado.modo === 'Equipos') && (this.juegoSeleccionado.asignacion === 'Equipo')) {
       // preparo las opciones para el radio selector
       this.equiposJuegoDeColeccion.forEach (equipo => {
         const input = {
           type: 'radio',
-          label: equipo.Nombre,
+          label: equipo.nombre,
           value: equipo.id,
           checked: false
         };
@@ -185,7 +185,7 @@ export class IntercambiarCromosPage implements OnInit {
       this.alumnosJuegoDeColeccion.forEach (alumno => {
         const input = {
           type: 'radio',
-          label: alumno.Nombre + ' ' + alumno.PrimerApellido + ' ' + alumno.SegundoApellido,
+          label: alumno.nombre + ' ' + alumno.primerApellido + ' ' + alumno.segundoApellido,
           value: alumno.id,
           checked: false
         };

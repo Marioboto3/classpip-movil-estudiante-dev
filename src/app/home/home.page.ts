@@ -624,7 +624,7 @@ replay() {
       return re.test(email);
     }
     UsernameUsado(username: string) {
-      return this.alumnosEnClasspip.some (alumno => alumno.Username === username);
+      return this.alumnosEnClasspip.some (alumno => alumno.username === username);
     }
     async Registro() {
       console.log ('registro');

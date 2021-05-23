@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Grupo } from '../clases';
 import { JuegoDeEscapeRoom } from '../clases/JuegoDeEscapeRoom';
-import { MALOJuegoDeEscapeRoom } from '../clases/MALOJuegoDeEscapeRoom';
 import { CalculosService, PeticionesAPIService, SesionService } from '../servicios';
 
 @Component({
@@ -14,7 +13,7 @@ export class JuegoDeEscapeRoomPage implements OnInit {
 
   estado: boolean = false;
   grupo: Grupo;
-  juego: MALOJuegoDeEscapeRoom;
+  juego: JuegoDeEscapeRoom;
 
   constructor(private router: Router, 
               private sesion: SesionService,
@@ -23,7 +22,7 @@ export class JuegoDeEscapeRoomPage implements OnInit {
               { }
 
   ngOnInit() {
-    this.juego = this.sesion.DameJuegoEscape();
+    this.juego = this.sesion.DameJuegoEscapeRoom();
     console.log("Juego: ", this.juego);
     this.estado = this.juego.estado;
   }

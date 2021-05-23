@@ -42,17 +42,17 @@ export class JuegoVotacionUnoATodosPage implements OnInit {
         .subscribe (alumnos => {
           this.alumnos = alumnos;
         
-          if (this.inscripcionAlumnoJuegoDeVotacionUnoATodos.Votos) {
+          if (this.inscripcionAlumnoJuegoDeVotacionUnoATodos.votos) {
               // Si ha votado preparlo la lista solo con los alumnos a los que ha votado
               // para mostrar el resultado de su votación
               this.alumnosVotados = [];
               // tslint:disable-next-line:prefer-for-of
-              for (let i = 0; i < this.inscripcionAlumnoJuegoDeVotacionUnoATodos.Votos.length; i++) {
+              for (let i = 0; i < this.inscripcionAlumnoJuegoDeVotacionUnoATodos.votos.length; i++) {
                 // tslint:disable-next-line:max-line-length
-                const alumno = this.alumnos.filter (al => al.id === this.inscripcionAlumnoJuegoDeVotacionUnoATodos.Votos[i].alumnoId)[0];
+                const alumno = this.alumnos.filter (al => al.id === this.inscripcionAlumnoJuegoDeVotacionUnoATodos.votos[i].alumnoId)[0];
                 this.alumnosVotados.push ({
                   al: alumno,
-                  puntos: this.inscripcionAlumnoJuegoDeVotacionUnoATodos.Votos[i].puntos
+                  puntos: this.inscripcionAlumnoJuegoDeVotacionUnoATodos.votos[i].puntos
                 });
               }
               // tslint:disable-next-line:only-arrow-functions
@@ -105,12 +105,12 @@ export class JuegoVotacionUnoATodosPage implements OnInit {
         {
           text: 'SI',
           handler: async () => {
-            this.inscripcionAlumnoJuegoDeVotacionUnoATodos.Votos = [];
+            this.inscripcionAlumnoJuegoDeVotacionUnoATodos.votos = [];
             if (this.juegoSeleccionado.ModoReparto !== 'Reparto libre') {
               // Guardo los identificadores de los alumnos a los que ha votado (que estan en las primeras posiciones de la lista)
               // tslint:disable-next-line:prefer-for-of
               for (let i = 0; i < this.juegoSeleccionado.Puntos.length; i++) {
-                this.inscripcionAlumnoJuegoDeVotacionUnoATodos.Votos.push ({
+                this.inscripcionAlumnoJuegoDeVotacionUnoATodos.votos.push ({
                   alumnoId: this.alumnos[i].id,
                   puntos:  this.juegoSeleccionado.Puntos[i]
                 });
@@ -118,7 +118,7 @@ export class JuegoVotacionUnoATodosPage implements OnInit {
             } else {
               // tslint:disable-next-line:prefer-for-of
               for (let i = 0; i < this.alumnosConPuntos.length; i++) {
-                this.inscripcionAlumnoJuegoDeVotacionUnoATodos.Votos.push ({
+                this.inscripcionAlumnoJuegoDeVotacionUnoATodos.votos.push ({
                   alumnoId: this.alumnosConPuntos[i].al.id,
                   puntos:  this.alumnosConPuntos[i].puntos
                 });
@@ -141,12 +141,12 @@ export class JuegoVotacionUnoATodosPage implements OnInit {
 
                       this.alumnosVotados = [];
                       // tslint:disable-next-line:prefer-for-of
-                      for (let i = 0; i < this.inscripcionAlumnoJuegoDeVotacionUnoATodos.Votos.length; i++) {
+                      for (let i = 0; i < this.inscripcionAlumnoJuegoDeVotacionUnoATodos.votos.length; i++) {
                         // tslint:disable-next-line:max-line-length
-                        const alumno = this.alumnos.filter (al => al.id === this.inscripcionAlumnoJuegoDeVotacionUnoATodos.Votos[i].alumnoId)[0];
+                        const alumno = this.alumnos.filter (al => al.id === this.inscripcionAlumnoJuegoDeVotacionUnoATodos.votos[i].alumnoId)[0];
                         this.alumnosVotados.push ({
                           al: alumno,
-                          puntos: this.inscripcionAlumnoJuegoDeVotacionUnoATodos.Votos[i].puntos
+                          puntos: this.inscripcionAlumnoJuegoDeVotacionUnoATodos.votos[i].puntos
                         });
                       }
                       // tslint:disable-next-line:only-arrow-functions

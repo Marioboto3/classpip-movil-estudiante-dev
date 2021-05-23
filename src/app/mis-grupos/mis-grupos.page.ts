@@ -15,11 +15,11 @@ import {MatAccordion} from '@angular/material/expansion';
 export class MisGruposPage implements OnInit {
   @ViewChild('accordion', {static: false}) accordion: MatAccordion;
 
-  Grupos: Grupo[];
-  Alumno: Alumno;
+  grupos: Grupo[];
+  alumno: Alumno;
   listaGruposYAlumnos: any;
   listaGruposYEquipos: any [];
-  Tipo: string;
+  tipo: string;
   equiposDelAlumno: Equipo[];
   equipoElegido: Equipo;
   alumnosEquipo: Alumno[];
@@ -34,15 +34,15 @@ export class MisGruposPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.Alumno = this.sesion.DameAlumno();
-    this.peticionesAPI.DameEquiposDelAlumno (this.Alumno.id)
+    this.alumno = this.sesion.DameAlumno();
+    this.peticionesAPI.DameEquiposDelAlumno (this.alumno.id)
     .subscribe (equipos => this.equiposDelAlumno = equipos);
-    this.peticionesAPI.DameGruposAlumno(this.Alumno.id).subscribe(
-      MisGrupos => {
+    this.peticionesAPI.DameGruposAlumno(this.alumno.id).subscribe(
+      misGrupos => {
         console.log ('ya tengo los grupos');
-        this.Grupos = MisGrupos;
-        console.log(this.Grupos);
-        this.calculos.DameLosGruposYLosAlumnos(this.Grupos)
+        this.grupos = misGrupos;
+        console.log(this.grupos);
+        this.calculos.DameLosGruposYLosAlumnos(this.grupos)
         .subscribe (lista => {
           this.listaGruposYAlumnos = lista;
           console.log ('listaGruposYAlumnos');
@@ -50,7 +50,7 @@ export class MisGruposPage implements OnInit {
          
         });
 
-        this.calculos.DameLosGruposYLosEquipos(this.Grupos)
+        this.calculos.DameLosGruposYLosEquipos(this.grupos)
         .subscribe (lista =>  {
           this.listaGruposYEquipos = lista;
           console.log ('equipos');
@@ -60,7 +60,7 @@ export class MisGruposPage implements OnInit {
   }
  
   ionViewWillEnter (){
-    this.Tipo = "Alumnos";
+    this.tipo = "Alumnos";
   }
   SeleccionarLogo($event) {
   
@@ -71,7 +71,7 @@ export class MisGruposPage implements OnInit {
     formData.append(imagen.name, imagen);
     this.peticionesAPI.PonLogoEquipo(formData)
     .subscribe (() => {
-      this.equipoElegido.FotoEquipo = URL.LogosEquipos + imagen.name;
+      this.equipoElegido.fotoEquipo = URL.LogosEquipos + imagen.name;
       this.peticionesAPI.ModificaEquipo (this.equipoElegido).subscribe();
      });
   }
@@ -80,11 +80,11 @@ export class MisGruposPage implements OnInit {
     console.log ('voy a cambiar el logo del equipo');
     console.log (equipo);
     this.equipoElegido = equipo;
-    if (equipo.FotoEquipo !== undefined) {
+    if (equipo.fotoEquipo !== undefined) {
       // primero borro el logo si tiene
       // la foto viene con toda la URL y solo quiero el nombre del fichero
       // para borrarlo, que viene al final
-      const url = equipo.FotoEquipo.split ('/');
+      const url = equipo.fotoEquipo.split ('/');
       const imagen = url[url.length - 1];
 
       this.peticionesAPI.BorraLogoEquipo (imagen).subscribe ();
@@ -96,11 +96,11 @@ export class MisGruposPage implements OnInit {
   QuitarLogo(equipo: Equipo) {
     // la foto viene con toda la URL y solo quiero el nombre del fichero
     // para borrarlo, que viene al final
-    const url = equipo.FotoEquipo.split ('/');
+    const url = equipo.fotoEquipo.split ('/');
     const imagen = url[url.length - 1];
 
     this.peticionesAPI.BorraLogoEquipo (imagen).subscribe ();
-    equipo.FotoEquipo = undefined;
+    equipo.fotoEquipo = undefined;
     console.log ('voy a modificar el equipo');
     console.log (equipo);
     this.peticionesAPI.ModificaEquipo (equipo)
@@ -120,7 +120,7 @@ export class MisGruposPage implements OnInit {
   }
 
   TraeEquiposGrupo (nombreGrupo) {
-    const grupoId = this.Grupos.find (grupo => grupo.Nombre = nombreGrupo).id;
+    const grupoId = this.grupos.find (grupo => grupo.nombre = nombreGrupo).id;
     this.peticionesAPI.DameEquiposDelGrupo (grupoId)
     .subscribe (equipos => {
       this.equiposDelGrupo = equipos;

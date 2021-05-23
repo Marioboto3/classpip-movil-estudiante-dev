@@ -16,9 +16,9 @@ import { IonContent } from '@ionic/angular';
 export class JuegoCompeticionLigaPage implements OnInit {
 
   juegoSeleccionado: Juego;
-  MiAlumno: Alumno;
-  MiEquipo: Equipo;
-  MiAlumnoJuegoCompLiga: AlumnoJuegoDeCompeticionLiga;
+  miAlumno: Alumno;
+  miEquipo: Equipo;
+  miAlumnoJuegoCompLiga: AlumnoJuegoDeCompeticionLiga;
   alumnosDelJuego: Alumno[];
   equiposDelJuego: Equipo[];
   listaAlumnosOrdenadaPorPuntos: AlumnoJuegoDeCompeticionLiga[];
@@ -49,9 +49,9 @@ export class JuegoCompeticionLigaPage implements OnInit {
 
   ngOnInit() {
     this.juegoSeleccionado = this.sesion.DameJuego();
-    this.MiAlumno = this.sesion.DameAlumno();
+    this.miAlumno = this.sesion.DameAlumno();
     console.log('toma el id del alumno');
-    console.log(this.MiAlumno);
+    console.log(this.miAlumno);
     this.DameJornadasDelJuegoDeCompeticionSeleccionado();
   }
 
@@ -86,7 +86,7 @@ export class JuegoCompeticionLigaPage implements OnInit {
         if (jornadasCounter === this.jornadas.length) {
           console.log('La lista final de enfrentamientos del juego es: ');
           console.log(this.enfrentamientosDelJuego);
-          if (this.juegoSeleccionado.Modo === 'Individual') {
+          if (this.juegoSeleccionado.modo === 'Individual') {
             this.AlumnosDelJuego();
           } else {
             this.EquiposDelJuego();
@@ -146,12 +146,12 @@ export class JuegoCompeticionLigaPage implements OnInit {
           console.log('miro en: ' + this.equiposDelJuego[i]);
           // tslint:disable-next-line:prefer-for-of
           for (let j = 0; j < res.length; j++) {
-            if (res[j].id === this.MiAlumno.id) {
+            if (res[j].id === this.miAlumno.id) {
               console.log(res);
-              this.MiEquipo = this.equiposDelJuego[i];
-              this.infoMiEquipo = this.rankingEquiposJuegoDeCompeticion.filter (equipo => equipo.id === this.MiEquipo.id)[0];
+              this.miEquipo = this.equiposDelJuego[i];
+              this.infoMiEquipo = this.rankingEquiposJuegoDeCompeticion.filter (equipo => equipo.id === this.miEquipo.id)[0];
               console.log('tu equipo');
-              console.log(this.MiEquipo);
+              console.log(this.miEquipo);
             }
           }
         });
@@ -167,8 +167,8 @@ export class JuegoCompeticionLigaPage implements OnInit {
       // ordena la lista por puntos
       // tslint:disable-next-line:only-arrow-functions
       this.listaAlumnosOrdenadaPorPuntos = this.listaAlumnosOrdenadaPorPuntos.sort(function(obj1, obj2) {
-        console.log (obj2.PuntosTotalesAlumno + ' ; ' + obj1.PuntosTotalesAlumno);
-        return obj2.PuntosTotalesAlumno - obj1.PuntosTotalesAlumno;
+        console.log (obj2.puntosTotalesAlumno + ' ; ' + obj1.puntosTotalesAlumno);
+        return obj2.puntosTotalesAlumno - obj1.puntosTotalesAlumno;
       });
       console.log(this.listaAlumnosOrdenadaPorPuntos);
       this.TablaClasificacionTotal();
@@ -183,8 +183,8 @@ export class JuegoCompeticionLigaPage implements OnInit {
         // ordena la lista por puntos
         // tslint:disable-next-line:only-arrow-functions
         this.listaEquiposOrdenadaPorPuntos = this.listaEquiposOrdenadaPorPuntos.sort(function(obj1, obj2) {
-          console.log (obj2.PuntosTotalesEquipo + ' ; ' + obj1.PuntosTotalesEquipo);
-          return obj2.PuntosTotalesEquipo - obj1.PuntosTotalesEquipo;
+          console.log (obj2.puntosTotalesEquipo + ' ; ' + obj1.puntosTotalesEquipo);
+          return obj2.puntosTotalesEquipo - obj1.puntosTotalesEquipo;
         });
         console.log(this.listaEquiposOrdenadaPorPuntos);
         this.TablaClasificacionTotal();
@@ -192,7 +192,7 @@ export class JuegoCompeticionLigaPage implements OnInit {
     }
   
   TablaClasificacionTotal() {
-    if (this.juegoSeleccionado.Modo === 'Individual') {
+    if (this.juegoSeleccionado.modo === 'Individual') {
       this.rankingAlumnoJuegoDeCompeticion = this.calculos.PrepararTablaRankingIndividualLiga (this.listaAlumnosOrdenadaPorPuntos,
                                                                                                this.alumnosDelJuego, this.jornadas,
                                                                                                this.enfrentamientosDelJuego);
@@ -214,7 +214,7 @@ export class JuegoCompeticionLigaPage implements OnInit {
   TablaClasificacionMiAlumno() {
     for(let i = 0; i < this.rankingAlumnoJuegoDeCompeticion.length; i++)
     {
-      if (this.rankingAlumnoJuegoDeCompeticion[i].id == this.MiAlumno.id)
+      if (this.rankingAlumnoJuegoDeCompeticion[i].id == this.miAlumno.id)
       {
         console.log(this.rankingAlumnoJuegoDeCompeticion[i].id);
         this.infomialumno = this.rankingAlumnoJuegoDeCompeticion[i];
@@ -240,8 +240,8 @@ export class JuegoCompeticionLigaPage implements OnInit {
                                       this.JornadasCompeticion);
     this.sesion.TomaTablaAlumnoJuegoDeCompeticion(this.rankingAlumnoJuegoDeCompeticion);
     this.sesion.TomaTablaEquipoJuegoDeCompeticion(this.rankingEquiposJuegoDeCompeticion);
-    this.sesion.TomaAlumno (this.MiAlumno);
-    this.sesion.TomaEquipo(this.MiEquipo);
+    this.sesion.TomaAlumno (this.miAlumno);
+    this.sesion.TomaEquipo(this.miEquipo);
     this.navCtrl.navigateForward('/informacion-jornadas');
   }
 
