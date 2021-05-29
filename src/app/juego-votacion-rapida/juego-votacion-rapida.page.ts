@@ -34,11 +34,11 @@ export class JuegoVotacionRapidaPage implements OnInit {
 
   ngOnInit() {
     this.juegoSeleccionado = this.sesion.DameJuego();
-    this.puntosARepartir = this.juegoSeleccionado.Puntos[0];
+    this.puntosARepartir = this.juegoSeleccionado.puntos[0];
     this.nickName = this.sesion.DameNickName();
-    if (this.juegoSeleccionado.ModoReparto === 'Reparto libre') {
+    if (this.juegoSeleccionado.modoReparto === 'Reparto libre') {
       this.conceptosConPuntos = [];
-      this.juegoSeleccionado.Conceptos.forEach (concepto =>
+      this.juegoSeleccionado.conceptos.forEach (concepto =>
         this.conceptosConPuntos.push ({
           c: concepto,
           puntos: 0
@@ -52,8 +52,8 @@ export class JuegoVotacionRapidaPage implements OnInit {
 
    // Esta función se ejecuta cuando movemos a los conceptos de sitio
    reorderItems(event) {
-    const itemMove = this.juegoSeleccionado.Conceptos.splice(event.detail.from, 1)[0];
-    this.juegoSeleccionado.Conceptos.splice(event.detail.to, 0, itemMove);
+    const itemMove = this.juegoSeleccionado.conceptos.splice(event.detail.from, 1)[0];
+    this.juegoSeleccionado.conceptos.splice(event.detail.to, 0, itemMove);
     event.detail.complete();
  }
 
@@ -74,11 +74,11 @@ Decrementar(i) {
  async EnviarVotacion() {
   console.log ('voy a enviar la votacion');
   this.misVotos = [];
-  if (this.juegoSeleccionado.ModoReparto !== 'Reparto libre') {
-    for (let i = 0; i < this.juegoSeleccionado.Puntos.length; i++) {
+  if (this.juegoSeleccionado.modoReparto !== 'Reparto libre') {
+    for (let i = 0; i < this.juegoSeleccionado.puntos.length; i++) {
       this.misVotos.push ({
-        c: this.juegoSeleccionado.Conceptos[i],
-        puntos: this.juegoSeleccionado.Puntos[i]
+        c: this.juegoSeleccionado.conceptos[i],
+        puntos: this.juegoSeleccionado.puntos[i]
       });
     }
   } else {

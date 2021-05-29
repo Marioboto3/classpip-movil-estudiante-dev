@@ -50,9 +50,9 @@ export class EscogerAvatarPage implements OnInit {
   ngOnInit() {
 
     this.alumno = this.sesion.DameAlumno();
-    this.juego = this.sesion.DameJuego();
+    this.juego = this.sesion.DameJuegoEscapeRoom();
     console.log("Juego: ", this.juego);
-    this.alumnoEscape = new AlumnoJuegoDeEscapeRoom (this.alumno.id, "empty", this.juego.JuegoEscapeId);
+    this.alumnoEscape = new AlumnoJuegoDeEscapeRoom (this.alumno.id, "empty", this.juego.id);
   
   }
   cogerpersonaje(name: string){
@@ -68,7 +68,7 @@ export class EscogerAvatarPage implements OnInit {
       confirmButtonText: 'Si, estoy seguro'
     }).then((result) => {
       if (result.value) {
-          this.calculos.añadirPersonaje(this.alumnoEscape.alumnoId, this.alumnoEscape.juegoEscapeRoomId, this.alumnoEscape.personaje);
+          this.calculos.añadirPersonaje(this.alumnoEscape.alumnoId, this.alumnoEscape.juegoDeEscapeRoomId, this.alumnoEscape.personaje);
           this.router.navigateByUrl('primer-escenario');
       }
     });

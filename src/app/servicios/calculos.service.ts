@@ -221,26 +221,19 @@ export class CalculosService {
                       }
                }
                console.log('ya tengo los juegos de votacion todos a uno');
-                console.log('voy a por los juegos de Escape');
+               console.log('¡Escape room!');
    
-                this.peticionesAPI.DameGruposAlumno(AlumnoId).subscribe (listaGrupos => {
-                  for (let i = 0; i< listaGrupos.length; i++){
-                    this.peticionesAPI.DameJuegosDeEscapeRoomPorGrupo(listaGrupos[i].id)
-                // tslint:disable-next-line:no-shadowed-variable
-                .subscribe( lista => {
-                   console.log("tamaño lista con escape: ", lista.length);
-                    for (let i = 0; i < (lista.length); i++) {
-                      //REVISAR CLASES POR TEMA DE MAYUSCULAS
-                      if (lista[i].juegoActivo === true) {
-                        JuegosActivos.push(this.juegoEscape);
-                      } else {
-                        JuegosInactivos.push(this.juegoEscape);
-                      }
+                this.peticionesAPI.DameJuegosDeEscapeRoom(AlumnoId).subscribe (juegosDelAlumno => {
+                  for (let i = 0; i< juegosDelAlumno.length; i++){
+                    //REVISAR CLASES POR TEMA DE MAYUSCULAS
+                    if (juegosDelAlumno[i].juegoActivo === true) {
+                      JuegosActivos.push(juegosDelAlumno[i]);
+                    } else {
+                      JuegosInactivos.push(juegosDelAlumno[i]);
                     }
-                  });
-                }
-                
-                console.log('ya tengo los juegos de Escape');
+                  }
+                });
+                console.log('Ya tengo los juegos de Escape');
 
                 console.log('voy a por los juegos de cuestionario de satisfaccion');
                 this.peticionesAPI.DameJuegosDeCuestiinarioSatisfaccionAlumno(AlumnoId)
@@ -371,8 +364,6 @@ export class CalculosService {
                                         }); // equipos del alumno
                                       }); // juegos de evaluacion
                                    }); // juegos de cuestionario de satisfaccion
-                                   
-                                 }); // juegos escape room
                                 }); // juegos de votacion todos a uno
                               }); // juegos de votacion uno a todos
                              });  // juegos de avatar
@@ -537,7 +528,9 @@ export class CalculosService {
         this.peticionesAPI.AñadePersonaje(this.alumnoEscape)
         .subscribe( alumnoDevuelto => {
             console.log('Alumno: ', alumnoDevuelto);
+            this.juegoEscape = this.sesion.DameJuegoEscapeRoom();
             this.juegoEscape.estado = true;
+            console.log("pre estado: ", this.juegoEscape);
             this.peticionesAPI.ModificaEstadoEscapeRoom(this.juegoEscape);
         });
     });

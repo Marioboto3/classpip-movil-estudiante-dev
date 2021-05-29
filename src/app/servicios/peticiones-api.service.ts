@@ -938,7 +938,7 @@ public PonerNotaAlumnoJuegoDeGeocaching(alumnoJuegoDeGeocaching: AlumnoJuegoDeGe
   }
   // Devuelve los juegos de avatar del Alumno
   public DameJuegoDeAvatarAlumno(alumnoId: number): Observable<Juego[]> {
-    return this.http.get<Juego[]>(this.APIUrlAlumnos + '/' + alumnoId + '/JuegoDeAvatares');
+    return this.http.get<Juego[]>(this.APIUrlAlumnos + '/' + alumnoId + '/JuegosDeAvatar');
   }
   // Obtener familia de avatar
   public DameFamilia(familiaId: number): Observable<FamiliaAvatares> {
@@ -980,13 +980,13 @@ public PonerNotaAlumnoJuegoDeGeocaching(alumnoJuegoDeGeocaching: AlumnoJuegoDeGe
     return this.http.get<JuegoDeEscapeRoom>(this.APIUrlAlumnos + '/' + alumnoId + '/JuegosDeEscapeRoom' + '?filter[where][juegoDeEscapeRoomId]=' + escapeRoomId);
   }
   public DameAlumnoDeEscapeRoom(alumnoId: number, escapeRoomId: number): Observable<AlumnoJuegoDeEscapeRoom> {
-    return this.http.get<AlumnoJuegoDeEscapeRoom>(this.APIUrlAlumnoJuegoDeEscapeRoom + '?filter[where][juegoEscapeRoomId]=' + escapeRoomId + '&?filter[where][alumnoId]=' + alumnoId);
+    return this.http.get<AlumnoJuegoDeEscapeRoom>(this.APIUrlAlumnoJuegoDeEscapeRoom + '?filter[where][juegoDeEscapeRoomId]=' + escapeRoomId + '&?filter[where][alumnoId]=' + alumnoId);
   }
   public DameJuegosDeEscapeRoom(alumnoId: number): Observable<JuegoDeEscapeRoom[]> {
     return this.http.get<JuegoDeEscapeRoom[]>(this.APIUrlAlumnos + '/' + alumnoId + '/JuegosDeEscapeRoom');
   }
   public DameJuegosDeEscapeRoomPorGrupo(grupoId: number): Observable<JuegoDeEscapeRoom[]> {
-    return this.http.get<JuegoDeEscapeRoom[]>(this.APIUrlGrupos + '/' + grupoId + '/JuegoDeEscapeRoom');
+    return this.http.get<JuegoDeEscapeRoom[]>(this.APIUrlGrupos + '/' + grupoId + '/JuegosDeEscapeRoom');
   }
    // Da la inscripción de un alumno concreto
    public DameInscripcionAlumnoJuegoDeVotacionUnoATodos(juegoId: number, alumnoId: number): Observable<AlumnoJuegoDeVotacionUnoATodos[]> {
