@@ -23,6 +23,7 @@ import { MiAlumnoAMostrarJuegoDeCuestionario } from '../clases/MiAlumnoAMostrarJ
 import { AlumnoJuegoDeCuestionario } from '../clases/AlumnoJuegoDeCuestionario';
 import { JuegoDeEscapeRoom } from '../clases/JuegoDeEscapeRoom';
 import { AlumnoJuegoDeEscapeRoom } from '../clases/AlumnoJuegoDeEscapeRoom';
+import { ObjetoEscape } from '../clases/objetoEscape';
 
 @Injectable({
   providedIn: 'root'
@@ -94,6 +95,12 @@ export class CalculosService {
         }
 
       });
+  }
+
+  public añadirObjetoMochila(objeto: ObjetoEscape){
+    this.juegoEscape = this.sesion.DameJuegoEscapeRoom();
+    console.log("objeto: ", objeto);
+    this.juegoEscape.mochila.objetos[this.juegoEscape.mochila.objetos.length] = objeto;
   }
 
   public DameJuegosAlumno(AlumnoId: number): any {
@@ -519,19 +526,19 @@ export class CalculosService {
   //Escape room
 
   public añadirPersonaje (alumnoId: number, escapeRoomId: number, personaje: string){
-    console.log("AlumnoId:", alumnoId + ",EscapeId:", escapeRoomId +".");
     this.peticionesAPI.DameAlumnoDeEscapeRoom(alumnoId, escapeRoomId)
     .subscribe( alumnoEscapeDevuelto => {
-        console.log('Juego del alumno: ', alumnoEscapeDevuelto);
         this.alumnoEscape = new AlumnoJuegoDeEscapeRoom (alumnoId, personaje, escapeRoomId);
         this.alumnoEscape.id = alumnoEscapeDevuelto[0].id;
         this.peticionesAPI.AñadePersonaje(this.alumnoEscape)
         .subscribe( alumnoDevuelto => {
-            console.log('Alumno: ', alumnoDevuelto);
-            this.juegoEscape = this.sesion.DameJuegoEscapeRoom();
-            this.juegoEscape.estado = true;
-            console.log("pre estado: ", this.juegoEscape);
-            this.peticionesAPI.ModificaEstadoEscapeRoom(this.juegoEscape);
+          this.juegoEscape = this.sesion.DameJuegoEscapeRoom();
+          this.juegoEscape.estado = true;
+          console.log("This.juegoEscape: ", this.juegoEscape);
+          this.peticionesAPI.ModificaEstadoEscapeRoom(this.juegoEscape).subscribe(juego => {
+            console.log("juegoDevuelto: ", juego);
+          });
+          this.sesion.TomaJuegoEscapeRoom(this.juegoEscape);
         });
     });
   }

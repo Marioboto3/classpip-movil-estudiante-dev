@@ -11,6 +11,9 @@ import { JuegoDeEscapeRoom } from '../clases/JuegoDeEscapeRoom';
 })
 export class SesionService {
 
+
+  prueba: boolean;
+
   alumno: Alumno;
   alumnoObservable = new ReplaySubject(1);
   profesor: Profesor;
@@ -60,7 +63,7 @@ export class SesionService {
 
   privilegiosAlumno: any;
   // listaEquiposGrupo: any;
-
+  estado: boolean;
   elem;
   pos;
   cromosQueTengo;
@@ -127,11 +130,24 @@ export class SesionService {
   //   return this.listaEquiposGrupo;
   // }
 
+  public TomaPrueba(prueba: boolean) {
+    this.prueba = prueba;
+  }
+  public DamePrueba(): boolean {
+    return this.prueba;
+  }
+
   public TomaJuego(juego: Juego) {
     this.juego = juego;
   }
   public DameJuego(): Juego {
     return this.juego;
+  }
+  public TomaEstadoEscapeRoom(estado: boolean) {
+    this.estado = estado;
+  }
+  public DameEstadoEscapeRoom(): boolean {
+    return this.estado;
   }
   public TomaJuegoEscapeRoom(juegoDeEscapeRoom: JuegoDeEscapeRoom) {
     this.juegoEscapeRoom = juegoDeEscapeRoom;

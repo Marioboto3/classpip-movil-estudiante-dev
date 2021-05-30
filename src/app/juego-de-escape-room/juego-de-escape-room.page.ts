@@ -23,8 +23,8 @@ export class JuegoDeEscapeRoomPage implements OnInit {
 
   ngOnInit() {
     this.juego = this.sesion.DameJuegoEscapeRoom();
-    console.log("Juego: ", this.juego);
     this.estado = this.juego.estado;
+    this.sesion.TomaEstadoEscapeRoom(this.estado);
   }
 
   nextpageEscojerPersonaje() {
@@ -32,6 +32,7 @@ export class JuegoDeEscapeRoomPage implements OnInit {
   }
 
   nextpageContinuar() {
+    this.sesion.TomaPrueba(false);
     this.router.navigateByUrl('primer-escenario');
   }
 }

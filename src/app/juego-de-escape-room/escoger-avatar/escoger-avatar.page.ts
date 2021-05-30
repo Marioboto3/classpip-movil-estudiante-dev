@@ -69,6 +69,7 @@ export class EscogerAvatarPage implements OnInit {
     }).then((result) => {
       if (result.value) {
           this.calculos.añadirPersonaje(this.alumnoEscape.alumnoId, this.alumnoEscape.juegoDeEscapeRoomId, this.alumnoEscape.personaje);
+          this.sesion.TomaPrueba(false);
           this.router.navigateByUrl('primer-escenario');
       }
     });

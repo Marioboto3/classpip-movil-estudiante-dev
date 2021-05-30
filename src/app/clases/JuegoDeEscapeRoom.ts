@@ -1,4 +1,5 @@
 import { Escenario } from "./Escenario";
+import { Mochila } from "./Mochila";
 
 export class JuegoDeEscapeRoom {
     id: number;
@@ -9,6 +10,7 @@ export class JuegoDeEscapeRoom {
     juegoActivo: boolean;
     tipo: string;
     estado: boolean;
+    mochila: Mochila;
   
     constructor( modo?: string, grupoId?: number, nombreJuego?: string, escenario?: Escenario, juegoActivo?: boolean, tipo?: string, estado?: boolean) {
       this.grupoId = grupoId;
@@ -18,5 +20,7 @@ export class JuegoDeEscapeRoom {
       this.juegoActivo=juegoActivo;
       this.tipo = tipo;
       this.estado = estado;
+      this.mochila.idJuegoDeEscapeRoom = 0;
+      this.mochila.objetos = [];
     }
   }
