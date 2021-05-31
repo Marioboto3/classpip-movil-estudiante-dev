@@ -12,5 +12,6 @@ export class Mochila {
       this.idJuegoDeEscapeRoom = idJuegoDeEscapeRoom;
   
     }
+    
   }
   

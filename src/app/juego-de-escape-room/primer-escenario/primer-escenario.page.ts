@@ -1,10 +1,11 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { ModalController } from '@ionic/angular';
+import { ModalController, AlertController } from '@ionic/angular';
 import { Howl } from 'howler';
 import { Juego } from 'src/app/clases';
 import { Audio } from 'src/app/clases/Audio';
 import { JuegoDeEscapeRoom } from 'src/app/clases/JuegoDeEscapeRoom';
+import { ObjetoEnigma } from 'src/app/clases/ObjetoEnigma';
 import { ObjetoEscape } from 'src/app/clases/ObjetoEscape';
 import { CalculosService, SesionService } from 'src/app/servicios';
 import Swal from 'sweetalert2';
@@ -39,8 +40,13 @@ export class PrimerEscenarioPage implements OnInit {
   recogido: boolean;
   objeto1: ObjetoEscape;
   objeto2: ObjetoEscape;
+  objetoEnigma: ObjetoEnigma;
 
-  constructor(private router: Router, private modalController: ModalController, private sesion: SesionService, private calculos: CalculosService) {}
+  constructor(private router: Router, 
+    private modalController: ModalController, 
+    private sesion: SesionService, 
+    private calculos: CalculosService,
+    private alertController: AlertController) {}
 
   playlist: Audio[] = [
     {
@@ -81,12 +87,9 @@ export class PrimerEscenarioPage implements OnInit {
       this.varEscenario = "containerHabitacion";}
     }
 
-    console.log("objeto1: ", this.juegoEscape.escenario.objeto1);
-    console.log("objeto2: ", this.juegoEscape.escenario.objeto2);
-
     this.objeto1 = new ObjetoEscape (this.juegoEscape.escenario.objeto1.nombre, this.juegoEscape.escenario.objeto1.usable, this.juegoEscape.escenario.objeto1.recogido, this.juegoEscape.escenario.objeto1.posicion);
     this.objeto2 = new ObjetoEscape (this.juegoEscape.escenario.objeto2.nombre, this.juegoEscape.escenario.objeto2.usable, this.juegoEscape.escenario.objeto2.recogido, this.juegoEscape.escenario.objeto2.posicion);
-
+    this.objetoEnigma = new ObjetoEnigma(this.juegoEscape.escenario.objetoEnigma.nombre, this.juegoEscape.escenario.objetoEnigma.pregunta, this.juegoEscape.escenario.objetoEnigma.respuesta);
 
   }
 
@@ -134,6 +137,46 @@ abrirMochila(){
 
 zoom(zoomIn: boolean){}
 
+abrirObjeto(objeto){
+  console.log("Objeto: ", objeto);
+  this.alertController.create({
+    header: 'Enigma de la caja fuerte',
+    subHeader: 'Responde con el código correcto.',
+    message: '¿' + objeto.pregunta + '?',
+    inputs: [
+      {
+        name:'Respuesta',
+        placeholder:'Código...'
+      }
+    ],
+    buttons: [
+      {
+        text: 'Cancel',
+        handler: (data: any) => {
+          console.log('Canceled', data);
+        }
+      },
+      {
+        text: 'Done!',
+        handler: (data: any) => {
+          console.log("Respuesta: ", data.Respuesta);
+          console.log("ObjetoEngima respuesta: ", this.objetoEnigma.respuesta);
+          if(this.objetoEnigma.respuesta == data.Respuesta){
+            this.alertController.create({message: "Perfecto!"}).then(res => {
+              res.present();
+            });
+          }else{
+            this.alertController.create({message: "Error!"}).then(res => {
+              res.present();
+            });
+          }
+        }
+      }
+    ]
+  }).then(res => {
+    res.present();
+  });
+}
 cogerObjeto(objeto){
   if (objeto == this.objeto1.nombre){
     if(this.objeto1.usable == true){

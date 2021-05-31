@@ -27,4 +27,8 @@ export class MochilaPage implements OnInit {
     console.log("objetos: ", this.objetos);
   }
 
+  volver(){
+    this.router.navigateByUrl('primer-escenario');
+  }
+
 }
