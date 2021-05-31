@@ -9,15 +9,19 @@
                <mat-icon (click)="start()" style="color: blue; zoom: 2.0;">contact_support</mat-icon>
               </div>
               <div *ngIf="mapa == imagenBase && !recogido else other_content">
-                <button (click)="abrirMochila()" style="margin-left: 10px; margin-top: 5px; color: black; background-color: darkgoldenrod; position: absolute;">Mochila</button>
+                  <button mat-mini-fab aria-label="miniFabButton" style="background-color: orange; position:fixed; margin-top: 10px; margin-left: 10px;" (click)="abrirMochila()">
+                      <mat-icon >folder</mat-icon>
+                  </button>
                   <img style="position: fixed; margin-left: 250px; margin-top: 110px; height: 50px;" (click)="abrirObjeto(objetoEnigma)" src="../../../assets/escape-room/cajaFuerte.png"> 
-                  <img style="margin-left: 250px; margin-top: 210px; height: 50px;" (click)="cogerObjeto(objeto1.nombre)" src="../../../assets/escape-room/objetos/{{objeto1.nombre}}.png"> 
-                  <img style="text-align: center; margin-left: 10px; margin-top: 210px; height: 50px;" (click)="cogerObjeto(objeto2.nombre)" src="../../../assets/escape-room/objetos/{{objeto2.nombre}}.png"> 
+                  <img style="margin-left: 275px; margin-top: 210px; height: 50px;" (click)="cogerObjeto(objeto1.nombre)" src="../../../assets/escape-room/objetos/{{objeto1.nombre}}.png"> 
+                  <img style="margin-top: 210px; height: 50px;" (click)="cogerObjeto(objeto2.nombre)" src="../../../assets/escape-room/objetos/{{objeto2.nombre}}.png"> 
               </div>
               <ng-template #other_content>
-                <button (click)="abrirMochila()" style="margin-left: 10px; margin-top: 5px; color: black; background-color: darkgoldenrod; position: absolute;">Mochila</button>  
+                  <button mat-mini-fab aria-label="miniFabButton" style="background-color: orange; position:fixed; margin-top: 10px; margin-left: 10px;" (click)="abrirMochila()">
+                      <mat-icon >folder</mat-icon>
+                  </button>  
                   <img style="position: fixed; margin-left: 250px; margin-top: 110px; height: 50px;" (click)="abrirObjeto(objetoEnigma)" src="../../../assets/escape-room/cajaFuerte.png"> 
-                  <img style="margin-left: 260px; margin-top: 210px; height: 50px;" (click)="cogerObjeto(objeto2.nombre)" src="../../../assets/escape-room/objetos/{{objeto2.nombre}}.png"> 
+                  <img style="margin-left: 330px; margin-top: 210px; height: 50px;" (click)="cogerObjeto(objeto2.nombre)" src="../../../assets/escape-room/objetos/{{objeto2.nombre}}.png"> 
               </ng-template>
          
            </ion-col>   

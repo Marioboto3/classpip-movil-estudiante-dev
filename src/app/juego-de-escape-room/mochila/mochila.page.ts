@@ -3,6 +3,11 @@ import { Router } from '@angular/router';
 import { JuegoDeEscapeRoom } from 'src/app/clases/JuegoDeEscapeRoom';
 import { ObjetoEscape } from 'src/app/clases/objetoEscape';
 import { CalculosService, PeticionesAPIService, SesionService } from 'src/app/servicios';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { AlertController } from '@ionic/angular';
+
+
 
 @Component({
   selector: 'app-mochila',
@@ -17,7 +22,8 @@ export class MochilaPage implements OnInit {
   constructor(private router: Router, 
     private sesion: SesionService,
     private calculos: CalculosService,
-    private peticionesAPI: PeticionesAPIService) { }
+    private peticionesAPI: PeticionesAPIService,
+    private alertController: AlertController) { }
 
   ngOnInit() {
     
@@ -31,4 +37,28 @@ export class MochilaPage implements OnInit {
     this.router.navigateByUrl('primer-escenario');
   }
 
+  ensenarObjeto(objeto: ObjetoEscape){
+    this.alertController.create({
+      header: objeto.nombre,
+      message: '<img src="../../../assets/escape-room/objetos/botella.png">',
+      buttons: [
+        {
+          text: 'Cancel',
+          handler: (data: any) => {
+            console.log('Canceled', data);
+          }
+        },
+        {
+          text: 'Usar',
+          handler: (data: any) => {
+              this.alertController.create({message: "Perfecto!"}).then(res => {
+                res.present();
+              });
+          }
+        }
+      ]
+    }).then(res => {
+      res.present();
+    });
+  }
 }

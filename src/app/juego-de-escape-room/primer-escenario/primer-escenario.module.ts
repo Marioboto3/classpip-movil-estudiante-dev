@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import {MatIconModule} from '@angular/material/icon';
 
 import { PrimerEscenarioPage } from './primer-escenario.page';
+import { MatButtonModule } from '@angular/material';
 
 const routes: Routes = [
   {
@@ -20,6 +21,7 @@ const routes: Routes = [
     CommonModule,
     MatIconModule,
     FormsModule,
+    MatButtonModule,
     IonicModule,
     RouterModule.forChild(routes)
   ],

@@ -9,6 +9,9 @@ import { ObjetoEnigma } from 'src/app/clases/ObjetoEnigma';
 import { ObjetoEscape } from 'src/app/clases/ObjetoEscape';
 import { CalculosService, SesionService } from 'src/app/servicios';
 import Swal from 'sweetalert2';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+
 
 @Component({
   selector: 'app-primer-escenario',

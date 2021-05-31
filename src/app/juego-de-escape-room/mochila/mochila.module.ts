@@ -6,6 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { MochilaPage } from './mochila.page';
+import { MatButtonModule, MatIconModule } from '@angular/material';
 
 const routes: Routes = [
   {
@@ -19,6 +20,8 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
+    MatIconModule,
+    MatButtonModule,
     RouterModule.forChild(routes)
   ],
   declarations: [MochilaPage]
