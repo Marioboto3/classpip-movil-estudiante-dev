@@ -130,13 +130,20 @@ export class SesionService {
   //   return this.listaEquiposGrupo;
   // }
 
-  public TomaPrueba(prueba: boolean) {
-    this.prueba = prueba;
+  public TomaPrueba(prueba: boolean, objeto: string) {
+    if(objeto == "objeto1"){
+    this.juegoEscapeRoom.escenario.objeto1.recogido = prueba;
+    }else{
+      this.juegoEscapeRoom.escenario.objeto2.recogido = prueba;
+    }
   }
-  public DamePrueba(): boolean {
-    return this.prueba;
+  public DamePrueba(objeto: string): boolean {
+    if(objeto == "objeto1"){
+    return this.juegoEscapeRoom.escenario.objeto1.recogido;
+    }else{
+    return this.juegoEscapeRoom.escenario.objeto2.recogido;
+    }
   }
-
   public TomaJuego(juego: Juego) {
     this.juego = juego;
   }

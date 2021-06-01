@@ -97,10 +97,24 @@ export class CalculosService {
       });
   }
 
+  public borrarElementoLista(number: number, lista: any){
+    lista.forEach((value, index) => {
+      if(value==number) {lista.splice(index,1)
+      console.log("eeeeee");}
+    });
+    return lista;
+  }
   public añadirObjetoMochila(objeto: ObjetoEscape){
     this.juegoEscape = this.sesion.DameJuegoEscapeRoom();
     console.log("objeto: ", objeto);
     this.juegoEscape.mochila.objetos[this.juegoEscape.mochila.objetos.length] = objeto;
+    this.sesion.TomaJuegoEscapeRoom(this.juegoEscape);
+  }
+
+  public GuardaEscapeRoom(){
+    this.peticionesAPI.GuardaEscapeRoom(this.sesion.DameJuegoEscapeRoom()).subscribe(juego => {
+      console.log("Juego devuelto al guardar: ", juego);
+    })
   }
 
   public DameJuegosAlumno(AlumnoId: number): any {

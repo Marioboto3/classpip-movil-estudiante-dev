@@ -8,22 +8,50 @@
                <img src="../../../assets/escape-room/profesor.png"> 
                <mat-icon (click)="start()" style="color: blue; zoom: 2.0;">contact_support</mat-icon>
               </div>
-              <div *ngIf="mapa == imagenBase && !recogido else other_content">
-                  <button mat-mini-fab aria-label="miniFabButton" style="background-color: orange; position:fixed; margin-top: 10px; margin-left: 10px;" (click)="abrirMochila()">
+              <div id="mochilaYguardar" *ngIf="mapa == imagenBase && !recogido && !recogido2 else other_content">
+                  <button mat-mini-fab aria-label="miniFabButton" style="background-color: orange; position: fixed; margin-top: 10px; " (click)="abrirMochila()">
                       <mat-icon >folder</mat-icon>
                   </button>
+                  <button mat-mini-fab aria-label="miniFabButton" style="background-color: blue; position: fixed; margin-left: 45px; margin-top: 10px;" (click)="guardarEscape()">
+                    <mat-icon >save</mat-icon>
+                </button>
                   <img style="position: fixed; margin-left: 250px; margin-top: 110px; height: 50px;" (click)="abrirObjeto(objetoEnigma)" src="../../../assets/escape-room/cajaFuerte.png"> 
                   <img style="margin-left: 275px; margin-top: 210px; height: 50px;" (click)="cogerObjeto(objeto1.nombre)" src="../../../assets/escape-room/objetos/{{objeto1.nombre}}.png"> 
                   <img style="margin-top: 210px; height: 50px;" (click)="cogerObjeto(objeto2.nombre)" src="../../../assets/escape-room/objetos/{{objeto2.nombre}}.png"> 
               </div>
               <ng-template #other_content>
-                  <button mat-mini-fab aria-label="miniFabButton" style="background-color: orange; position:fixed; margin-top: 10px; margin-left: 10px;" (click)="abrirMochila()">
+                <div *ngIf="recogido && !recogido2 else third_content">
+                  <button mat-mini-fab aria-label="miniFabButton" style="background-color: orange; position:fixed; margin-top: 10px; " (click)="abrirMochila()">
                       <mat-icon >folder</mat-icon>
                   </button>  
+                  <button mat-mini-fab aria-label="miniFabButton" style="background-color: blue; position: fixed; margin-left: 45px; margin-top: 10px;" (click)="guardarEscape()">
+                    <mat-icon >save</mat-icon>
+                </button>
                   <img style="position: fixed; margin-left: 250px; margin-top: 110px; height: 50px;" (click)="abrirObjeto(objetoEnigma)" src="../../../assets/escape-room/cajaFuerte.png"> 
                   <img style="margin-left: 330px; margin-top: 210px; height: 50px;" (click)="cogerObjeto(objeto2.nombre)" src="../../../assets/escape-room/objetos/{{objeto2.nombre}}.png"> 
+                </div>
               </ng-template>
-         
+                <ng-template #third_content>
+                  <div *ngIf="!recogido && recogido2 else fourth_content">
+                    <button mat-mini-fab aria-label="miniFabButton" style="background-color: orange; position:fixed; margin-top: 10px; " (click)="abrirMochila()">
+                        <mat-icon >folder</mat-icon>
+                    </button>  
+                    <button mat-mini-fab aria-label="miniFabButton" style="background-color: blue; position: fixed; margin-left: 45px; margin-top: 10px;" (click)="guardarEscape()">
+                      <mat-icon >save</mat-icon>
+                  </button> 
+                    <img style="position: fixed; margin-left: 250px; margin-top: 110px; height: 50px;" (click)="abrirObjeto(objetoEnigma)" src="../../../assets/escape-room/cajaFuerte.png"> 
+                    <img style="margin-left: 275px; margin-top: 210px; height: 50px;" (click)="cogerObjeto(objeto1.nombre)" src="../../../assets/escape-room/objetos/{{objeto1.nombre}}.png"> 
+                  </div>
+              </ng-template>
+                  <ng-template #fourth_content>
+                      <button mat-mini-fab aria-label="miniFabButton" style="background-color: orange; position:fixed; margin-top: 10px; " (click)="abrirMochila()">
+                          <mat-icon >folder</mat-icon>
+                      </button>  
+                      <button mat-mini-fab aria-label="miniFabButton" style="background-color: blue;position: fixed; margin-left: 45px; margin-top: 10px;" (click)="guardarEscape()">
+                        <mat-icon >save</mat-icon>
+                    </button> 
+                      <img style="position: fixed; margin-left: 250px; margin-top: 110px; height: 50px;" (click)="abrirObjeto(objetoEnigma)" src="../../../assets/escape-room/cajaFuerte.png">                                
+              </ng-template>
            </ion-col>   
          </ion-row> 
         </ion-grid>  

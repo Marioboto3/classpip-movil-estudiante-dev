@@ -32,7 +32,6 @@ export class JuegoDeEscapeRoomPage implements OnInit {
   }
 
   nextpageContinuar() {
-    this.sesion.TomaPrueba(false);
     this.router.navigateByUrl('primer-escenario');
   }
 }

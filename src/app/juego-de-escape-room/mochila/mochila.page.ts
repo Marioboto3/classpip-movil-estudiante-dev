@@ -49,11 +49,61 @@ export class MochilaPage implements OnInit {
           }
         },
         {
-          text: 'Usar',
+          text: 'Dejar',
           handler: (data: any) => {
-              this.alertController.create({message: "Perfecto!"}).then(res => {
-                res.present();
-              });
+              this.alertController.create({message: "Devuelto a su sitio!"}).then(res => {
+              
+              if (objeto.nombre == this.juegoEscape.escenario.objeto1.nombre)
+              {
+                this.juegoEscape = this.sesion.DameJuegoEscapeRoom();
+                this.juegoEscape.escenario.objeto1.recogido = false;
+              for(let i=0; i<this.juegoEscape.mochila.objetos.length; i++)
+                  {
+                     if( this.juegoEscape.mochila.objetos[i].nombre == objeto.nombre)
+                     {
+                      this.juegoEscape.mochila.objetos.forEach((value, index) => {
+                        if(value==objeto) {
+                          this.juegoEscape.mochila.objetos.splice(index,1)
+                          console.log("Mostrar lista: ",this.juegoEscape.mochila.objetos);
+                        }
+                      });
+                      this.objetos.forEach((value, index) => {
+                        if(value==objeto) {
+                          this.objetos.splice(index,1)
+                          console.log("Objetos despues de borrar: ", this.objetos);
+                         }}); 
+                      } 
+                  }
+                    console.log("Como queda la lista? ", this.juegoEscape.mochila.objetos);
+                    this.sesion.TomaJuegoEscapeRoom(this.juegoEscape);
+                    res.present();
+                    this.calculos.GuardaEscapeRoom();
+                }
+              if (objeto.nombre == this.juegoEscape.escenario.objeto2.nombre){
+                this.juegoEscape = this.sesion.DameJuegoEscapeRoom();
+                this.juegoEscape.escenario.objeto2.recogido = false;
+                for(let i=0; i<this.juegoEscape.mochila.objetos.length; i++)
+                {
+                  if( this.juegoEscape.mochila.objetos[i].nombre == objeto.nombre)
+                     {
+                      this.juegoEscape.mochila.objetos.forEach((value, index) => {
+                        if(value==objeto) {
+                          this.juegoEscape.mochila.objetos.splice(index,1)
+                          console.log("Mostrar lista: ",this.juegoEscape.mochila.objetos);
+                        }
+                      });
+                      this.objetos.forEach((value, index) => {
+                        if(value==objeto) {
+                          this.objetos.splice(index,1)
+                          console.log("Objetos despues de borrar: ", this.objetos);
+                         }}); 
+                      } 
+                    console.log("Como queda la lista? ", this.juegoEscape.mochila.objetos);
+                } 
+                this.sesion.TomaJuegoEscapeRoom(this.juegoEscape);
+                res.present(); 
+                this.calculos.GuardaEscapeRoom();
+              }});
           }
         }
       ]

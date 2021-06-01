@@ -41,6 +41,7 @@ export class PrimerEscenarioPage implements OnInit {
   juegoEscape: JuegoDeEscapeRoom; 
   estado: boolean;
   recogido: boolean;
+  recogido2: boolean;
   objeto1: ObjetoEscape;
   objeto2: ObjetoEscape;
   objetoEnigma: ObjetoEnigma;
@@ -64,9 +65,16 @@ export class PrimerEscenarioPage implements OnInit {
   reload(){
     this.ngOnInit();
   }
+  ionViewWillEnter(){
+    this.reload();
+  }
   ngOnInit() {  
 
-    this.recogido = this.sesion.DamePrueba();
+    this.recogido = this.sesion.DameJuegoEscapeRoom().escenario.objeto1.recogido;
+    this.recogido2 = this.sesion.DameJuegoEscapeRoom().escenario.objeto2.recogido;
+    console.log("recogido 1: ", this.recogido);
+    console.log("recogido 2: ", this.recogido2);
+
     this.id = this.sesion.DameAlumno().id;
     this.juegoEscape = this.sesion.DameJuegoEscapeRoom();
     this.estado = this.sesion.DameEstadoEscapeRoom();
@@ -183,7 +191,8 @@ abrirObjeto(objeto){
 cogerObjeto(objeto){
   if (objeto == this.objeto1.nombre){
     if(this.objeto1.usable == true){
-      this.sesion.TomaPrueba(true);
+      this.sesion.TomaPrueba(true, "objeto1");
+      console.log("entra en el 1");
       Swal.fire({
         title: '¿Seguro que quieres este objeto?   ' + objeto,
         icon: 'warning',
@@ -200,7 +209,8 @@ cogerObjeto(objeto){
     }
   }if (objeto == this.objeto2.nombre){
     if(this.objeto2.usable == true){
-      this.sesion.TomaPrueba(true);
+      this.sesion.TomaPrueba(true, "objeto2");
+      console.log("entra en el 2");
       Swal.fire({
         title: '¿Seguro que quieres este objeto?   ' + objeto,
         icon: 'warning',
@@ -217,6 +227,23 @@ cogerObjeto(objeto){
     }
   }
 }
+
+guardarEscape(){
+  this.calculos.GuardaEscapeRoom();
+  Swal.fire({
+    title: '¿Quieres continuar?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Continuar'
+  }).then((result) => {
+    if (result.value) {
+      this.router.navigateByUrl('mochila');
+    }
+  });
+}
+
 close(){
   this.modalController.dismiss();
 }

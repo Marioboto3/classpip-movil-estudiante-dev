@@ -969,6 +969,9 @@ public PonerNotaAlumnoJuegoDeGeocaching(alumnoJuegoDeGeocaching: AlumnoJuegoDeGe
 
   public ModificaEstadoEscapeRoom (juegoDeEscapeRoom: JuegoDeEscapeRoom): Observable<JuegoDeEscapeRoom> {
     return this.http.put<JuegoDeEscapeRoom>(this.APIUrlJuegoDeEscapeRoom + '/' + juegoDeEscapeRoom.id, juegoDeEscapeRoom);
+  } 
+  public GuardaEscapeRoom(juego: JuegoDeEscapeRoom): Observable<JuegoDeEscapeRoom> {
+    return this.http.put<JuegoDeEscapeRoom>(this.APIUrlGrupos +'/'+ juego.grupoId +'/JuegosDeEscapeRoom/' + juego.id, juego);
   }
   public AñadePersonaje(alumno: AlumnoJuegoDeEscapeRoom): Observable<AlumnoJuegoDeEscapeRoom> {
     return this.http.put<AlumnoJuegoDeEscapeRoom>(this.APIUrlAlumnoJuegoDeEscapeRoom, alumno);
