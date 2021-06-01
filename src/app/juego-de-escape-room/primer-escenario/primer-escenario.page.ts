@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { ModalController, AlertController } from '@ionic/angular';
+import { ModalController, AlertController, NavController } from '@ionic/angular';
 import { Howl } from 'howler';
 import { Juego } from 'src/app/clases';
 import { Audio } from 'src/app/clases/Audio';
@@ -42,15 +42,18 @@ export class PrimerEscenarioPage implements OnInit {
   estado: boolean;
   recogido: boolean;
   recogido2: boolean;
+  recogidaPista: boolean;
   objeto1: ObjetoEscape;
   objeto2: ObjetoEscape;
+  objetoPista: ObjetoEscape;
   objetoEnigma: ObjetoEnigma;
 
   constructor(private router: Router, 
     private modalController: ModalController, 
     private sesion: SesionService, 
     private calculos: CalculosService,
-    private alertController: AlertController) {}
+    private alertController: AlertController,
+    public navCtrl: NavController) {}
 
   playlist: Audio[] = [
     {
@@ -72,8 +75,10 @@ export class PrimerEscenarioPage implements OnInit {
 
     this.recogido = this.sesion.DameJuegoEscapeRoom().escenario.objeto1.recogido;
     this.recogido2 = this.sesion.DameJuegoEscapeRoom().escenario.objeto2.recogido;
+    this.recogidaPista = this.sesion.DameJuegoEscapeRoom().escenario.objetoPista.recogido;
     console.log("recogido 1: ", this.recogido);
     console.log("recogido 2: ", this.recogido2);
+    console.log("recogidaPista: ", this.recogidaPista);
 
     this.id = this.sesion.DameAlumno().id;
     this.juegoEscape = this.sesion.DameJuegoEscapeRoom();
@@ -100,7 +105,8 @@ export class PrimerEscenarioPage implements OnInit {
 
     this.objeto1 = new ObjetoEscape (this.juegoEscape.escenario.objeto1.nombre, this.juegoEscape.escenario.objeto1.usable, this.juegoEscape.escenario.objeto1.recogido, this.juegoEscape.escenario.objeto1.posicion);
     this.objeto2 = new ObjetoEscape (this.juegoEscape.escenario.objeto2.nombre, this.juegoEscape.escenario.objeto2.usable, this.juegoEscape.escenario.objeto2.recogido, this.juegoEscape.escenario.objeto2.posicion);
-    this.objetoEnigma = new ObjetoEnigma(this.juegoEscape.escenario.objetoEnigma.nombre, this.juegoEscape.escenario.objetoEnigma.pregunta, this.juegoEscape.escenario.objetoEnigma.respuesta);
+    this.objetoEnigma = new ObjetoEnigma(this.juegoEscape.escenario.objetoEnigma.nombre, this.juegoEscape.escenario.objetoEnigma.pregunta, this.juegoEscape.escenario.objetoEnigma.respuesta, this.juegoEscape.escenario.objetoEnigma.resuelta);
+    this.objetoPista = new ObjetoEscape (this.juegoEscape.escenario.objetoPista.nombre, this.juegoEscape.escenario.objetoPista.usable, this.juegoEscape.escenario.objetoPista.recogido, this.juegoEscape.escenario.objetoPista.posicion);
 
   }
 
@@ -138,9 +144,6 @@ togglePlayer(pause){
       this.player.play();
     }
   }
-escribir(){
-  this.router.navigateByUrl('mapa');
-}
 
 abrirMochila(){
   this.router.navigateByUrl('mochila');
@@ -175,6 +178,7 @@ abrirObjeto(objeto){
           if(this.objetoEnigma.respuesta == data.Respuesta){
             this.alertController.create({message: "Perfecto!"}).then(res => {
               res.present();
+              this.conseguirPista();
             });
           }else{
             this.alertController.create({message: "Error!"}).then(res => {
@@ -186,6 +190,22 @@ abrirObjeto(objeto){
     ]
   }).then(res => {
     res.present();
+  });
+}
+conseguirPista(){
+  Swal.fire({
+    title: 'Felicidades! Has conseguido la llave',
+    icon: 'warning',
+    confirmButtonColor: '#3085d6',
+    confirmButtonText: 'Recoger'
+  }).then((result) => {
+    if (result.value) {
+      this.calculos.añadirObjetoMochila(this.objetoPista);
+      this.juegoEscape.escenario.objetoPista.recogido = true;
+      this.juegoEscape.escenario.objetoEnigma.resuelta = true;
+      this.sesion.TomaJuegoEscapeRoom(this.juegoEscape);
+      this.reload();
+    }
   });
 }
 cogerObjeto(objeto){
@@ -231,15 +251,30 @@ cogerObjeto(objeto){
 guardarEscape(){
   this.calculos.GuardaEscapeRoom();
   Swal.fire({
-    title: '¿Quieres continuar?',
+    title: '¿Quieres guardar?',
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
     cancelButtonColor: '#d33',
-    confirmButtonText: 'Continuar'
+    confirmButtonText: 'Guardar'
   }).then((result) => {
     if (result.value) {
-      this.router.navigateByUrl('mochila');
+      Swal.fire({
+        title: '¿Quieres continuar o salir del juego?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Salir',
+        confirmButtonText: 'Continuar'
+      }).then((result) => {
+        if(result.isConfirmed){
+          Swal.fire('¡Continua disfrutando del juego!');
+        }else {
+          Swal.fire("Vuelve pronto, te estaremos esperando.");
+          this.navCtrl.navigateForward('/inici');
+        }
+      });
     }
   });
 }
