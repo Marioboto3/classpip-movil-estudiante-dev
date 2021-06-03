@@ -40,7 +40,7 @@ export class MochilaPage implements OnInit {
   ensenarObjeto(objeto: ObjetoEscape){
     this.alertController.create({
       header: objeto.nombre,
-      message: '<img src="../../../assets/escape-room/objetos/botella.png">',
+      message: '<img src="../../../assets/escape-room/objetos/' + objeto.nombre + '.png">',
       buttons: [
         {
           text: 'Cancel',
