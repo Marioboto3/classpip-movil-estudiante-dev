@@ -27,20 +27,7 @@ export class EscogerAvatarPage implements OnInit {
   name4: string = "Inés Table";
 
   name:string;
-  /*slides = [
-    { 
-      title: "Elvis Tek",
-      subtitle: "Estudiante de segundo grado",
-      description: "Estudiante de segundo en el colegio Makoko, no será el mejor estudiante del colegio, pero es un gran compañero y sobre todo, el carisma que tiene hace que sea muy popular. Si te identificas con Elvis tek y quieres pasar un buen rato, adelante!",
-      image:"../../../assets/elder.png"
-    },
-    { 
-      title: "Laman Teca",
-      subtitle: "Estudiante de tercer grado",
-      description: "Estudiante escurridiza",
-      image:"../../../assets/manteca.jpg"
-    }
-  ]*/
+
   constructor(private router: Router,     
               private sesion: SesionService,
               private calculos: CalculosService

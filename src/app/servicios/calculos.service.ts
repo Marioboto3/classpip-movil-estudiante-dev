@@ -24,12 +24,16 @@ import { AlumnoJuegoDeCuestionario } from '../clases/AlumnoJuegoDeCuestionario';
 import { JuegoDeEscapeRoom } from '../clases/JuegoDeEscapeRoom';
 import { AlumnoJuegoDeEscapeRoom } from '../clases/AlumnoJuegoDeEscapeRoom';
 import { ObjetoEscape } from '../clases/objetoEscape';
+import { ObjetoEnigma } from '../clases/ObjetoEnigma';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CalculosService {
 
+  
+  objetosEscape: ObjetoEscape [] = [];
+  objetosEnigma: ObjetoEnigma [] = [];
   juegosDePuntosActivos: Juego[] = [];
   juegosDePuntosInactivos: Juego[] = [];
   juegosDeColeccionActivos: Juego[] = [];
@@ -55,6 +59,29 @@ export class CalculosService {
   }
 
 
+  public GuardarObjetosEscapeRoom(juego: JuegoDeEscapeRoom){
+
+    juego.escenario.objetos.forEach(elemento => {
+      if(elemento.tipoDeObjeto == "objetoEscape"){
+        this.peticionesAPI.DameObjetoEscape(elemento.id).subscribe(res => {
+          this.objetosEscape.push(res[0]);
+        });
+      }else{
+        this.peticionesAPI.DameObjetoEnigma(elemento.id).subscribe(res =>{
+          this.objetosEnigma.push(res[0]);
+        });
+      }
+    });
+    console.log("escapeee, ", this.objetosEscape);
+    console.log("escapeeelength, ", this.objetosEscape.length);
+    console.log("escapeee2, ", this.objetosEnigma.length);
+    if(this.objetosEscape != undefined){
+      this.sesion.TomaObjetosEscape(this.objetosEscape);
+    }
+    if(this.objetosEnigma != undefined){
+      this.sesion.TomaObjetosEnigma(this.objetosEnigma);
+    }
+  }
   // ESTA FUNCIÓN BORRARÁ EL GRUPO DE ID QUE PASEMOS DEL PROFESOR CON ID QUE PASEMOS Y VOLVERÁ A LA PÁGINA DE LISTAR
   // ACTUALIZANDO LA TABLA
   public EliminarGrupo() {
@@ -110,13 +137,11 @@ export class CalculosService {
     this.juegoEscape.mochila.objetos[this.juegoEscape.mochila.objetos.length] = objeto;
     this.sesion.TomaJuegoEscapeRoom(this.juegoEscape);
   }
-
   public GuardaEscapeRoom(){
     this.peticionesAPI.GuardaEscapeRoom(this.sesion.DameJuegoEscapeRoom()).subscribe(juego => {
       console.log("Juego devuelto al guardar: ", juego);
     })
   }
-
   public DameJuegosAlumno(AlumnoId: number): any {
     const Observables = new Observable(obs => {
       console.log('ya estoy dentro de dame juegos alumno');

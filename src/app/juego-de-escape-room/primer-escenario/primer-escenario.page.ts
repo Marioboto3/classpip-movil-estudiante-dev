@@ -38,15 +38,28 @@ export class PrimerEscenarioPage implements OnInit {
 
   audioInicial: Audio = new Audio ("audio-inicial", "../../../assets/escape-room/audio-inicial.m4a");
   id: number;
+
   juegoEscape: JuegoDeEscapeRoom; 
+
   estado: boolean;
+
   recogido: boolean;
   recogido2: boolean;
+  recogido3: boolean;
+  resuelto: boolean;
+  resuelto2: boolean;
   recogidaPista: boolean;
-  objeto1: ObjetoEscape;
-  objeto2: ObjetoEscape;
-  objetoPista: ObjetoEscape;
-  objetoEnigma: ObjetoEnigma;
+
+  objeto1escape: ObjetoEscape;
+  objeto2escape: ObjetoEscape;
+  objeto3escape: ObjetoEscape;
+  objeto1enigma: ObjetoEnigma;
+  objeto2enigma: ObjetoEnigma;
+
+  llave: ObjetoEscape;
+
+  objetosEnigma: ObjetoEnigma [];
+  objetosEscape: ObjetoEscape [];  
 
   constructor(private router: Router, 
     private modalController: ModalController, 
@@ -72,19 +85,34 @@ export class PrimerEscenarioPage implements OnInit {
     this.reload();
   }
   ngOnInit() {  
+    
+    this.juegoEscape = this.sesion.DameJuegoEscapeRoom();
 
-    this.recogido = this.sesion.DameJuegoEscapeRoom().escenario.objeto1.recogido;
-    this.recogido2 = this.sesion.DameJuegoEscapeRoom().escenario.objeto2.recogido;
-    this.recogidaPista = this.sesion.DameJuegoEscapeRoom().escenario.objetoPista.recogido;
+    this.objetosEnigma = this.sesion.DameObjetosEnigma();
+    this.objetosEscape = this.sesion.DameObjetosEscape();
+    this.llave = new ObjetoEscape ("llave", true, false);
+
+    console.log("objetosEscape, ", this.objetosEscape);
+    console.log("objetosEnigma: ", this.objetosEnigma);
+
+    //Falta declarar los 5 objetos
+    this.objeto1escape = this.objetosEscape[0];
+    this.objeto1enigma = this.objetosEnigma[0];
+    
+    this.recogido = this.objeto1escape.recogido;
+    this.resuelto = this.objeto1enigma.resuelta;
+
+    //this.recogidaPista = this.sesion.DameJuegoEscapeRoom().escenario.objetoPista.recogido;
     console.log("recogido 1: ", this.recogido);
-    console.log("recogido 2: ", this.recogido2);
-    console.log("recogidaPista: ", this.recogidaPista);
+    console.log("recogido 2: ", this.resuelto);
 
     this.id = this.sesion.DameAlumno().id;
-    this.juegoEscape = this.sesion.DameJuegoEscapeRoom();
     this.estado = this.sesion.DameEstadoEscapeRoom();
 
     //Para mostrar el profesor o no
+
+    this.showImage = true;
+
     if(this.estado === true){
       this.showImage = true;
     }
@@ -102,11 +130,6 @@ export class PrimerEscenarioPage implements OnInit {
       else {
       this.varEscenario = "containerHabitacion";}
     }
-
-    this.objeto1 = new ObjetoEscape (this.juegoEscape.escenario.objeto1.nombre, this.juegoEscape.escenario.objeto1.usable, this.juegoEscape.escenario.objeto1.recogido, this.juegoEscape.escenario.objeto1.posicion);
-    this.objeto2 = new ObjetoEscape (this.juegoEscape.escenario.objeto2.nombre, this.juegoEscape.escenario.objeto2.usable, this.juegoEscape.escenario.objeto2.recogido, this.juegoEscape.escenario.objeto2.posicion);
-    this.objetoEnigma = new ObjetoEnigma(this.juegoEscape.escenario.objetoEnigma.nombre, this.juegoEscape.escenario.objetoEnigma.pregunta, this.juegoEscape.escenario.objetoEnigma.respuesta, this.juegoEscape.escenario.objetoEnigma.resuelta);
-    this.objetoPista = new ObjetoEscape (this.juegoEscape.escenario.objetoPista.nombre, this.juegoEscape.escenario.objetoPista.usable, this.juegoEscape.escenario.objetoPista.recogido, this.juegoEscape.escenario.objetoPista.posicion);
 
   }
 
@@ -144,13 +167,13 @@ togglePlayer(pause){
       this.player.play();
     }
   }
-
+zoom(zoomIn: boolean){
+}
+  
 abrirMochila(){
   this.router.navigateByUrl('mochila');
 }
-
-zoom(zoomIn: boolean){}
-
+//ObjetoEnigma
 abrirObjeto(objeto){
   console.log("Objeto: ", objeto);
   this.alertController.create({
@@ -174,11 +197,11 @@ abrirObjeto(objeto){
         text: 'Done!',
         handler: (data: any) => {
           console.log("Respuesta: ", data.Respuesta);
-          console.log("ObjetoEngima respuesta: ", this.objetoEnigma.respuesta);
-          if(this.objetoEnigma.respuesta == data.Respuesta){
+          console.log("ObjetoEngima respuesta: ", this.objeto1enigma.respuesta);
+          if(this.objeto1enigma.respuesta == data.Respuesta){
             this.alertController.create({message: "Perfecto!"}).then(res => {
               res.present();
-              this.conseguirPista();
+              this.conseguirPista(this.objeto1enigma);
             });
           }else{
             this.alertController.create({message: "Error!"}).then(res => {
@@ -192,7 +215,7 @@ abrirObjeto(objeto){
     res.present();
   });
 }
-conseguirPista(){
+conseguirPista(objetoEnigma){
   Swal.fire({
     title: 'Felicidades! Has conseguido la llave',
     icon: 'warning',
@@ -200,19 +223,23 @@ conseguirPista(){
     confirmButtonText: 'Recoger'
   }).then((result) => {
     if (result.value) {
-      this.calculos.añadirObjetoMochila(this.objetoPista);
-      this.juegoEscape.escenario.objetoPista.recogido = true;
-      this.juegoEscape.escenario.objetoEnigma.resuelta = true;
-      this.sesion.TomaJuegoEscapeRoom(this.juegoEscape);
+      this.calculos.añadirObjetoMochila(this.llave);
+      this.llave.recogido = true;
+      this.objetosEnigma.forEach(element =>{
+        if(element.nombre == objetoEnigma.nombre){
+          element.resuelta = true;
+        }
+      });
+      this.sesion.TomaObjetosEnigma(this.objetosEnigma);
       this.reload();
     }
   });
 }
 cogerObjeto(objeto){
-  if (objeto == this.objeto1.nombre){
-    if(this.objeto1.usable == true){
-      this.sesion.TomaPrueba(true, "objeto1");
-      console.log("entra en el 1");
+ 
+  if (objeto == this.objeto1escape.nombre){
+    if(this.objeto1escape.usable == true){
+      this.sesion.cambiaElEstadoDelObjeto(true, objeto);
       Swal.fire({
         title: '¿Seguro que quieres este objeto?   ' + objeto,
         icon: 'warning',
@@ -222,32 +249,13 @@ cogerObjeto(objeto){
         confirmButtonText: 'Si, estoy seguro'
       }).then((result) => {
         if (result.value) {
-          this.calculos.añadirObjetoMochila(this.objeto1);
-          this.reload();
-        }
-      });
-    }
-  }if (objeto == this.objeto2.nombre){
-    if(this.objeto2.usable == true){
-      this.sesion.TomaPrueba(true, "objeto2");
-      console.log("entra en el 2");
-      Swal.fire({
-        title: '¿Seguro que quieres este objeto?   ' + objeto,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Si, estoy seguro'
-      }).then((result) => {
-        if (result.value) {
-          this.calculos.añadirObjetoMochila(this.objeto2);
+          this.calculos.añadirObjetoMochila(this.objeto1escape);
           this.reload();
         }
       });
     }
   }
 }
-
 guardarEscape(){
   this.calculos.GuardaEscapeRoom();
   Swal.fire({
@@ -278,7 +286,6 @@ guardarEscape(){
     }
   });
 }
-
 close(){
   this.modalController.dismiss();
 }

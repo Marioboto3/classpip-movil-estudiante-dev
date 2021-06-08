@@ -26,6 +26,9 @@ import {AlumnoJuegoEvaluado} from '../clases/AlumnoJuegoEvaluado';
 import {EquipoJuegoEvaluado} from '../clases/EquipoJuegoEvaluado';
 import {JuegoDeEscapeRoom} from '../clases/JuegoDeEscapeRoom';
 import { AlumnoJuegoDeEscapeRoom } from '../clases/AlumnoJuegoDeEscapeRoom';
+import { ObjetoEscape } from '../clases/objetoEscape';
+import { ObjetoEnigma } from '../clases/ObjetoEnigma';
+import { ObjetoGlobalEscape } from '../clases/ObjetoGlobalEscape';
 
 
 @Injectable({
@@ -109,6 +112,8 @@ export class PeticionesAPIService {
 
 
   //OTROS
+  private APIUrlObjetosEscape = this.base + '3000/api/ObjetosEscape';
+  private APIUrlObjetosEnigma = this.base + '3000/api/ObjetosEnigma';
 
   private APIUrlLogoEquipo = this.base + '3000/api/Imagenes/LogosEquipos/download/';
   private APIUrlLogosEquipos = this.base + '3000/api/Imagenes/LogosEquipos';
@@ -596,7 +601,21 @@ export class PeticionesAPIService {
     return this.http.delete<Juego>(this.APIUrlGrupos + '/' + grupoId + '/JuegosDePuntos/' + juegoDePuntosId);
   }
 
-
+  public DameObjetosEscapeDelProfesorEscapeRoom(profesorId: number): Observable<ObjetoEscape[]> {
+    return this.http.get<ObjetoEscape[]>(this.APIUrlProfesores + '/' + profesorId + '/ObjetosEscape');
+  }
+  public DameObjetosEnigmaDelProfesorEscapeRoom(profesorId: number): Observable<ObjetoEnigma[]> {
+    return this.http.get<ObjetoEnigma[]>(this.APIUrlProfesores + '/' + profesorId + '/ObjetosEnigma');
+  }
+  
+  public DameObjetoEscape(idObjetoGlobal: number): Observable<ObjetoEscape> {
+    return this.http.get<ObjetoEscape>(this.APIUrlObjetosEscape + '?filter[where][objetoId]='
+    + idObjetoGlobal);
+  }
+  public DameObjetoEnigma(idObjetoGlobal: number): Observable<ObjetoEnigma> {
+    return this.http.get<ObjetoEnigma>(this.APIUrlObjetosEnigma + '?filter[where][objetoId]='
+    + idObjetoGlobal);
+  }
   // DEVUELVE LOS ALUMNOS QUE FORMAN PARTE DE UN JUEGO DE COLECCIÓN DETERMINADO
   public DameAlumnosJuegoDeColeccion(juegoDeColeccionId: number): Observable<Alumno[]> {
     console.log('Voy a por los alumnos');

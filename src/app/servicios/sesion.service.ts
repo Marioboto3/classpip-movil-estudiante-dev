@@ -1,18 +1,23 @@
 import { Injectable } from '@angular/core';
-import { Profesor, Grupo, Juego, Equipo, Alumno, Coleccion, Cromo, Punto, Insignia, TablaAlumnoJuegoDeCompeticion,
-         TablaJornadas, Jornada, TablaEquipoJuegoDeCompeticion, JuegoDeAvatar } from '../clases';
+import {
+  Profesor, Grupo, Juego, Equipo, Alumno, Coleccion, Cromo, Punto, Insignia, TablaAlumnoJuegoDeCompeticion,
+  TablaJornadas, Jornada, TablaEquipoJuegoDeCompeticion, JuegoDeAvatar
+} from '../clases';
 import { AnonymousSubject } from 'rxjs/internal/Subject';
 import { ReplaySubject } from 'rxjs';
-import {JuegoDeEvaluacion} from '../clases/JuegoDeEvaluacion';
+import { JuegoDeEvaluacion } from '../clases/JuegoDeEvaluacion';
 import { JuegoDeEscapeRoom } from '../clases/JuegoDeEscapeRoom';
+import { ObjetoEscape } from '../clases/objetoEscape';
+import { ObjetoEnigma } from '../clases/ObjetoEnigma';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SesionService {
 
-
   prueba: boolean;
+  objetosEnigma: ObjetoEnigma[];
+  objetosEscape: ObjetoEscape[];
 
   alumno: Alumno;
   alumnoObservable = new ReplaySubject(1);
@@ -92,10 +97,10 @@ export class SesionService {
   //   return this.profesor;
   // }
 
-  public TomaAlumnosJuegoDeColeccion(alumnos: Alumno []) {
+  public TomaAlumnosJuegoDeColeccion(alumnos: Alumno[]) {
     this.alumnosJuegoDeColeccion = alumnos;
   }
-  public DameAlumnosJuegoDeColeccion(): Alumno [] {
+  public DameAlumnosJuegoDeColeccion(): Alumno[] {
     return this.alumnosJuegoDeColeccion;
   }
 
@@ -113,7 +118,20 @@ export class SesionService {
   public TomaListaGrupos(listaGrupos: any) {
     this.listaGrupos = listaGrupos;
   }
+  public TomaObjetosEscape(objetosEscape: ObjetoEscape[]) {
+    this.objetosEscape = objetosEscape;
+  }
 
+  public DameObjetosEscape(): any {
+    return this.objetosEscape;
+  }
+  public TomaObjetosEnigma(objetosEnigma: ObjetoEnigma[]) {
+    this.objetosEnigma = objetosEnigma;
+  }
+
+  public DameObjetosEnigma(): any {
+    return this.objetosEnigma;
+  }
   public DameListaGrupos(): any {
     return this.listaGrupos;
   }
@@ -130,20 +148,22 @@ export class SesionService {
   //   return this.listaEquiposGrupo;
   // }
 
-  public TomaPrueba(prueba: boolean, objeto: string) {
-    if(objeto == "objeto1"){
-    this.juegoEscapeRoom.escenario.objeto1.recogido = prueba;
-    }else{
-      this.juegoEscapeRoom.escenario.objeto2.recogido = prueba;
+  public cambiaElEstadoDelObjeto(estado: boolean, objeto: string) {
+    this.objetosEscape.forEach(element => {
+      if (element.nombre == objeto) {
+        element.recogido = estado;
+      }
+    });
+    console.log("this.objetosEscape", this.objetosEscape);
+  }
+  public DameEstadoDelObjeto(objeto: string): boolean {
+    if (objeto == "objeto1") {
+      return this.juegoEscapeRoom.escenario.objeto1.recogido;
+    } else {
+      return this.juegoEscapeRoom.escenario.objeto2.recogido;
     }
   }
-  public DamePrueba(objeto: string): boolean {
-    if(objeto == "objeto1"){
-    return this.juegoEscapeRoom.escenario.objeto1.recogido;
-    }else{
-    return this.juegoEscapeRoom.escenario.objeto2.recogido;
-    }
-  }
+
   public TomaJuego(juego: Juego) {
     this.juego = juego;
   }
@@ -205,7 +225,7 @@ export class SesionService {
     this.cromosQueNoTengo = cromos;
   }
   public DameCromosQueNoTengo(): any[] {
-    return  this.cromosQueNoTengo;
+    return this.cromosQueNoTengo;
   }
   public DameCromosSinRepetidos(): any[] {
     return this.cromosSinRepetidos;
@@ -379,13 +399,13 @@ export class SesionService {
     jornadas: Jornada[],
     JornadasCompeticion: TablaJornadas[]
   ) {
-  this.JornadasCompeticion = JornadasCompeticion;
-  this.jornadas = jornadas;
-  console.log ('jornadas:');
-  console.log ( this.JornadasCompeticion);
-  console.log ('TablaJornadas:');
-  console.log ( this.jornadas);
-}
+    this.JornadasCompeticion = JornadasCompeticion;
+    this.jornadas = jornadas;
+    console.log('jornadas:');
+    console.log(this.JornadasCompeticion);
+    console.log('TablaJornadas:');
+    console.log(this.jornadas);
+  }
   public DameDatosJornadas(): any {
     const datos = {
       jornadas: this.jornadas,
@@ -415,32 +435,32 @@ export class SesionService {
     cromosQueNoTengoImagenDelante,
     cromosQueNoTengoImagenDetras,
     coleccion) {
-      this.elem = elem;
-      this.pos = pos;
-      this.cromosSinRepetidos = cromosSinRepetidos;
-      this.cromosQueTengo = cromosQueTengo;
-      this.cromosQueTengoImagenDelante = cromosQueTengoImagenDelante;
-      this.cromosQueTengoImagenDetras = cromosQueTengoImagenDetras;
-      this.cromosQueNoTengo = cromosQueNoTengo;
-      this.cromosQueNoTengoImagenDelante = cromosQueNoTengoImagenDelante;
-      this.cromosQueNoTengoImagenDetras = cromosQueNoTengoImagenDetras;
-      this.coleccion = coleccion;
-    }
-    public DameInfoParaRegaloCromo(): any {
-      const datos = {
-        elem: this.elem,
-        pos: this.pos,
-        cromosSinRepetidos: this.cromosSinRepetidos,
-        cromosQueTengo: this.cromosQueTengo,
-        cromosQueTengoImagenDelante: this.cromosQueTengoImagenDelante,
-        cromosQueTengoImagenDetras: this.cromosQueTengoImagenDetras,
-        cromosQueNoTengo: this.cromosQueNoTengo,
-        cromosQueNoTengoImagenDelante: this.cromosQueNoTengoImagenDelante ,
-        cromosQueNoTengoImagenDetras: this.cromosQueNoTengoImagenDetras,
-        coleccion: this.coleccion
-      };
-      return datos;
-    }
+    this.elem = elem;
+    this.pos = pos;
+    this.cromosSinRepetidos = cromosSinRepetidos;
+    this.cromosQueTengo = cromosQueTengo;
+    this.cromosQueTengoImagenDelante = cromosQueTengoImagenDelante;
+    this.cromosQueTengoImagenDetras = cromosQueTengoImagenDetras;
+    this.cromosQueNoTengo = cromosQueNoTengo;
+    this.cromosQueNoTengoImagenDelante = cromosQueNoTengoImagenDelante;
+    this.cromosQueNoTengoImagenDetras = cromosQueNoTengoImagenDetras;
+    this.coleccion = coleccion;
+  }
+  public DameInfoParaRegaloCromo(): any {
+    const datos = {
+      elem: this.elem,
+      pos: this.pos,
+      cromosSinRepetidos: this.cromosSinRepetidos,
+      cromosQueTengo: this.cromosQueTengo,
+      cromosQueTengoImagenDelante: this.cromosQueTengoImagenDelante,
+      cromosQueTengoImagenDetras: this.cromosQueTengoImagenDetras,
+      cromosQueNoTengo: this.cromosQueNoTengo,
+      cromosQueNoTengoImagenDelante: this.cromosQueNoTengoImagenDelante,
+      cromosQueNoTengoImagenDetras: this.cromosQueNoTengoImagenDetras,
+      coleccion: this.coleccion
+    };
+    return datos;
+  }
   public TomaPrivilegiosAlumno(Priv: any) {
     this.privilegiosAlumno = Priv;
   }
