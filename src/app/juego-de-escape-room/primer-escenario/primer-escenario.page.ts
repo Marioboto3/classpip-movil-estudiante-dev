@@ -96,12 +96,50 @@ export class PrimerEscenarioPage implements OnInit {
     console.log("objetosEnigma: ", this.objetosEnigma);
 
     //Falta declarar los 5 objetos
-    this.objeto1escape = this.objetosEscape[0];
-    this.objeto1enigma = this.objetosEnigma[0];
-    
-    this.recogido = this.objeto1escape.recogido;
-    this.resuelto = this.objeto1enigma.resuelta;
+    this.juegoEscape.escenario.objetos.forEach(elemento => {
+      if (elemento.tipoDeObjeto == "objetoEscape"){
+        this.objetosEscape.forEach(objetoEsca => {
+          if(objetoEsca.nombre == elemento.nombre){
+            if(elemento.posicion == 1){
+              this.objeto1escape = objetoEsca;
+            }if(elemento.posicion == 2){
+              this.objeto2escape = objetoEsca;
+            }if(elemento.posicion == 3){
+              this.objeto3escape = objetoEsca;
+            }
+          }
+        });
+      }else{
+        console.log("elemento dentro enigma: ", elemento);
+        this.objetosEnigma.forEach(objetoEnig => {
+          if(objetoEnig.nombre == elemento.nombre){
+            if(elemento.posicion == 4){
+              this.objeto1enigma = objetoEnig;
+            }if(elemento.posicion == 5){
+              this.objeto2enigma = objetoEnig;
+            }
+          }
+        });
+      }
+    });
 
+    console.log("ESC 1: ", this.objeto1escape);
+    console.log("ESC 2: ", this.objeto2escape);
+    console.log("ESC 3: ", this.objeto3escape);
+
+    console.log("ENIG 1: ", this.objeto1enigma);
+    console.log("ENIG 2: ", this.objeto2enigma);
+
+
+
+
+
+    this.recogido = this.objeto1escape.recogido;
+    this.recogido2 = this.objeto2escape.recogido;
+    this.recogido3= this.objeto3escape.recogido;
+
+
+    
     //this.recogidaPista = this.sesion.DameJuegoEscapeRoom().escenario.objetoPista.recogido;
     console.log("recogido 1: ", this.recogido);
     console.log("recogido 2: ", this.resuelto);
@@ -196,18 +234,22 @@ abrirObjeto(objeto){
       {
         text: 'Done!',
         handler: (data: any) => {
-          console.log("Respuesta: ", data.Respuesta);
-          console.log("ObjetoEngima respuesta: ", this.objeto1enigma.respuesta);
-          if(this.objeto1enigma.respuesta == data.Respuesta){
-            this.alertController.create({message: "Perfecto!"}).then(res => {
-              res.present();
-              this.conseguirPista(this.objeto1enigma);
-            });
-          }else{
-            this.alertController.create({message: "Error!"}).then(res => {
-              res.present();
-            });
-          }
+          this.juegoEscape.escenario.objetos.forEach(elemento => {
+            if (elemento.nombre == objeto){
+              this.objetosEnigma.forEach(elemen => {
+                if(elemen.respuesta == data.Respuesta){
+                  this.alertController.create({message: "Perfecto!"}).then(res => {
+                    res.present();
+                    this.conseguirPista(elemen);
+                  });
+                }else{
+                  this.alertController.create({message: "Error!"}).then(res => {
+                    res.present();
+                  });
+                }
+              });
+            }
+          });
         }
       }
     ]
@@ -250,6 +292,42 @@ cogerObjeto(objeto){
       }).then((result) => {
         if (result.value) {
           this.calculos.añadirObjetoMochila(this.objeto1escape);
+          this.reload();
+        }
+      });
+    }
+  }
+  if (objeto == this.objeto2escape.nombre){
+    if(this.objeto2escape.usable == true){
+      this.sesion.cambiaElEstadoDelObjeto(true, objeto);
+      Swal.fire({
+        title: '¿Seguro que quieres este objeto?   ' + objeto,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, estoy seguro'
+      }).then((result) => {
+        if (result.value) {
+          this.calculos.añadirObjetoMochila(this.objeto2escape);
+          this.reload();
+        }
+      });
+    }
+  }
+  if (objeto == this.objeto3escape.nombre){
+    if(this.objeto1escape.usable == true){
+      this.sesion.cambiaElEstadoDelObjeto(true, objeto);
+      Swal.fire({
+        title: '¿Seguro que quieres este objeto?   ' + objeto,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, estoy seguro'
+      }).then((result) => {
+        if (result.value) {
+          this.calculos.añadirObjetoMochila(this.objeto3escape);
           this.reload();
         }
       });
