@@ -39,7 +39,7 @@ export class SesionService {
   inscripcionAlumnoJuego: any;
   equipoSeleccionado: any;
   inscripcionEquipoJuego: any;
-
+  objetoEnigma: ObjetoEnigma;
   alumnosDelJuego: any;
   listaAlumnosOrdenadaPorPuntos: any;
   rankingJuegoDePuntos: any;
@@ -131,6 +131,14 @@ export class SesionService {
 
   public DameObjetosEnigma(): any {
     return this.objetosEnigma;
+  }
+  public TomaObjetoEnigma(objetoEnigma: ObjetoEnigma) {
+    this.objetosEnigma.push(objetoEnigma);
+    this.objetoEnigma = objetoEnigma;
+  }
+
+  public DameObjetoEnigma(): any {
+    return this.objetoEnigma;
   }
   public DameListaGrupos(): any {
     return this.listaGrupos;

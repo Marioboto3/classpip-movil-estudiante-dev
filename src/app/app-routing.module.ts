@@ -41,9 +41,11 @@ const routes: Routes = [
   // tslint:disable-next-line:max-line-length
   { path: 'juego-coger-turno-rapido', loadChildren: './juego-coger-turno-rapido/juego-coger-turno-rapido.module#JuegoCogerTurnoRapidoPageModule' },
   { path: 'juego-evaluacion', loadChildren: './juego-evaluacion/juego-evaluacion.module#JuegoEvaluacionPageModule' },
-  { path: 'juego-de-escape-room', loadChildren: './juego-de-escape-room/juego-de-escape-room.module#JuegoDeEscapeRoomPageModule' },  { path: 'escoger-avatar', loadChildren: './juego-de-escape-room/escoger-avatar/escoger-avatar.module#EscogerAvatarPageModule' },
+  { path: 'juego-de-escape-room', loadChildren: './juego-de-escape-room/juego-de-escape-room.module#JuegoDeEscapeRoomPageModule' },
+  { path: 'escoger-avatar', loadChildren: './juego-de-escape-room/escoger-avatar/escoger-avatar.module#EscogerAvatarPageModule' },
   { path: 'primer-escenario', loadChildren: './juego-de-escape-room/primer-escenario/primer-escenario.module#PrimerEscenarioPageModule' },
   { path: 'mochila', loadChildren: './juego-de-escape-room/mochila/mochila.module#MochilaPageModule' },
+  { path: 'segundo-escenario', loadChildren: './juego-de-escape-room/segundo-escenario/segundo-escenario.module#SegundoEscenarioPageModule' },
 
 
 

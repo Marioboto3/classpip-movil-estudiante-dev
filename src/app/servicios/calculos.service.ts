@@ -72,9 +72,9 @@ export class CalculosService {
         });
       }
     });
-    console.log("escapeee, ", this.objetosEscape);
+    console.log("escapeee, ", this.objetosEscape);  
     console.log("escapeeelength, ", this.objetosEscape.length);
-    console.log("escapeee2, ", this.objetosEnigma.length);
+    console.log("escapeee2, ", this.objetosEnigma);
     if(this.objetosEscape != undefined){
       this.sesion.TomaObjetosEscape(this.objetosEscape);
     }
