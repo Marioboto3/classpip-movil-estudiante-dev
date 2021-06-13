@@ -1,9 +1,16 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>segundo-escenario</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
+
+  <div id="{{varEscenario}}">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <div *ngIf="showImage == false">
+            <img src="../../../assets/escape-room/profesor.png">
+            <mat-icon (click)="start()" style="color: blue; zoom: 2.0;">contact_support</mat-icon>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
 
 </ion-content>

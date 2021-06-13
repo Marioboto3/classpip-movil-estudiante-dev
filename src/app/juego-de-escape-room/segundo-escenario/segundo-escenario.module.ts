@@ -6,6 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { SegundoEscenarioPage } from './segundo-escenario.page';
+import { MatButtonModule, MatIconModule } from '@angular/material';
 
 const routes: Routes = [
   {
@@ -17,7 +18,9 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
+    MatIconModule,
     FormsModule,
+    MatButtonModule,
     IonicModule,
     RouterModule.forChild(routes)
   ],
