@@ -6,6 +6,7 @@ import { CalculosService, PeticionesAPIService, SesionService } from 'src/app/se
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { AlertController } from '@ionic/angular';
+import { ObjetoPista } from 'src/app/clases/ObjetoPista';
 
 
 
@@ -21,6 +22,8 @@ export class MochilaPage implements OnInit {
   objetos: ObjetoEscape[] = [];
   objetosMochila: ObjetoEscape[] = [];
 
+  pistasGuardadas: ObjetoPista [] = [];
+
   constructor(private router: Router,
     private sesion: SesionService,
     private calculos: CalculosService,
@@ -32,6 +35,15 @@ export class MochilaPage implements OnInit {
     this.juegoEscape = this.sesion.DameJuegoEscapeRoom();
     this.objetos = this.sesion.DameObjetosEscape();
     this.objetosMochila = this.juegoEscape.mochila.objetos;
+    this.pistasGuardadas = this.juegoEscape.mochila.pistasGuardadas;
+
+  }
+
+  reload() {
+    this.ngOnInit();
+  }
+  ionViewWillEnter() {
+    this.reload();
   }
 
   volver() {
@@ -91,5 +103,11 @@ export class MochilaPage implements OnInit {
     }).then(res => {
       res.present();
     });
+  }
+
+  mostrarTodasLasPistas (){
+    this.router.navigateByUrl('pistas-mochila');
+
+    
   }
 }

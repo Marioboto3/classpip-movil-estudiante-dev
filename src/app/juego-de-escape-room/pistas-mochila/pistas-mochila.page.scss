@@ -2,21 +2,21 @@ ion-content.containerMochila{
     --background: url("../../../assets/escape-room/mochila.jpg") no-repeat center/cover fixed;
     
 }
-    #tablaObjetos {
+    #tablaPistas {
       margin-top: 30px;
       margin-left: 300px;
     }
   
 
-#tablaObjetos td, #tablaObjetos th {
+#tablaPistas td, #tablaObjetos th {
   border: 1px solid #ddd;
   padding-top: 10px;
   padding-bottom: 10px;
   padding-left: 80px;
   padding-right: 80px;}
-#tablaObjetos tr:nth-child(even){background-color: #f2f2f2;}
-#tablaObjetos tr:hover {background-color: #ddd;}
-#tablaObjetos th {
+#tablaPistas tr:nth-child(even){background-color: #f2f2f2;}
+#tablaPistas tr:hover {background-color: #ddd;}
+#tablaPistas th {
   padding-top: 10px;
   padding-bottom: 10px;
   padding-left: 80px;

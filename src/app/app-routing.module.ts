@@ -46,10 +46,7 @@ const routes: Routes = [
   { path: 'primer-escenario', loadChildren: './juego-de-escape-room/primer-escenario/primer-escenario.module#PrimerEscenarioPageModule' },
   { path: 'mochila', loadChildren: './juego-de-escape-room/mochila/mochila.module#MochilaPageModule' },
   { path: 'segundo-escenario', loadChildren: './juego-de-escape-room/segundo-escenario/segundo-escenario.module#SegundoEscenarioPageModule' },
-
-
-
-
+  { path: 'pistas-mochila', loadChildren: './juego-de-escape-room/pistas-mochila/pistas-mochila.module#PistasMochilaPageModule' },
 
 ];
 

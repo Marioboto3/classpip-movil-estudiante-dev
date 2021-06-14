@@ -8,6 +8,15 @@
             <img src="../../../assets/escape-room/profesor.png">
             <mat-icon (click)="start()" style="color: blue; zoom: 2.0;">contact_support</mat-icon>
           </div>
+          <button mat-mini-fab aria-label="miniFabButton"
+              style="background-color: orange; position: fixed; margin-top: 10px; " (click)="abrirMochila()">
+              <mat-icon>folder</mat-icon>
+            </button>
+            <button mat-mini-fab aria-label="miniFabButton"
+              style="background-color: blue; position: fixed; margin-left: 45px; margin-top: 10px;"
+              (click)="guardarEscape()">
+              <mat-icon>save</mat-icon>
+            </button>
         </ion-col>
       </ion-row>
     </ion-grid>

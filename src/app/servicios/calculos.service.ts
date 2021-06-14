@@ -25,6 +25,7 @@ import { JuegoDeEscapeRoom } from '../clases/JuegoDeEscapeRoom';
 import { AlumnoJuegoDeEscapeRoom } from '../clases/AlumnoJuegoDeEscapeRoom';
 import { ObjetoEscape } from '../clases/objetoEscape';
 import { ObjetoEnigma } from '../clases/ObjetoEnigma';
+import { ObjetoPista } from '../clases/ObjetoPista';
 
 @Injectable({
   providedIn: 'root'
@@ -135,6 +136,12 @@ export class CalculosService {
     this.juegoEscape = this.sesion.DameJuegoEscapeRoom();
     console.log("objeto: ", objeto);
     this.juegoEscape.mochila.objetos[this.juegoEscape.mochila.objetos.length] = objeto;
+    this.sesion.TomaJuegoEscapeRoom(this.juegoEscape);
+  }
+  public añadirPistaMochila(objeto: ObjetoPista){
+    this.juegoEscape = this.sesion.DameJuegoEscapeRoom();
+    console.log("objeto: ", objeto);
+    this.juegoEscape.mochila.pistasGuardadas[this.juegoEscape.mochila.pistasGuardadas.length] = objeto;
     this.sesion.TomaJuegoEscapeRoom(this.juegoEscape);
   }
   public GuardaEscapeRoom(){

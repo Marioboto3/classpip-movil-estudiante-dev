@@ -59,5 +59,37 @@ export class SegundoEscenarioPage implements OnInit {
     this.showImage = true;
 
   }
-
+  abrirMochila() {
+    this.router.navigateByUrl('mochila');
+  }
+  guardarEscape() {
+    this.calculos.GuardaEscapeRoom();
+    Swal.fire({
+      title: '¿Quieres guardar?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Guardar'
+    }).then((result) => {
+      if (result.value) {
+        Swal.fire({
+          title: '¿Quieres continuar o salir del juego?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          cancelButtonText: 'Salir',
+          confirmButtonText: 'Continuar'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            Swal.fire('¡Continua disfrutando del juego!');
+          } else {
+            Swal.fire("Vuelve pronto, te estaremos esperando.");
+            this.navCtrl.navigateForward('/inici');
+          }
+        });
+      }
+    });
+  }
 }

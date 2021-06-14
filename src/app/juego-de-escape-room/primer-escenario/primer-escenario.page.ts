@@ -11,6 +11,7 @@ import { CalculosService, SesionService } from 'src/app/servicios';
 import Swal from 'sweetalert2';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { ObjetoPista } from 'src/app/clases/ObjetoPista';
 
 
 @Component({
@@ -55,6 +56,8 @@ export class PrimerEscenarioPage implements OnInit {
   objeto3escape: ObjetoEscape;
   objeto1enigma: ObjetoEnigma;
   objeto2enigma: ObjetoEnigma;
+
+  objetoPista: ObjetoPista;
 
   llave: ObjetoEscape = new ObjetoEscape("llave", true, false);
 
@@ -162,6 +165,7 @@ export class PrimerEscenarioPage implements OnInit {
       }
     }
 
+    this.objetoPista = new ObjetoPista ("Pista", this.juegoEscape.escenario.mapa, "Principal", "Recuerda observar bien todo tu alrededor, nunca sabes lo que te podrá ser útil en un futuro...");
   }
 
   activeTrack: Audio = null;
@@ -242,8 +246,10 @@ export class PrimerEscenarioPage implements OnInit {
                         elemen.resuelta = true;
                         if (elemen.principal == true) {
                           console.log("Entra!");
+                          this.conseguirLlave(elemen);
+                        } else { 
                           this.conseguirPista(elemen);
-                        } else { }
+                        }
                       });
                     } else {
                       if(elemen.resuelta == true){
@@ -267,7 +273,22 @@ export class PrimerEscenarioPage implements OnInit {
       res.present();
     });
   }
-  conseguirPista(objetoEnigma) {
+  conseguirPista(objetoEnigma){
+    Swal.fire({
+      title: 'Felicidades! Has conseguido una pista',
+      icon: 'success',
+      confirmButtonColor: '#3085d6',
+      confirmButtonText: 'Recoger'
+    }).then((result) => {
+      if (result.value) {
+        this.calculos.añadirPistaMochila(this.objetoPista);
+        this.objetoPista.recogida = true;
+        this.sesion.TomaObjetoEnigma(objetoEnigma);
+        this.reload();
+      }
+    });
+  }
+  conseguirLlave(objetoEnigma) {
 
     Swal.fire({
       title: 'Felicidades! Has conseguido la llave',
