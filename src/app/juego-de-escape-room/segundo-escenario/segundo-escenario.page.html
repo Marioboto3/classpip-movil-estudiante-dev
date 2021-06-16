@@ -8,7 +8,10 @@
             <img src="../../../assets/escape-room/profesor.png">
             <mat-icon (click)="start()" style="color: blue; zoom: 2.0;">contact_support</mat-icon>
           </div>
-          <button mat-mini-fab aria-label="miniFabButton"
+
+     <!--     <div *ngIf="mapa == baño"> -->
+
+            <button mat-mini-fab aria-label="miniFabButton"
               style="background-color: orange; position: fixed; margin-top: 10px; " (click)="abrirMochila()">
               <mat-icon>folder</mat-icon>
             </button>
@@ -17,6 +20,24 @@
               (click)="guardarEscape()">
               <mat-icon>save</mat-icon>
             </button>
+
+
+            <img style="margin-left: 550px; margin-top: 40px; height: 40px; position: fixed;"
+              (click)="abrirObjeto(objeto2enigma)"
+              src="../../../assets/escape-room/objetos/{{objeto1escape.nombre}}.png">
+            <img style="margin-left: 500px; margin-top: 343px; height: 18px; position: fixed;" (click)="abrirObjetoBascula(bascula)"
+              src="../../../assets/escape-room/objetos/bascula.JPG">
+          
+            <img style="margin-left: 245px; margin-top: 59px; height: 28px; position: fixed;"
+              (click)="cogerObjeto(objeto1escape.nombre)"
+              src="../../../assets/escape-room/objetos/{{objeto1escape.nombre}}.png">
+            <img style="margin-left: 250px; margin-top: 90px; height: 18px; position: fixed;" (click)="cogerObjeto(objeto2escape.nombre)"
+              src="../../../assets/escape-room/objetos/{{objeto2escape.nombre}}.png">
+            <img style="margin-left: 337px; margin-top: 147px; height: 30px; position: fixed;" (click)="cogerObjeto(objeto3escape.nombre)"
+              src="../../../assets/escape-room/objetos/{{objeto3escape.nombre}}.JPG">
+
+            <!--     </div> -->
+
         </ion-col>
       </ion-row>
     </ion-grid>

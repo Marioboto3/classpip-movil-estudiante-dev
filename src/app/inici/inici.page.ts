@@ -44,7 +44,6 @@ export class IniciPage implements OnInit {
     this.id = this.sesion.DameAlumno().id;
     this.calculos.DameJuegosAlumno(this.id)
       .subscribe(listas => {
-        console.log("listas: ", listas);
         this.juegosActivos = listas.activos;
     });
   }
@@ -77,7 +76,6 @@ export class IniciPage implements OnInit {
       this.navCtrl.navigateForward('/juego-evaluacion');
     } else if (juego.tipo === 'Juego De Escape Room') {
       this.sesion.TomaJuegoEscapeRoom(juego);
-      console.log("EN INICI: ", juego);
       this.navCtrl.navigateForward('/juego-de-escape-room');}
     else {
       this.navCtrl.navigateForward('/juego-colleccion');

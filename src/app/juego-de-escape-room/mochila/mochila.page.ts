@@ -19,6 +19,8 @@ export class MochilaPage implements OnInit {
 
   juegoEscape: JuegoDeEscapeRoom;
 
+  estancia: string;
+
   objetos: ObjetoEscape[] = [];
   objetosMochila: ObjetoEscape[] = [];
 
@@ -32,6 +34,7 @@ export class MochilaPage implements OnInit {
 
   ngOnInit() {
 
+    this.estancia = this.sesion.DameEstanciaEscenario();
     this.juegoEscape = this.sesion.DameJuegoEscapeRoom();
     this.objetos = this.sesion.DameObjetosEscape();
     this.objetosMochila = this.juegoEscape.mochila.objetos;
@@ -47,7 +50,12 @@ export class MochilaPage implements OnInit {
   }
 
   volver() {
-    this.router.navigateByUrl('primer-escenario');
+
+    if(this.estancia == "Principal"){
+      this.router.navigateByUrl('primer-escenario');
+    }else{
+      this.router.navigateByUrl('segundo-escenario');
+    }
   }
 
   ensenarObjeto(objeto: ObjetoEscape) {

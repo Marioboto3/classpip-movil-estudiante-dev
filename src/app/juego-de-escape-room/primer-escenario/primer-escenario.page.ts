@@ -51,6 +51,8 @@ export class PrimerEscenarioPage implements OnInit {
   resuelto2: boolean;
   recogidaPista: boolean;
 
+  estancia: string;
+
   objeto1escape: ObjetoEscape;
   objeto2escape: ObjetoEscape;
   objeto3escape: ObjetoEscape;
@@ -89,13 +91,19 @@ export class PrimerEscenarioPage implements OnInit {
   }
   ngOnInit() {
 
+
+    this.estancia = "Principal";
+    this.sesion.TomaEstanciaEscenario(this.estancia);
+
     this.juegoEscape = this.sesion.DameJuegoEscapeRoom();
+
+    console.log("Juego: ", this.juegoEscape);
 
     this.objetosEnigma = this.sesion.DameObjetosEnigma();
     this.objetosEscape = this.sesion.DameObjetosEscape();
 
-    console.log("objetosEscape, ", this.objetosEscape);
-    console.log("objetosEnigma: ", this.objetosEnigma);
+    console.log("Objetos enigma: ", this.objetosEnigma);
+    console.log("Objetos escape: ", this.objetosEscape);
 
     //Falta declarar los 5 objetos
     this.juegoEscape.escenario.objetos.forEach(elemento => {
@@ -112,7 +120,6 @@ export class PrimerEscenarioPage implements OnInit {
           }
         });
       } else {
-        console.log("elemento dentro enigma: ", elemento);
         this.objetosEnigma.forEach(objetoEnig => {
           if (objetoEnig.nombre == elemento.nombre) {
             if (elemento.posicion == 4) {
@@ -124,14 +131,6 @@ export class PrimerEscenarioPage implements OnInit {
         });
       }
     });
-
-    console.log("ESC 1: ", this.objeto1escape);
-    console.log("ESC 2: ", this.objeto2escape);
-    console.log("ESC 3: ", this.objeto3escape);
-
-    console.log("ENIG 1: ", this.objeto1enigma);
-    console.log("ENIG 2: ", this.objeto2enigma);
-
 
     this.recogido = this.objeto1escape.recogido;
     this.recogido2 = this.objeto2escape.recogido;
@@ -150,7 +149,6 @@ export class PrimerEscenarioPage implements OnInit {
     }
 
     //Mochila
-    console.log("MOCHILA¨: ", this.juegoEscape.mochila);
 
     //Elegir el mapa
     if (this.juegoEscape.escenario.mapa == "Baño") {
@@ -165,7 +163,13 @@ export class PrimerEscenarioPage implements OnInit {
       }
     }
 
-    this.objetoPista = new ObjetoPista ("Pista", this.juegoEscape.escenario.mapa, "Principal", "Recuerda observar bien todo tu alrededor, nunca sabes lo que te podrá ser útil en un futuro...");
+    //Escenario secundario
+    this.calculos.GuardaObjetosEscapeEscenario("Secundario");
+    this.calculos.GuardaObjetosEnigmaEscenario("Secundario");
+
+    this.llave = this.juegoEscape.escenario.llave;
+
+    this.objetoPista = new ObjetoPista("Primera pista", this.juegoEscape.escenario.mapa, "Principal", "Recuerda observar bien todo tu alrededor, nunca sabes lo que te podrá ser útil en un futuro...");
   }
 
   activeTrack: Audio = null;
@@ -209,7 +213,8 @@ export class PrimerEscenarioPage implements OnInit {
   }
   //ObjetoEnigma
   abrirObjeto(objeto) {
-    console.log("Objeto: ", objeto);
+
+    let bool: boolean = false;
     this.alertController.create({
       header: 'Enigma de la caja fuerte',
       subHeader: 'Responde con el código correcto.',
@@ -231,37 +236,44 @@ export class PrimerEscenarioPage implements OnInit {
           text: 'Done!',
           handler: (data: any) => {
             this.juegoEscape.escenario.objetos.forEach(elemento => {
-              console.log("HOLAAA: ", elemento.nombre);
               if (elemento.nombre == objeto.nombre) {
-                console.log("PORQUE NO ENTRAS?");
                 this.objetosEnigma.forEach(elemen => {
-                  console.log("elemen nombre: ",elemen.nombre);
-                  console.log("elemento nombre: ",elemento.nombre);
 
                   if (elemen.nombre == elemento.nombre) {
                     if (elemen.respuesta == data.Respuesta && elemen.resuelta == false) {
                       this.alertController.create({ message: "Perfecto!" }).then(res => {
                         res.present();
-                        console.log("Elemen: s", elemen);
                         elemen.resuelta = true;
-                        if (elemen.principal == true) {
-                          console.log("Entra!");
+                        this.calculos.cambiaEstadoObjetoEnigmaConListaObjetos(elemen);
+                        if (elemen.principal == true && this.llave.recogido == false) {
                           this.conseguirLlave(elemen);
-                        } else { 
-                          this.conseguirPista(elemen);
+                        } if (elemen.principal == false) {
+                          if (this.juegoEscape.mochila.pistasGuardadas != null && this.juegoEscape.mochila.pistasGuardadas != undefined) {
+                            this.juegoEscape.mochila.pistasGuardadas.forEach(pista => {
+                              if (pista.nombre == this.objetoPista.nombre) {
+                                this.alertController.create({ message: "Ya tienes la pista!" }).then(res => {
+                                  res.present();
+                                  bool = true;
+                                });
+                              }
+                            });
+                          }
+                          if (bool == false) {
+                            this.conseguirPista(elemen);
+                          }
                         }
                       });
                     } else {
-                      if(elemen.resuelta == true){
+                      if (elemen.resuelta == true) {
                         this.alertController.create({ message: "Ya has resuelto este acertijo!" }).then(res => {
                           res.present();
                         });
-                      }else{
-                      this.alertController.create({ message: "Error!" }).then(res => {
-                        res.present();
-                      });
+                      } else {
+                        this.alertController.create({ message: "Error!" }).then(res => {
+                          res.present();
+                        });
+                      }
                     }
-                  }
                   }
                 });
               }
@@ -273,7 +285,7 @@ export class PrimerEscenarioPage implements OnInit {
       res.present();
     });
   }
-  conseguirPista(objetoEnigma){
+  conseguirPista(objetoEnigma) {
     Swal.fire({
       title: 'Felicidades! Has conseguido una pista',
       icon: 'success',
@@ -299,7 +311,7 @@ export class PrimerEscenarioPage implements OnInit {
       if (result.value) {
         this.calculos.añadirObjetoMochila(this.llave);
         this.llave.recogido = true;
-        this.sesion.TomaObjetoEnigma(objetoEnigma);
+        this.sesion.TomaLlave(this.llave);
         this.reload();
       }
     });
@@ -395,26 +407,26 @@ export class PrimerEscenarioPage implements OnInit {
   close() {
     this.modalController.dismiss();
   }
-  pasarAlSiguienteEscenario(){
+  pasarAlSiguienteEscenario() {
 
-      Swal.fire({
-        title: '¿Tiene la llave que abre este portal?',
-        icon: 'warning',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'Sí',
-        showCancelButton: true,
-        cancelButtonColor: '#d33',
-        cancelButtonText: 'No'
-      }).then((result) => {
-        if (result.value) {
-          
-          if(this.llave.recogido == true){
+    Swal.fire({
+      title: '¿Tiene la llave que abre este portal?',
+      icon: 'warning',
+      confirmButtonColor: '#3085d6',
+      confirmButtonText: 'Sí',
+      showCancelButton: true,
+      cancelButtonColor: '#d33',
+      cancelButtonText: 'No'
+    }).then((result) => {
+      if (result.value) {
+
+        if (this.llave.recogido == true) {
           this.router.navigateByUrl('segundo-escenario');
-          }else{
-            Swal.fire('Me parece aquí que alguien me esta mintiendo... Vuelve al escenario del crimen y encuentra la llave!', '', 'info');
+        } else {
+          Swal.fire('Me parece aquí que alguien me esta mintiendo... Vuelve al escenario del crimen y encuentra la llave!', '', 'info');
 
-          }
-          }
-      });
-    }
+        }
+      }
+    });
+  }
 }

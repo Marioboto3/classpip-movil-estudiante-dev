@@ -17,7 +17,12 @@ export class SesionService {
 
   prueba: boolean;
   objetosEnigma: ObjetoEnigma[];
+  objetosEnigmaSegundoEscenario: ObjetoEnigma[];
+
   objetosEscape: ObjetoEscape[];
+  objetosEscapeSegundoEscenario: ObjetoEscape[];
+
+  llave: ObjetoEscape;
 
   alumno: Alumno;
   alumnoObservable = new ReplaySubject(1);
@@ -40,6 +45,10 @@ export class SesionService {
   equipoSeleccionado: any;
   inscripcionEquipoJuego: any;
   objetoEnigma: ObjetoEnigma;
+  objetoEnigmaSegundoEscenario: ObjetoEnigma;
+
+  objetosDepositadosBascula: ObjetoEscape[] = [];
+
   alumnosDelJuego: any;
   listaAlumnosOrdenadaPorPuntos: any;
   rankingJuegoDePuntos: any;
@@ -48,6 +57,8 @@ export class SesionService {
   rankingEquiposJuegoDePuntos: any;
 
   juegoEscapeRoom: JuegoDeEscapeRoom;
+
+  estancia: string;
 
   alumnoJuegoDeColeccion: Alumno;
   alumnosJuegoDeColeccion: Alumno[];
@@ -122,24 +133,63 @@ export class SesionService {
     this.objetosEscape = objetosEscape;
   }
 
-  public DameObjetosEscape(): any {
+  public DameObjetosEscape(): ObjetoEscape[] {
     return this.objetosEscape;
+  }
+  public DameObjetosEscapeSegundoEscenario(): ObjetoEscape[] {
+    return this.objetosEscapeSegundoEscenario;
+  }
+  public TomaObjetosEscapeSegundoEscenario(objetosEscape: ObjetoEscape[]) {
+    this.objetosEscapeSegundoEscenario = objetosEscape;
   }
   public TomaObjetosEnigma(objetosEnigma: ObjetoEnigma[]) {
     this.objetosEnigma = objetosEnigma;
   }
-
-  public DameObjetosEnigma(): any {
+  public DameObjetosEnigma(): ObjetoEnigma[] {
     return this.objetosEnigma;
   }
+  public DameObjetosEnigmaSegundoEscenario(): ObjetoEnigma[] {
+    return this.objetosEnigmaSegundoEscenario;
+  }
+  public TomaObjetosEnigmaSegundoEscenario(objetosEnigma: ObjetoEnigma[]) {
+    this.objetosEnigmaSegundoEscenario = objetosEnigma;
+  }
+  public TomaObjetoEnigmaSegundoEscenario(objetoEnigma: ObjetoEnigma) {
+    this.objetosEnigmaSegundoEscenario.push(objetoEnigma);
+    this.objetoEnigmaSegundoEscenario = objetoEnigma;
+  }
+
   public TomaObjetoEnigma(objetoEnigma: ObjetoEnigma) {
     this.objetosEnigma.push(objetoEnigma);
     this.objetoEnigma = objetoEnigma;
   }
 
-  public DameObjetoEnigma(): any {
+  public DameObjetoEnigma(): ObjetoEnigma {
     return this.objetoEnigma;
   }
+  public TomaLlave(llave: ObjetoEscape) {
+    this.llave = llave;
+    if (this.objetosEscape != undefined) {
+      this.objetosEscape.forEach(elemento => {
+        if (elemento.nombre == llave.nombre) {
+          elemento = llave;
+        }
+      });
+    }
+  }
+
+  public DameLlave(): ObjetoEscape {
+    return this.llave;
+  }
+
+  public TomaListaObjetosDepositadosBascula(objetos: ObjetoEscape[]) {
+    this.objetosDepositadosBascula = objetos;
+  }
+
+  public DameListaObjetosDepositadosBascula(): ObjetoEscape[] {
+    return this.objetosDepositadosBascula;
+  }
+
   public DameListaGrupos(): any {
     return this.listaGrupos;
   }
@@ -164,19 +214,18 @@ export class SesionService {
     });
     console.log("this.objetosEscape", this.objetosEscape);
   }
-  public DameEstadoDelObjeto(objeto: string): boolean {
-    if (objeto == "objeto1") {
-      return this.juegoEscapeRoom.escenario.objeto1.recogido;
-    } else {
-      return this.juegoEscapeRoom.escenario.objeto2.recogido;
-    }
-  }
 
   public TomaJuego(juego: Juego) {
     this.juego = juego;
   }
   public DameJuego(): Juego {
     return this.juego;
+  }
+  public DameEstanciaEscenario() {
+    return this.estancia;
+  }
+  public TomaEstanciaEscenario(escenario: string) {
+    this.estancia = escenario;
   }
   public TomaEstadoEscapeRoom(estado: boolean) {
     this.estado = estado;

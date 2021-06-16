@@ -26,6 +26,7 @@ export class JuegoDeEscapeRoomPage implements OnInit {
     this.estado = this.juego.estado;
     this.sesion.TomaEstadoEscapeRoom(this.estado);
     this.calculos.GuardarObjetosEscapeRoom(this.juego);
+    console.clear();
   }
 
   nextpageEscojerPersonaje() {

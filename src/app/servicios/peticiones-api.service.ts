@@ -612,10 +612,21 @@ export class PeticionesAPIService {
     return this.http.get<ObjetoEscape>(this.APIUrlObjetosEscape + '?filter[where][objetoId]='
     + idObjetoGlobal);
   }
+  public DameObjetosEscapeEscenario(escenario: string): Observable<ObjetoEscape[]> {
+    return this.http.get<ObjetoEscape[]>(this.APIUrlObjetosEscape + '?filter[where][escenario]='
+    + escenario);
+  }
+  public DameObjetosEnigmaEscenario(escenario: string): Observable<ObjetoEnigma[]> {
+    return this.http.get<ObjetoEnigma[]>(this.APIUrlObjetosEnigma + '?filter[where][escenario]='
+    + escenario);
+  }
   public DameObjetoEnigma(idObjetoGlobal: number): Observable<ObjetoEnigma> {
     return this.http.get<ObjetoEnigma>(this.APIUrlObjetosEnigma + '?filter[where][objetoId]='
     + idObjetoGlobal);
   }
+  public ActualizaObjetoEnigma(objetoEnigma: ObjetoEnigma): Observable<ObjetoEnigma> {
+    return this.http.put<ObjetoEnigma>(this.APIUrlObjetosEnigma, objetoEnigma);}
+
   // DEVUELVE LOS ALUMNOS QUE FORMAN PARTE DE UN JUEGO DE COLECCIÓN DETERMINADO
   public DameAlumnosJuegoDeColeccion(juegoDeColeccionId: number): Observable<Alumno[]> {
     console.log('Voy a por los alumnos');
@@ -991,6 +1002,15 @@ public PonerNotaAlumnoJuegoDeGeocaching(alumnoJuegoDeGeocaching: AlumnoJuegoDeGe
   } 
   public GuardaEscapeRoom(juego: JuegoDeEscapeRoom): Observable<JuegoDeEscapeRoom> {
     return this.http.put<JuegoDeEscapeRoom>(this.APIUrlGrupos +'/'+ juego.grupoId +'/JuegosDeEscapeRoom/' + juego.id, juego);
+  }
+  public ActualizarObjetosEscape(objetoEscape: ObjetoEscape): Observable<ObjetoEscape> {
+    return this.http.put<ObjetoEscape>(this.APIUrlObjetosEscape, objetoEscape);
+  }
+  public ActualizarObjetosEnigma(objetoEnigma: ObjetoEnigma): Observable<ObjetoEnigma > {
+    return this.http.put<ObjetoEnigma>(this.APIUrlObjetosEnigma, objetoEnigma);
+  }
+  public GuardarEstadoLlave(llave: ObjetoEscape): Observable<ObjetoEscape > {
+    return this.http.put<ObjetoEscape>(this.APIUrlObjetosEscape, llave);
   }
   public AñadePersonaje(alumno: AlumnoJuegoDeEscapeRoom): Observable<AlumnoJuegoDeEscapeRoom> {
     return this.http.put<AlumnoJuegoDeEscapeRoom>(this.APIUrlAlumnoJuegoDeEscapeRoom, alumno);
