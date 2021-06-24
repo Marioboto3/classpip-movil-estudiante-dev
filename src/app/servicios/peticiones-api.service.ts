@@ -29,6 +29,10 @@ import { AlumnoJuegoDeEscapeRoom } from '../clases/AlumnoJuegoDeEscapeRoom';
 import { ObjetoEscape } from '../clases/objetoEscape';
 import { ObjetoEnigma } from '../clases/ObjetoEnigma';
 import { ObjetoGlobalEscape } from '../clases/ObjetoGlobalEscape';
+import { PartidaEscape } from '../clases/PartidaEscape';
+import { EscenarioEscapeRoom } from '../clases/EscenarioEscapeRoom';
+import { EscenaDeJuego } from '../clases/EscenaDeJuego';
+import { ObjetoJuego } from '../clases/ObjetoJuego';
 
 
 @Injectable({
@@ -108,12 +112,18 @@ export class PeticionesAPIService {
   private APIUrlProfesores = this.base + '3000/api/Profesores';
   private APIUrlRubrica = this.base + '3000/api/Rubricas';
   private APIUrlRespuestasJuegoDeCuestionario = this.base + '3000/api/respuestasJuegoDeCuestionario';
+  private APIUrlPartidasEscape = this.base +  '3000/api/PartidasEscape';
+  private APIUrlEscenaDeJuego= this.base +  '3000/api/EscenasDeJuego';
+  private APIUrlEscenarioEscapeRoom= this.base +  '3000/api/EscenariosEscapeRoom';
+
+  
 
 
 
   //OTROS
   private APIUrlObjetosEscape = this.base + '3000/api/ObjetosEscape';
   private APIUrlObjetosEnigma = this.base + '3000/api/ObjetosEnigma';
+  private APIUrlObjetosGlobalEscape = this.base + '3000/api/ObjetosGlobalEscape';
 
   private APIUrlLogoEquipo = this.base + '3000/api/Imagenes/LogosEquipos/download/';
   private APIUrlLogosEquipos = this.base + '3000/api/Imagenes/LogosEquipos';
@@ -1009,8 +1019,9 @@ public PonerNotaAlumnoJuegoDeGeocaching(alumnoJuegoDeGeocaching: AlumnoJuegoDeGe
   public ActualizarObjetosEnigma(objetoEnigma: ObjetoEnigma): Observable<ObjetoEnigma > {
     return this.http.put<ObjetoEnigma>(this.APIUrlObjetosEnigma, objetoEnigma);
   }
-  public GuardarEstadoLlave(llave: ObjetoEscape): Observable<ObjetoEscape > {
-    return this.http.put<ObjetoEscape>(this.APIUrlObjetosEscape, llave);
+  //MIRAR PARA CAMBIAR
+  public GuardarEstadoLlave(llave: ObjetoGlobalEscape): Observable<ObjetoGlobalEscape > {
+    return this.http.put<ObjetoGlobalEscape>(this.APIUrlObjetosEscape, llave);
   }
   public AñadePersonaje(alumno: AlumnoJuegoDeEscapeRoom): Observable<AlumnoJuegoDeEscapeRoom> {
     return this.http.put<AlumnoJuegoDeEscapeRoom>(this.APIUrlAlumnoJuegoDeEscapeRoom, alumno);
@@ -1020,6 +1031,21 @@ public PonerNotaAlumnoJuegoDeGeocaching(alumnoJuegoDeGeocaching: AlumnoJuegoDeGe
   }
   public DameJuegoDeEscapeRoom(alumnoId: number, escapeRoomId: number): Observable<JuegoDeEscapeRoom> {
     return this.http.get<JuegoDeEscapeRoom>(this.APIUrlAlumnos + '/' + alumnoId + '/JuegosDeEscapeRoom' + '?filter[where][juegoDeEscapeRoomId]=' + escapeRoomId);
+  }
+  public DameTodasLasPartidasDelJuegoEscape(escapeRoomId: number): Observable<PartidaEscape[]> {
+    return this.http.get<PartidaEscape[]>(this.APIUrlPartidasEscape + '?filter[where][juegoDeEscapeRoomId]=' + escapeRoomId);
+  }
+  public DameEscenaEscapeRoom(escenaId: number): Observable<EscenaDeJuego> {
+    return this.http.get<EscenaDeJuego>(this.APIUrlEscenaDeJuego + '/' + escenaId);
+  }
+  public DameEscenarioEscapePorEscena(escenarioId: number): Observable<EscenarioEscapeRoom> {
+    return this.http.get<EscenarioEscapeRoom>(this.APIUrlEscenarioEscapeRoom + '/' + escenarioId);
+  }
+  public DameTodosLosObjetosJuegoDeLaEscena(escenaId: number): Observable<ObjetoJuego[]> {
+    return this.http.get<ObjetoJuego[]>(this.APIUrlEscenaDeJuego + '/' + escenaId + '/ObjetosJuego');
+  }
+  public DameObjetoGlobalEscape(objetoId: number): Observable<ObjetoGlobalEscape> {
+    return this.http.get<ObjetoGlobalEscape>(this.APIUrlObjetosGlobalEscape + '/' + objetoId);
   }
   public DameAlumnoDeEscapeRoom(alumnoId: number, escapeRoomId: number): Observable<AlumnoJuegoDeEscapeRoom> {
     return this.http.get<AlumnoJuegoDeEscapeRoom>(this.APIUrlAlumnoJuegoDeEscapeRoom + '?filter[where][juegoDeEscapeRoomId]=' + escapeRoomId + '&?filter[where][alumnoId]=' + alumnoId);

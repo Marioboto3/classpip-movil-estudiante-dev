@@ -9,6 +9,14 @@ import { JuegoDeEvaluacion } from '../clases/JuegoDeEvaluacion';
 import { JuegoDeEscapeRoom } from '../clases/JuegoDeEscapeRoom';
 import { ObjetoEscape } from '../clases/objetoEscape';
 import { ObjetoEnigma } from '../clases/ObjetoEnigma';
+import { ObjetoGlobalEscape } from '../clases/ObjetoGlobalEscape';
+import { ObjetoPista } from '../clases/ObjetoPista';
+import { AlumnoJuegoDeEscapeRoom } from '../clases/AlumnoJuegoDeEscapeRoom';
+import { EscenaDeJuego } from '../clases/EscenaDeJuego';
+import { EscenarioEscapeRoom } from '../clases/EscenarioEscapeRoom';
+import { ObjetoJuego } from '../clases/ObjetoJuego';
+import { Llave } from '../clases/Llave';
+import { Pista } from '../clases/Pista';
 
 @Injectable({
   providedIn: 'root'
@@ -22,8 +30,11 @@ export class SesionService {
   objetosEscape: ObjetoEscape[];
   objetosEscapeSegundoEscenario: ObjetoEscape[];
 
-  llave: ObjetoEscape;
+  objetosGlobalesPrimerEscenario: ObjetoGlobalEscape [];
+  objetosGlobalesSegundoEscenario: ObjetoGlobalEscape [];
 
+  llave: ObjetoGlobalEscape;
+  objetosMochila: ObjetoGlobalEscape [] = [];
   alumno: Alumno;
   alumnoObservable = new ReplaySubject(1);
   profesor: Profesor;
@@ -46,6 +57,7 @@ export class SesionService {
   inscripcionEquipoJuego: any;
   objetoEnigma: ObjetoEnigma;
   objetoEnigmaSegundoEscenario: ObjetoEnigma;
+  alumnoEscapeRoom: AlumnoJuegoDeEscapeRoom;
 
   objetosDepositadosBascula: ObjetoEscape[] = [];
 
@@ -59,7 +71,7 @@ export class SesionService {
   juegoEscapeRoom: JuegoDeEscapeRoom;
 
   estancia: string;
-
+  pistasGuardadas: ObjetoPista [] = [];
   alumnoJuegoDeColeccion: Alumno;
   alumnosJuegoDeColeccion: Alumno[];
   inscripcionAlumno: any;
@@ -88,6 +100,19 @@ export class SesionService {
   cromosQueNoTengoImagenDelante;
   cromosQueNoTengoImagenDetras;
   nickName;
+
+  mapEscenasPorJuego: Map<number, Map<number, EscenaDeJuego>> = new Map<number, Map<number, EscenaDeJuego>>();
+  mapEscenarioPorEscena: Map<number, EscenarioEscapeRoom> = new Map<number, EscenarioEscapeRoom>();
+  mapObjetosPorEscena: Map<number, Map<number, ObjetoJuego>> = new Map<number, Map<number, ObjetoJuego>>();
+  mapInformacionGlobalDelObjetoJuego: Map<number, ObjetoGlobalEscape> = new Map<number, ObjetoGlobalEscape>();
+  mapEscenas: Map<number, EscenaDeJuego> = new Map<number, EscenaDeJuego>();
+  mapObjetosJuego:  Map<number, ObjetoJuego> = new Map<number, ObjetoJuego>();
+  mapObjetosEscapeFromObjetosJuego: Map<number,ObjetoEscape> = new Map<number, ObjetoEscape>();
+  mapObjetosEnigmaFromObjetosJuego: Map<number,ObjetoEnigma> = new Map<number, ObjetoEnigma>();
+  mapPosicionObjetosDeEscena: Map<number, any> = new Map<number, any>(); //escena actual
+  mapLlavePorEscena: Map<number, Llave> = new Map<number, Llave>();
+  mapPistaPorEscena: Map<number, Pista> = new Map<number, Pista>();
+  mapObjetosRequeridosPorEscena: Map<number, Map<number,ObjetoEscape>> = new Map<number, Map<number,ObjetoEscape>>();
 
   constructor() { }
   public TomaProfesor(profesor: Profesor) {
@@ -129,10 +154,117 @@ export class SesionService {
   public TomaListaGrupos(listaGrupos: any) {
     this.listaGrupos = listaGrupos;
   }
+
+  //ESCAPE ROOM
+
+  public TomaAlumnoEscape(alumno: AlumnoJuegoDeEscapeRoom) {
+    this.alumnoEscapeRoom = alumno;
+  }
+  public DameAlumnoEscape(): AlumnoJuegoDeEscapeRoom {
+    return this.alumnoEscapeRoom[0];
+  }
+  public DameAlumnoEscapeRoom(): AlumnoJuegoDeEscapeRoom {
+    return this.alumnoEscapeRoom;
+  }
+  public TomaMapEscenasPorJuego(map: Map<number, Map<number, EscenaDeJuego>>) {
+    this.mapEscenasPorJuego = map;
+  }
+  public DameMapEscenasPorJuego(): any {
+    return this.mapEscenasPorJuego;
+  }
+  public TomaMapEscenas(map: Map<number, EscenaDeJuego>) {
+    this.mapEscenas = map;
+  }
+  public DameMapEscenas(): any {
+    return this.mapEscenas;
+  }
+  public TomaMapLlaveEscena(map: Map<number, Llave>) {
+    this.mapLlavePorEscena = map;
+  }
+  public DameMapLlaveEscena(): any {
+    return this.mapLlavePorEscena;
+  }
+  public TomaMapObjetosRequeridosPorEscena(map: Map<number, Map<number,ObjetoEscape>> ) {
+    this.mapObjetosRequeridosPorEscena = map;
+  }
+  public DameMapObjetosRequeridosPorEscena(): any {
+    return this.mapObjetosRequeridosPorEscena;
+  }
+  public TomaMapPistaEscena(map: Map<number, Pista>) {
+    this.mapPistaPorEscena = map;
+  }
+  public DameMapPistaEscena(): any {
+    return this.mapPistaPorEscena;
+  }
+  public TomaMapObjetosJuego(map: Map<number, ObjetoJuego>) {
+    this.mapObjetosJuego = map;
+  }
+  public DameMapObjetosJuego(): any {
+    return this.mapObjetosJuego;
+  }
+  public TomaMapObjetosEscapeFromObjetosJuego(map:Map<number, ObjetoEscape>) {
+    this.mapObjetosEscapeFromObjetosJuego = map;
+  }
+  public DameMapObjetosEscapeFromObjetosJuego(): any {
+    return this.mapObjetosEscapeFromObjetosJuego;
+  }
+  public TomaMapObjetosEnigmaFromObjetosJuego(map: Map<number, ObjetoEnigma>) {
+    this.mapObjetosEnigmaFromObjetosJuego = map;
+  }
+  public DameMapObjetosEnigmaFromObjetosJuego(): any {
+    return this.mapObjetosEnigmaFromObjetosJuego;
+  }
+  public TomaMapEscenarioPorEscena(map: Map<number, EscenarioEscapeRoom>){
+   this.mapEscenarioPorEscena = map;
+  }
+  public DameMapEscenarioPorEscena(): any {
+    return this.mapEscenarioPorEscena;
+  }
+  public TomaMapObjetosPorEscena(map: Map<number, Map<number, ObjetoJuego>>) {
+    this.mapObjetosPorEscena = map;
+  }
+  public DameMapObjetosPorEscena(): any {
+    return this.mapObjetosPorEscena;
+  }
+  public TomaMapPosicionObjetosDeEscena(map: Map<number, any>) {
+    this.mapPosicionObjetosDeEscena = map;
+  }
+  public DameMapPosicionObjetosDeEscena(): any {
+    return this.mapPosicionObjetosDeEscena;
+  }
+  public TomaMapInformacionGlobalDelObjetoJuego(map: Map<number, ObjetoGlobalEscape>) {
+    this.mapInformacionGlobalDelObjetoJuego = map;
+  }
+  public DameMapInformacionGlobalDelObjetoJuego(): any {
+    return this.mapInformacionGlobalDelObjetoJuego;
+  }
   public TomaObjetosEscape(objetosEscape: ObjetoEscape[]) {
     this.objetosEscape = objetosEscape;
+  } 
+  public DamePistasGuardadas(): ObjetoPista[] {
+    return this.pistasGuardadas;
   }
-
+  public TomaPistasGuardadas(pistas: ObjetoPista[]) {
+    this.pistasGuardadas = pistas;
+  }
+  public DameObjetosMochila(): ObjetoGlobalEscape[] {
+    return this.objetosMochila;
+  }
+  public TomaObjetosMochila(objetosGlobales: ObjetoGlobalEscape[]) {
+    this.objetosMochila = objetosGlobales;
+  }
+  public DameObjetosGlobalesPrimerEscenario(): ObjetoGlobalEscape[] {
+    return this.objetosGlobalesPrimerEscenario;
+  }
+  public TomaObjetosGlobalesPrimerEscenario(objetosGlobales: ObjetoGlobalEscape[]) {
+    this.objetosGlobalesPrimerEscenario = objetosGlobales;
+  }
+  public DameObjetosGlobalesSegundoEscenario(): ObjetoGlobalEscape[] {
+    return this.objetosGlobalesSegundoEscenario;
+  }
+  public TomaObjetosGlobalesSegundoEscenario(objetosGlobales: ObjetoGlobalEscape[]) {
+    this.objetosGlobalesSegundoEscenario = objetosGlobales;
+  }
   public DameObjetosEscape(): ObjetoEscape[] {
     return this.objetosEscape;
   }
@@ -167,18 +299,11 @@ export class SesionService {
   public DameObjetoEnigma(): ObjetoEnigma {
     return this.objetoEnigma;
   }
-  public TomaLlave(llave: ObjetoEscape) {
+  public TomaLlave(llave: ObjetoGlobalEscape) {
     this.llave = llave;
-    if (this.objetosEscape != undefined) {
-      this.objetosEscape.forEach(elemento => {
-        if (elemento.nombre == llave.nombre) {
-          elemento = llave;
-        }
-      });
-    }
   }
 
-  public DameLlave(): ObjetoEscape {
+  public DameLlave(): ObjetoGlobalEscape {
     return this.llave;
   }
 
@@ -207,13 +332,24 @@ export class SesionService {
   // }
 
   public cambiaElEstadoDelObjeto(estado: boolean, objeto: string) {
-    this.objetosEscape.forEach(element => {
+    /*this.objetosGlobalesPrimerEscenario.forEach(element => {
       if (element.nombre == objeto) {
         element.recogido = estado;
       }
     });
     console.log("this.objetosEscape", this.objetosEscape);
-  }
+  */}
+  public cambiaElEstadoDelObjetoSegundoEscenario(estado: boolean, objeto: string) {
+    /*console.log("Objetos escape segundo escenario: ", this.objetosEnigmaSegundoEscenario);
+    this.objetosGlobalesSegundoEscenario.forEach(element => {
+      console.log("elemento: ", element);
+      if (element.nombre == objeto) {
+        element.recogido = estado;
+      }
+    });
+    console.log("this.objetosEscape", this.objetosEscapeSegundoEscenario);
+  */}
+
 
   public TomaJuego(juego: Juego) {
     this.juego = juego;

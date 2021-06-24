@@ -1,23 +1,37 @@
+
+
 export class ObjetoEscape {
 
   nombre: string;
+  imagen: string;
   usable: boolean;
   recogido: boolean;
-  profesorId: number;
+  posicion: number;
+  escenaId: number;
+  juegoDeEscapeRoomId: number;
   id: number;
-  objetoId: number;
-  escenario: string;
-  peso: number;
+  objetoGlobalId: number;
+  objetoJuegoId: number;
+  tipo: string;
+  requerido: boolean;
+  requeridoEscenaId: number;
 
-  constructor(nombre?: string, usable?: boolean, recogido?: boolean, profesorId?: number, objetoId?: number, escenario?: string, peso?: number) {
+ // peso: number;
+
+  constructor(nombre?: string, imagen?: string, usable?: boolean, recogido?: boolean, posicion?: number, escenaId?: number, juegoEscapeRoomId?: number, objetoGlobalId?: number, objetoJuegoId?: number, tipo?: string, requerido?:boolean, requeridoEscenaId?: number) {
 
     this.nombre = nombre;
+    this.imagen = imagen;
     this.usable = usable;
     this.recogido = recogido;
-    this.profesorId = profesorId;
-    this.objetoId = objetoId;
-    this.escenario = escenario;
-    this.peso = peso;
+    this.posicion = posicion;
+    this.escenaId = escenaId;
+    this.juegoDeEscapeRoomId = juegoEscapeRoomId;
+    this.objetoGlobalId = objetoGlobalId;
+    this.objetoJuegoId = objetoJuegoId;
+    this.tipo = tipo;
+    this.requerido = requerido;
+    this.requeridoEscenaId = requeridoEscenaId;
 
   }
 }

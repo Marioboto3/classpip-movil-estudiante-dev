@@ -10,6 +10,7 @@ import Swal from 'sweetalert2';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ObjetoPista } from 'src/app/clases/ObjetoPista';
+import { ObjetoGlobalEscape } from 'src/app/clases/ObjetoGlobalEscape';
 
 
 @Component({
@@ -24,12 +25,22 @@ export class SegundoEscenarioPage implements OnInit {
 
   estancia: string;
 
-  pesoTotal: number;
+  pesoTotal: number = 0;
+
+  mapVar: string;
 
   listaObjetosDepositadosBascula: ObjetoEscape[] = [];
 
   objetosEnigma: ObjetoEnigma[] = [];
   objetosEscape: ObjetoEscape[] = [];
+  objetosGlobales: ObjetoGlobalEscape [] = [];
+
+  objetosEnigmaPrimerEscenario: ObjetoEnigma[] = [];
+  objetosEscapePrimerEscenario: ObjetoEscape[] = [];
+  objetosGlobalesPrimerEscenario: ObjetoGlobalEscape [] = [];
+
+
+  objetoEscapeLlave: ObjetoEscape;
 
   objeto1escape: ObjetoEscape;
   objeto2escape: ObjetoEscape;
@@ -40,7 +51,7 @@ export class SegundoEscenarioPage implements OnInit {
 
   objetoEscape: ObjetoEscape;
   objetoPista: ObjetoPista;
-  llave: ObjetoEscape = new ObjetoEscape("llave", true, false);
+  llave: ObjetoGlobalEscape;
 
   recogido: boolean;
   recogido2: boolean;
@@ -69,28 +80,28 @@ export class SegundoEscenarioPage implements OnInit {
 
     this.objetosEscape = this.sesion.DameObjetosEscapeSegundoEscenario();
     this.objetosEnigma = this.sesion.DameObjetosEnigmaSegundoEscenario();
+    this.objetosGlobales = this.sesion.DameObjetosGlobalesSegundoEscenario();
+
+    this.objetosEscapePrimerEscenario = this.sesion.DameObjetosEscape();
+    this.objetosEnigmaPrimerEscenario = this.sesion.DameObjetosEnigma();
+    this.objetosGlobalesPrimerEscenario = this.sesion.DameObjetosGlobalesPrimerEscenario();
 
     this.listaObjetosDepositadosBascula = this.sesion.DameListaObjetosDepositadosBascula();
 
-    console.log("LISTA ESCAPE: ", this.objetosEscape);
-    console.log("LISTA ENIGMA: ", this.objetosEnigma);
-    console.log("LISTA OBJETOS DEPOSITADOS EN LA BASCULA: ", this.listaObjetosDepositadosBascula);
-
-    //cambiar
-    // this.objetosEnigma = this.sesion.DameObjetosEnigmaSegundoEscenario();
-
-    console.log("Objetos segundo escenario: ", this.juegoEscape.escenarioSecundario.objetos);
-    console.log("ObjetosEscape: ", this.objetosEscape);
-    this.juegoEscape.escenarioSecundario.objetos.forEach(elemento => {
+ 
+  /*  this.objetosGlobales.forEach(elemento => {
       if (elemento.tipoDeObjeto == "objetoEscape") {
         this.objetosEscape.forEach(objetoEsca => {
           if (objetoEsca.nombre == elemento.nombre) {
             if (elemento.posicion == 1) {
               this.objeto1escape = objetoEsca;
+              this.recogido = elemento.recogido;
             } if (elemento.posicion == 2) {
               this.objeto2escape = objetoEsca;
+              this.recogido2 = elemento.recogido;
             } if (elemento.posicion == 3) {
               this.objeto3escape = objetoEsca;
+              this.recogido3 = elemento.recogido;
             }
           }
         });
@@ -106,17 +117,15 @@ export class SegundoEscenarioPage implements OnInit {
         });
       }
     });
-
+ */
     this.listaObjetosDepositadosBascula.forEach(elemento => {
-      this.pesoTotal = elemento.peso + this.pesoTotal;
     });
 
-    this.pesoTotal = 2;
-
-    this.objetoPista = new ObjetoPista ("Pista", this.juegoEscape.escenario.mapa, "Secundario", "Quizás tendrás que hacer una combinación de objetos proximamente...");
+//    this.objetoPista = new ObjetoPista ("Segunda pista", this.juegoEscape.escenario.mapa, "Secundario", "Quizás tendrás que hacer una combinación de objetos proximamente...");
 
 
-    if (this.juegoEscape.escenarioSecundario.mapa == "baño") {
+  /*  if (this.juegoEscape.escenarioSecundario.mapa == "baño") {
+      this.mapVar = "bano";
       this.varEscenario = "containerBaño";
     }
     else {
@@ -128,12 +137,14 @@ export class SegundoEscenarioPage implements OnInit {
       }
     }
     this.showImage = true;
-
+ */
   }
   abrirMochila() {
     this.router.navigateByUrl('mochila');
   }
   guardarEscape() {
+    this.sesion.TomaObjetosEnigmaSegundoEscenario(this.objetosEnigma);
+    this.sesion.TomaObjetosEscapeSegundoEscenario(this.objetosEscape);
     this.calculos.GuardaEscapeRoom();
     Swal.fire({
       title: '¿Quieres guardar?',
@@ -167,7 +178,8 @@ export class SegundoEscenarioPage implements OnInit {
 
     if (objeto == this.objeto1escape.nombre) {
       if (this.objeto1escape.usable == true) {
-        this.sesion.cambiaElEstadoDelObjeto(true, objeto);
+
+        this.sesion.cambiaElEstadoDelObjetoSegundoEscenario(true, objeto);
         Swal.fire({
           title: '¿Seguro que quieres este objeto?   ' + objeto,
           icon: 'warning',
@@ -177,7 +189,12 @@ export class SegundoEscenarioPage implements OnInit {
           confirmButtonText: 'Si, estoy seguro'
         }).then((result) => {
           if (result.value) {
-            this.calculos.añadirObjetoMochila(this.objeto1escape);
+            this.objetosGlobales.forEach(objeto => {
+              console.log("Objeto: ", objeto);
+              if(objeto.nombre == this.objeto1escape.nombre){
+                this.calculos.añadirObjetoMochila(objeto);
+              }
+            });
             this.reload();
           }
         });
@@ -185,7 +202,8 @@ export class SegundoEscenarioPage implements OnInit {
     }
     if (objeto == this.objeto2escape.nombre) {
       if (this.objeto2escape.usable == true) {
-        this.sesion.cambiaElEstadoDelObjeto(true, objeto);
+        console.log("ENTRAS PORFAPPLIS 2?");
+        this.sesion.cambiaElEstadoDelObjetoSegundoEscenario(true, objeto);
         Swal.fire({
           title: '¿Seguro que quieres este objeto?   ' + objeto,
           icon: 'warning',
@@ -195,15 +213,22 @@ export class SegundoEscenarioPage implements OnInit {
           confirmButtonText: 'Si, estoy seguro'
         }).then((result) => {
           if (result.value) {
-            this.calculos.añadirObjetoMochila(this.objeto2escape);
+            this.objetosGlobales.forEach(objeto => {
+              console.log("Objeto: ", objeto);
+              if(objeto.nombre == this.objeto2escape.nombre){
+                this.calculos.añadirObjetoMochila(objeto);
+              }
+            });
             this.reload();
           }
         });
       }
     }
     if (objeto == this.objeto3escape.nombre) {
-      if (this.objeto1escape.usable == true) {
-        this.sesion.cambiaElEstadoDelObjeto(true, objeto);
+      if (this.objeto3escape.usable == true) {
+        console.log("ENTRAS PORFAPPLIS 3?");
+
+        this.sesion.cambiaElEstadoDelObjetoSegundoEscenario(true, objeto);
         Swal.fire({
           title: '¿Seguro que quieres este objeto?   ' + objeto,
           icon: 'warning',
@@ -213,7 +238,12 @@ export class SegundoEscenarioPage implements OnInit {
           confirmButtonText: 'Si, estoy seguro'
         }).then((result) => {
           if (result.value) {
-            this.calculos.añadirObjetoMochila(this.objeto3escape);
+            this.objetosGlobales.forEach(objeto => {
+              console.log("Objeto: ", objeto);
+              if(objeto.nombre == this.objeto3escape.nombre){
+                this.calculos.añadirObjetoMochila(objeto);
+              }
+            });
             this.reload();
           }
         });
@@ -221,7 +251,7 @@ export class SegundoEscenarioPage implements OnInit {
     }
   }
   abrirObjeto(objeto) {
-    console.log("Objeto: ", objeto);
+   /* console.log("Objeto: ", objeto);
     this.alertController.create({
       header: 'Enigma',
       subHeader: 'Responde con el código correcto.',
@@ -242,25 +272,23 @@ export class SegundoEscenarioPage implements OnInit {
         {
           text: 'Done!',
           handler: (data: any) => {
-            this.juegoEscape.escenarioSecundario.objetos.forEach(elemento => {
+            this.objetosGlobales.forEach(elemento => {
               if (elemento.nombre == objeto.nombre) {
                 this.objetosEnigma.forEach(elemen => {
 
                   if (elemen.nombre == elemento.nombre) {
-                    if (elemen.respuesta == data.Respuesta && elemen.resuelta == false) {
+                    if (elemen.respuesta == data.Respuesta && elemento.resuelta == false) {
                       this.alertController.create({ message: "Perfecto!" }).then(res => {
                         res.present();
-                        console.log("Elemen: s", elemen);
-                        elemen.resuelta = true;
+                        elemento.resuelta = true;
                         if (elemen.principal == true) {
-                          console.log("Entra!");
                           this.conseguirLlave(elemen);
                         } else {
                           this.conseguirPista(elemen);
                         }
                       });
                     } else {
-                      if (elemen.resuelta == true) {
+                      if (elemento.resuelta == true) {
                         this.alertController.create({ message: "Ya has resuelto este acertijo!" }).then(res => {
                           res.present();
                         });
@@ -279,9 +307,30 @@ export class SegundoEscenarioPage implements OnInit {
       ]
     }).then(res => {
       res.present();
-    });
+    }); */
   }
   abrirObjetoBascula(objeto: ObjetoEnigma) {
+
+    /*this.juegoEscape.mochila.objetos.forEach(elemento => {
+      console.log("Elemento: ", elemento);
+      console.log("ObjetosEscape: ", this.objetosEscape);
+      console.log("ObjetosEscapePrimerEscenario: ", this.objetosEscapePrimerEscenario);
+      this.objetosEscape.forEach(objeto => {
+        if(elemento.id == objeto.objetoId){
+          console.log("Entras??");
+          this.pesoTotal = objeto.peso + this.pesoTotal;
+        }
+      });
+      this.objetosEscapePrimerEscenario.forEach(objeto => {
+        if(elemento.id == objeto.objetoId){
+          this.pesoTotal = objeto.peso + this.pesoTotal;
+        }
+      });
+    
+    });
+
+    console.log("this.peso: ", this.pesoTotal);
+
     console.log("Objeto: ", objeto);
     this.alertController.create({
       header: 'Enigma',
@@ -293,19 +342,26 @@ export class SegundoEscenarioPage implements OnInit {
           handler: (data: any) => {
             console.log('Canceled', data);
           }
+        },{
+          text: 'Abrir lista',
+          handler: (data: any) => {
+          }
         },
         {
           text: '¡Pesar!',
           handler: (data: any) => {
             
             let respuestaNumero = Number(objeto.respuesta);
-            console.log("respuestaNumero: ", respuestaNumero);
             if (respuestaNumero == this.pesoTotal) {
               this.alertController.create({ message: "Perfecto!" }).then(res => {
                 res.present();
                 this.objetosEnigma.forEach(elemen => {
                   if (elemen.nombre == objeto.nombre) {
-                    elemen.resuelta = true;
+                    this.objetosGlobales.forEach(elemento => {
+                      if(elemento.nombre == elemen.nombre){
+                        elemento.resuelta = true;
+                      }
+                    })
                     if (elemen.principal == true) {
                       this.conseguirLlave(elemen);
                     } else {
@@ -314,17 +370,20 @@ export class SegundoEscenarioPage implements OnInit {
                   }
                 });
               });
-
+            }else{
+              this.alertController.create({ message: "No tienes el peso ideal, ¡Vuelve a intentarlo cuando cambies!" }).then(res => {
+                res.present();
+              });
             }
           }
         }
       ]
     }).then(res => {
       res.present();
-    });
+    }); */
   }
   conseguirLlave(objetoEnigma) {
-
+  /*
     Swal.fire({
       title: 'Felicidades! Has conseguido la llave',
       icon: 'warning',
@@ -338,7 +397,7 @@ export class SegundoEscenarioPage implements OnInit {
         this.reload();
       }
     });
-
+   */
   }
   conseguirPista(objetoEnigma) {
     Swal.fire({

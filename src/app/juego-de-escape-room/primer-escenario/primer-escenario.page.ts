@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController, AlertController, NavController } from '@ionic/angular';
 import { Howl } from 'howler';
-import { Juego } from 'src/app/clases';
+import { Juego, Profesor } from 'src/app/clases';
 import { Audio } from 'src/app/clases/Audio';
 import { JuegoDeEscapeRoom } from 'src/app/clases/JuegoDeEscapeRoom';
 import { ObjetoEnigma } from 'src/app/clases/ObjetoEnigma';
@@ -12,6 +12,17 @@ import Swal from 'sweetalert2';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ObjetoPista } from 'src/app/clases/ObjetoPista';
+import { ObjetoGlobalEscape } from 'src/app/clases/ObjetoGlobalEscape';
+import { Console } from 'console';
+import { EscenaDeJuego } from 'src/app/clases/EscenaDeJuego';
+import { ObjetoJuego } from 'src/app/clases/ObjetoJuego';
+import { AlumnoJuegoDeEscapeRoom } from 'src/app/clases/AlumnoJuegoDeEscapeRoom';
+import { EscenarioEscapeRoom } from 'src/app/clases/EscenarioEscapeRoom';
+import { PartidaEscape } from 'src/app/clases/PartidaEscape';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { Llave } from 'src/app/clases/Llave';
+import { Pista } from 'src/app/clases/Pista';
+import { ObjectUnsubscribedError } from 'rxjs';
 
 
 @Component({
@@ -30,6 +41,7 @@ export class PrimerEscenarioPage implements OnInit {
   showImage: boolean = false;
   varEscenario: string = "containerHabitacion";
 
+  profesor: Profesor;
 
   sliderOpts = {
     zoom: {
@@ -41,30 +53,63 @@ export class PrimerEscenarioPage implements OnInit {
   id: number;
 
   juegoEscape: JuegoDeEscapeRoom;
+  alumnoJuegoEscapeRoom: AlumnoJuegoDeEscapeRoom;
+
+  escenaActual: EscenaDeJuego;
+  escenarioActual: EscenarioEscapeRoom;
+
+  primerEscenario: number = 1;
 
   estado: boolean;
 
   recogido: boolean;
   recogido2: boolean;
   recogido3: boolean;
+  recogido4: boolean;
+  recogido5: boolean;
   resuelto: boolean;
   resuelto2: boolean;
+  resuelto3: boolean;
+  resuelto4: boolean;
+  resuelto5: boolean;
+
   recogidaPista: boolean;
 
   estancia: string;
+  escenaAnterior: number = 1;
 
   objeto1escape: ObjetoEscape;
   objeto2escape: ObjetoEscape;
   objeto3escape: ObjetoEscape;
+  objeto4escape: ObjetoEscape;
+  objeto5escape: ObjetoEscape;
+
   objeto1enigma: ObjetoEnigma;
   objeto2enigma: ObjetoEnigma;
+  objeto3enigma: ObjetoEnigma;
+  objeto4enigma: ObjetoEnigma;
+  objeto5enigma: ObjetoEnigma;
 
-  objetoPista: ObjetoPista;
-
-  llave: ObjetoEscape = new ObjetoEscape("llave", true, false);
+  llaveActual: Llave;
+  pistaActual: Pista;
 
   objetosEnigma: ObjetoEnigma[];
   objetosEscape: ObjetoEscape[];
+  objetosGlobales: ObjetoGlobalEscape[] = [];
+
+  mapEscenasPorJuego: Map<number, Map<number, EscenaDeJuego>> = new Map<number, Map<number, EscenaDeJuego>>();
+  mapEscenarioPorEscena: Map<number, EscenarioEscapeRoom> = new Map<number, EscenarioEscapeRoom>();
+  mapObjetosPorEscena: Map<number, Map<number, ObjetoJuego>> = new Map<number, Map<number, ObjetoJuego>>();
+  mapInformacionGlobalDelObjetoJuego: Map<number, ObjetoGlobalEscape> = new Map<number, ObjetoGlobalEscape>();
+  mapEscenas: Map<number, EscenaDeJuego> = new Map<number, EscenaDeJuego>();
+  mapObjetosJuego: Map<number, ObjetoJuego> = new Map<number, ObjetoJuego>();
+  mapObjetosJuegoAuxiliar: Map<number, ObjetoJuego> = new Map<number, ObjetoJuego>();
+  mapObjetosEscapeFromObjetosJuego: Map<number, ObjetoEscape> = new Map<number, ObjetoEscape>(); //todos
+  mapObjetosEnigmaFromObjetosJuego: Map<number, ObjetoEnigma> = new Map<number, ObjetoEnigma>(); //todos
+  mapPosicionObjetosDeEscena: Map<number, any> = new Map<number, any>(); //escena actual
+  mapLlavePorEscena: Map<number, Llave> = new Map<number, Llave>();
+  mapPistaPorEscena: Map<number, Pista> = new Map<number, Pista>();
+  mapObjetosRequeridosPorEscena: Map<number, Map<number, ObjetoEscape>> = new Map<number, Map<number, ObjetoEscape>>();
 
   constructor(private router: Router,
     private modalController: ModalController,
@@ -91,52 +136,259 @@ export class PrimerEscenarioPage implements OnInit {
   }
   ngOnInit() {
 
-
-    this.estancia = "Principal";
-    this.sesion.TomaEstanciaEscenario(this.estancia);
+    //Recoger toda la info que nos ha quedado de la pantalla anterior y mostrarla
 
     this.juegoEscape = this.sesion.DameJuegoEscapeRoom();
+    // console.log("Juego: ", this.juegoEscape);
 
-    console.log("Juego: ", this.juegoEscape);
+    if (this.primerEscenario == 1) {
+      this.alumnoJuegoEscapeRoom = this.sesion.DameAlumnoEscape();
+    } else {
+      this.alumnoJuegoEscapeRoom = this.sesion.DameAlumnoEscapeRoom();
+    }
+    // console.log("Alumno Escape: ", this.alumnoJuegoEscapeRoom);
+    this.mapEscenas = this.sesion.DameMapEscenas();
+    // console.log("Map escenas:", this.mapEscenas);
 
-    this.objetosEnigma = this.sesion.DameObjetosEnigma();
-    this.objetosEscape = this.sesion.DameObjetosEscape();
-
-    console.log("Objetos enigma: ", this.objetosEnigma);
-    console.log("Objetos escape: ", this.objetosEscape);
-
-    //Falta declarar los 5 objetos
-    this.juegoEscape.escenario.objetos.forEach(elemento => {
-      if (elemento.tipoDeObjeto == "objetoEscape") {
-        this.objetosEscape.forEach(objetoEsca => {
-          if (objetoEsca.nombre == elemento.nombre) {
-            if (elemento.posicion == 1) {
-              this.objeto1escape = objetoEsca;
-            } if (elemento.posicion == 2) {
-              this.objeto2escape = objetoEsca;
-            } if (elemento.posicion == 3) {
-              this.objeto3escape = objetoEsca;
-            }
-          }
-        });
-      } else {
-        this.objetosEnigma.forEach(objetoEnig => {
-          if (objetoEnig.nombre == elemento.nombre) {
-            if (elemento.posicion == 4) {
-              this.objeto1enigma = objetoEnig;
-            } if (elemento.posicion == 5) {
-              this.objeto2enigma = objetoEnig;
-            }
-          }
-        });
+    this.mapEscenasPorJuego = this.sesion.DameMapEscenasPorJuego();
+    if (this.mapEscenasPorJuego.size == 0) {
+      if (this.mapEscenas.size != 0) {
+        this.mapEscenasPorJuego.set(this.juegoEscape.id, this.mapEscenas);
+        this.sesion.TomaMapEscenasPorJuego(this.mapEscenasPorJuego);
       }
-    });
+    }
 
-    this.recogido = this.objeto1escape.recogido;
-    this.recogido2 = this.objeto2escape.recogido;
-    this.recogido3 = this.objeto3escape.recogido;
+    this.mapObjetosJuego = this.sesion.DameMapObjetosJuego();
+
+    console.log("MAP OBJETOS JUEGO: ",this.mapObjetosJuego);
+    this.mapObjetosPorEscena = this.sesion.DameMapObjetosPorEscena();
+
+    if (this.mapObjetosPorEscena.size == 0) {
+      this.mapEscenas.forEach(escena => {
+        let mapObjetosJuegoAuxiliar: Map<number, ObjetoJuego> = new Map<number, ObjetoJuego>();
+        this.mapObjetosJuego.forEach(objeto => {
+          if (objeto.escenaId == escena.id) {
+            mapObjetosJuegoAuxiliar.set(objeto.id, objeto);
+          }
+        });
+        this.mapObjetosPorEscena.set(escena.id, mapObjetosJuegoAuxiliar);
+      });
+      this.sesion.TomaMapObjetosPorEscena(this.mapObjetosPorEscena);
+    }
+    this.mapEscenarioPorEscena = this.sesion.DameMapEscenarioPorEscena();
+    this.mapObjetosPorEscena = this.sesion.DameMapObjetosPorEscena();
+    this.mapInformacionGlobalDelObjetoJuego = this.sesion.DameMapInformacionGlobalDelObjetoJuego();
+
+    // console.log("Map escenas por juego:", this.mapEscenasPorJuego);
+    // console.log("Map escenarios por escena:", this.mapEscenarioPorEscena);
+    // console.log("Map objetos por escena:", this.mapObjetosPorEscena);
+    // console.log("Map info por objeto:", this.mapInformacionGlobalDelObjetoJuego);
 
 
+    //Conseguir escena actual para cargar el escenario
+
+    this.escenaActual = this.mapEscenasPorJuego.get(this.juegoEscape.id).get(this.alumnoJuegoEscapeRoom.escenaActualId);
+    //  console.log("Primero partida: ", this.mapEscenasPorJuego.get(this.juegoEscape.id));
+    // console.log("Escena actual: ", this.escenaActual);
+    this.escenarioActual = this.mapEscenarioPorEscena.get(this.escenaActual.id);
+
+    if (this.escenarioActual.imagenId == 3) {
+      this.varEscenario = "containerBaño";
+    }
+    else {
+      if (this.escenarioActual.imagenId == 2) {
+        this.varEscenario = "containerCocina";
+      }
+      else {
+        this.varEscenario = "containerHabitacion";
+      }
+    }
+
+    //Pasar los objetosJuego a Objetos escape y Objetos Enigma 
+    let objetoGlobal: ObjetoGlobalEscape;
+    let objetoEscape: ObjetoEscape;
+    let objetoEnigma: ObjetoEnigma;
+    let llave: Llave;
+    let pista: Pista;
+
+    this.mapObjetosEnigmaFromObjetosJuego = this.sesion.DameMapObjetosEnigmaFromObjetosJuego();
+    this.mapObjetosEscapeFromObjetosJuego = this.sesion.DameMapObjetosEscapeFromObjetosJuego();
+    this.mapLlavePorEscena = this.sesion.DameMapLlaveEscena();
+    this.mapPistaPorEscena = this.sesion.DameMapPistaEscena();
+
+    if (this.mapObjetosEnigmaFromObjetosJuego.size == 0 && this.mapObjetosEscapeFromObjetosJuego.size == 0 && this.mapLlavePorEscena.size == 0 && this.mapPistaPorEscena.size == 0) {
+      this.mapEscenas.forEach(escena => {
+        this.mapObjetosPorEscena.get(escena.id).forEach(objetoJuego => {
+          objetoGlobal = this.mapInformacionGlobalDelObjetoJuego.get(objetoJuego.id);
+          if (objetoGlobal.tipo == "objetoEscape") {
+            objetoEscape = this.convertirObjetoJuegoEnObjetoEscape(objetoJuego, objetoGlobal);
+            this.mapObjetosEscapeFromObjetosJuego.set(objetoJuego.id, objetoEscape);
+          } if (objetoGlobal.tipo == "objetoEnigma") {
+            objetoEnigma = this.convertirObjetoJuegoEnObjetoEnigma(objetoJuego, objetoGlobal);
+            this.mapObjetosEnigmaFromObjetosJuego.set(objetoJuego.id, objetoEnigma);
+          } if (objetoGlobal.tipo == "llave") {
+            llave = this.convertirObjetoJuegoEnLlave(objetoJuego, objetoGlobal);
+            this.mapLlavePorEscena.set(escena.id, llave);
+          } if (objetoGlobal.tipo == "pista") {
+            pista = this.convertirObjetoJuegoEnPista(objetoJuego, objetoGlobal);
+            this.mapPistaPorEscena.set(escena.id, pista);
+          }
+        });
+      });
+
+      this.sesion.TomaMapObjetosEnigmaFromObjetosJuego(this.mapObjetosEnigmaFromObjetosJuego);
+      this.sesion.TomaMapObjetosEscapeFromObjetosJuego(this.mapObjetosEscapeFromObjetosJuego);
+      this.sesion.TomaMapLlaveEscena(this.mapLlavePorEscena);
+      this.sesion.TomaMapPistaEscena(this.mapPistaPorEscena);
+
+    }
+
+    this.llaveActual = this.mapLlavePorEscena.get(this.escenaActual.id);
+    this.pistaActual = this.mapPistaPorEscena.get(this.escenaActual.id);
+
+    //  console.log("Map de llaves por escenas: ", this.mapLlavePorEscena);
+    //  console.log("Map de pistas por escenas: ", this.mapPistaPorEscena);
+
+    // console.log("ObjetosEscape antes del for: ", this.mapObjetosEscapeFromObjetosJuego);
+
+    this.mapPosicionObjetosDeEscena = this.sesion.DameMapPosicionObjetosDeEscena();
+
+    if (this.mapPosicionObjetosDeEscena.size == 0 || this.escenaAnterior != this.escenaActual.id) {
+      this.mapObjetosEnigmaFromObjetosJuego.forEach(objetoEnigma => {
+        if (objetoEnigma.escenaId == this.escenaActual.id) {
+          this.mapPosicionObjetosDeEscena.set(objetoEnigma.posicion, objetoEnigma);
+        }
+      });
+      this.mapObjetosEscapeFromObjetosJuego.forEach(objetoEscape => {
+        if (objetoEscape.escenaId == this.escenaActual.id) {
+          this.mapPosicionObjetosDeEscena.set(objetoEscape.posicion, objetoEscape);
+        }
+      });
+
+      this.sesion.TomaMapPosicionObjetosDeEscena(this.mapPosicionObjetosDeEscena);
+    }
+
+    this.mapObjetosRequeridosPorEscena = this.sesion.DameMapObjetosRequeridosPorEscena();
+
+    if (this.mapObjetosRequeridosPorEscena.size == 0 || this.escenaAnterior != this.escenaActual.id) {
+      this.mapEscenas.forEach(escena => {
+
+        let mapObjetosAuxiliar: Map<number, ObjetoEscape> = new Map<number, ObjetoEscape>();
+
+        // console.log("Escena: ", escena.id);
+
+        Array.from(this.mapObjetosEscapeFromObjetosJuego.values()).forEach(objetoEscape => {
+
+          // console.log("Objeto: ", objetoEscape);
+
+          if (escena.id == objetoEscape.requeridoEscenaId && objetoEscape.requerido == true) {
+            mapObjetosAuxiliar.set(objetoEscape.objetoJuegoId, objetoEscape);
+            // console.log("Map objetos auxiliar: ", mapObjetosAuxiliar);
+          }
+        });
+
+        this.mapObjetosRequeridosPorEscena.set(escena.id, mapObjetosAuxiliar);
+
+      });
+
+      // console.log("MAP OPBJETOS REQUERIDOS: ", this.mapObjetosRequeridosPorEscena);
+      this.sesion.TomaMapObjetosRequeridosPorEscena(this.mapObjetosRequeridosPorEscena);
+    }
+    //    console.log("Map de objetos escape: ", this.mapObjetosEscapeFromObjetosJuego);
+    //    console.log("Map de objetos enigma: ", this.mapObjetosEnigmaFromObjetosJuego);
+
+    
+
+
+    // console.log("Map de posiciones con objetos escape y enigma: ", this.mapPosicionObjetosDeEscena);
+    // console.log("ObjetoEnigma: 1, ", this.objeto4enigma);
+    // console.log("ObjetoEnigma: 2, ", this.objeto5enigma);
+    // console.log("ObjetoEnigma: 1, ", this.objeto1escape);
+    // console.log("ObjetoEnigma: 2, ", this.objeto2escape);
+    // console.log("ObjetoEnigma: 3, ", this.objeto3escape);
+    // console.log("ObjetoEnigma: 4, ", this.objeto4escape);
+    // console.log("ObjetoEnigma: 5, ", this.objeto5escape);
+
+
+    if (this.mapPosicionObjetosDeEscena.get(1) != undefined) {
+      if (this.mapPosicionObjetosDeEscena.get(1).tipo == "objetoEscape") {
+        objetoEscape = this.mapPosicionObjetosDeEscena.get(1);
+        this.objeto1escape = new ObjetoEscape(objetoEscape.nombre, objetoEscape.imagen, objetoEscape.usable, objetoEscape.recogido, objetoEscape.posicion, objetoEscape.escenaId, objetoEscape.juegoDeEscapeRoomId, objetoEscape.objetoGlobalId, objetoEscape.objetoJuegoId, objetoEscape.tipo);
+        this.recogido = this.objeto1escape.recogido;
+        // console.log("Objeto1: ", this.objeto1escape);
+
+      } else {
+        objetoEnigma = this.mapPosicionObjetosDeEscena.get(1);
+        this.objeto1enigma = new ObjetoEnigma(objetoEnigma.nombre, objetoEnigma.imagen, objetoEnigma.pregunta, objetoEnigma.respuesta, objetoEnigma.resuelto, objetoEnigma.posicion, objetoEnigma.escenaId, objetoEnigma.juegoDeEscapeRoomId, objetoEnigma.objetoGlobalId, objetoEnigma.objetoJuegoId, objetoEnigma.tipo);
+        this.resuelto = this.objeto1enigma.resuelto;
+        // console.log("Objeto1: ", this.objeto1enigma);
+
+      }
+    }
+    if (this.mapPosicionObjetosDeEscena.get(2) != undefined) {
+
+      if (this.mapPosicionObjetosDeEscena.get(2).tipo == "objetoEscape") {
+        objetoEscape = this.mapPosicionObjetosDeEscena.get(2);
+        this.objeto2escape = new ObjetoEscape(objetoEscape.nombre, objetoEscape.imagen, objetoEscape.usable, objetoEscape.recogido, objetoEscape.posicion, objetoEscape.escenaId, objetoEscape.juegoDeEscapeRoomId, objetoEscape.objetoGlobalId, objetoEscape.objetoJuegoId, objetoEscape.tipo);;
+        this.recogido2 = this.objeto2escape.recogido;
+        // console.log("Objeto2: ", this.objeto2escape);
+
+      } else {
+        objetoEnigma = this.mapPosicionObjetosDeEscena.get(2);
+        this.objeto2enigma = new ObjetoEnigma(objetoEnigma.nombre, objetoEnigma.imagen, objetoEnigma.pregunta, objetoEnigma.respuesta, objetoEnigma.resuelto, objetoEnigma.posicion, objetoEnigma.escenaId, objetoEnigma.juegoDeEscapeRoomId, objetoEnigma.objetoGlobalId, objetoEnigma.objetoJuegoId, objetoEnigma.tipo);
+        this.resuelto2 = this.objeto2enigma.resuelto;
+        // console.log("Objeto2: ", this.objeto2enigma);
+
+      }
+    }
+    if (this.mapPosicionObjetosDeEscena.get(3) != undefined) {
+
+      if (this.mapPosicionObjetosDeEscena.get(3).tipo == "objetoEscape") {
+        objetoEscape = this.mapPosicionObjetosDeEscena.get(3);
+        this.objeto3escape = new ObjetoEscape(objetoEscape.nombre, objetoEscape.imagen, objetoEscape.usable, objetoEscape.recogido, objetoEscape.posicion, objetoEscape.escenaId, objetoEscape.juegoDeEscapeRoomId, objetoEscape.objetoGlobalId, objetoEscape.objetoJuegoId, objetoEscape.tipo);
+        this.recogido3 = this.objeto3escape.recogido;
+        // console.log("Objeto3: ", this.objeto3escape);
+
+      } else {
+        objetoEnigma = this.mapPosicionObjetosDeEscena.get(3);
+        this.objeto3enigma = new ObjetoEnigma(objetoEnigma.nombre, objetoEnigma.imagen, objetoEnigma.pregunta, objetoEnigma.respuesta, objetoEnigma.resuelto, objetoEnigma.posicion, objetoEnigma.escenaId, objetoEnigma.juegoDeEscapeRoomId, objetoEnigma.objetoGlobalId, objetoEnigma.objetoJuegoId, objetoEnigma.tipo);
+        this.resuelto3 = this.objeto3enigma.resuelto;
+        // console.log("Objeto3: ", this.objeto3enigma);
+
+      }
+    }
+    if (this.mapPosicionObjetosDeEscena.get(4) != undefined) {
+
+      if (this.mapPosicionObjetosDeEscena.get(4).tipo == "objetoEscape") {
+        objetoEscape = this.mapPosicionObjetosDeEscena.get(4);
+        this.objeto4escape = new ObjetoEscape(objetoEscape.nombre, objetoEscape.imagen, objetoEscape.usable, objetoEscape.recogido, objetoEscape.posicion, objetoEscape.escenaId, objetoEscape.juegoDeEscapeRoomId, objetoEscape.objetoGlobalId, objetoEscape.objetoJuegoId, objetoEscape.tipo);
+        this.recogido4 = this.objeto4escape.recogido;
+        // console.log("Objeto4: ", this.objeto4escape);
+
+      } else {
+        objetoEnigma = this.mapPosicionObjetosDeEscena.get(4);
+        this.objeto4enigma = new ObjetoEnigma(objetoEnigma.nombre, objetoEnigma.imagen, objetoEnigma.pregunta, objetoEnigma.respuesta, objetoEnigma.resuelto, objetoEnigma.posicion, objetoEnigma.escenaId, objetoEnigma.juegoDeEscapeRoomId, objetoEnigma.objetoGlobalId, objetoEnigma.objetoJuegoId, objetoEnigma.tipo);
+        this.resuelto4 = this.objeto4enigma.resuelto;
+        // console.log("Objeto4: ", this.objeto4enigma);
+
+      }
+    }
+    if (this.mapPosicionObjetosDeEscena.get(5) != undefined) {
+
+      if (this.mapPosicionObjetosDeEscena.get(5).tipo == "objetoEscape") {
+        objetoEscape = this.mapPosicionObjetosDeEscena.get(5);
+        this.objeto5escape = new ObjetoEscape(objetoEscape.nombre, objetoEscape.imagen, objetoEscape.usable, objetoEscape.recogido, objetoEscape.posicion, objetoEscape.escenaId, objetoEscape.juegoDeEscapeRoomId, objetoEscape.objetoGlobalId, objetoEscape.objetoJuegoId, objetoEscape.tipo);
+        this.recogido5 = this.objeto5escape.recogido;
+        // console.log("Objeto5: ", this.objeto5escape);
+
+      } else {
+        objetoEnigma = this.mapPosicionObjetosDeEscena.get(5);
+        this.objeto5enigma = new ObjetoEnigma(objetoEnigma.nombre, objetoEnigma.imagen, objetoEnigma.pregunta, objetoEnigma.respuesta, objetoEnigma.resuelto, objetoEnigma.posicion, objetoEnigma.escenaId, objetoEnigma.juegoDeEscapeRoomId, objetoEnigma.objetoGlobalId, objetoEnigma.objetoJuegoId, objetoEnigma.tipo);
+        this.resuelto5 = this.objeto5enigma.resuelto;
+        // console.log("Objeto5: ", this.objeto5enigma);
+
+      }
+    }
     this.id = this.sesion.DameAlumno().id;
     this.estado = this.sesion.DameEstadoEscapeRoom();
 
@@ -148,30 +400,7 @@ export class PrimerEscenarioPage implements OnInit {
       this.showImage = true;
     }
 
-    //Mochila
-
-    //Elegir el mapa
-    if (this.juegoEscape.escenario.mapa == "Baño") {
-      this.varEscenario = "containerBaño";
-    }
-    else {
-      if (this.juegoEscape.escenario.mapa == "Cocina") {
-        this.varEscenario = "containerCocina";
-      }
-      else {
-        this.varEscenario = "containerHabitacion";
-      }
-    }
-
-    //Escenario secundario
-    this.calculos.GuardaObjetosEscapeEscenario("Secundario");
-    this.calculos.GuardaObjetosEnigmaEscenario("Secundario");
-
-    this.llave = this.juegoEscape.escenario.llave;
-
-    this.objetoPista = new ObjetoPista("Primera pista", this.juegoEscape.escenario.mapa, "Principal", "Recuerda observar bien todo tu alrededor, nunca sabes lo que te podrá ser útil en un futuro...");
   }
-
   activeTrack: Audio = null;
   player: Howl = null;
   isPlaying = false;
@@ -211,14 +440,14 @@ export class PrimerEscenarioPage implements OnInit {
   abrirMochila() {
     this.router.navigateByUrl('mochila');
   }
-  //ObjetoEnigma
-  abrirObjeto(objeto) {
+  abrirObjeto(objeto: ObjetoEnigma) {
 
-    let bool: boolean = false;
+    let objetoE: ObjetoEnigma;
+
     this.alertController.create({
-      header: 'Enigma de la caja fuerte',
+      header: 'Enigma de' + objeto.nombre,
       subHeader: 'Responde con el código correcto.',
-      message: '¿' + objeto.pregunta + '?',
+      message: objeto.pregunta,
       inputs: [
         {
           name: 'Respuesta',
@@ -235,49 +464,35 @@ export class PrimerEscenarioPage implements OnInit {
         {
           text: 'Done!',
           handler: (data: any) => {
-            this.juegoEscape.escenario.objetos.forEach(elemento => {
-              if (elemento.nombre == objeto.nombre) {
-                this.objetosEnigma.forEach(elemen => {
 
-                  if (elemen.nombre == elemento.nombre) {
-                    if (elemen.respuesta == data.Respuesta && elemen.resuelta == false) {
-                      this.alertController.create({ message: "Perfecto!" }).then(res => {
-                        res.present();
-                        elemen.resuelta = true;
-                        this.calculos.cambiaEstadoObjetoEnigmaConListaObjetos(elemen);
-                        if (elemen.principal == true && this.llave.recogido == false) {
-                          this.conseguirLlave(elemen);
-                        } if (elemen.principal == false) {
-                          if (this.juegoEscape.mochila.pistasGuardadas != null && this.juegoEscape.mochila.pistasGuardadas != undefined) {
-                            this.juegoEscape.mochila.pistasGuardadas.forEach(pista => {
-                              if (pista.nombre == this.objetoPista.nombre) {
-                                this.alertController.create({ message: "Ya tienes la pista!" }).then(res => {
-                                  res.present();
-                                  bool = true;
-                                });
-                              }
-                            });
-                          }
-                          if (bool == false) {
-                            this.conseguirPista(elemen);
-                          }
-                        }
-                      });
-                    } else {
-                      if (elemen.resuelta == true) {
-                        this.alertController.create({ message: "Ya has resuelto este acertijo!" }).then(res => {
-                          res.present();
-                        });
-                      } else {
-                        this.alertController.create({ message: "Error!" }).then(res => {
-                          res.present();
-                        });
-                      }
-                    }
-                  }
+            if (data.Respuesta == objeto.respuesta && objeto.resuelto == false) {
+              objetoE = this.mapObjetosEnigmaFromObjetosJuego.get(objeto.objetoJuegoId);
+              console.log("Objeto E: ", objetoE);
+              if (objetoE != undefined) {
+                objetoE.resuelto = true;
+                this.mapObjetosEnigmaFromObjetosJuego.set(objetoE.id, objetoE);
+                this.sesion.TomaMapObjetosEnigmaFromObjetosJuego(this.mapObjetosEnigmaFromObjetosJuego);
+                if (objetoE.principal == true) {
+                  this.conseguirLlave();
+                } else {
+                  this.conseguirPista();
+                }
+              }
+              this.alertController.create({ message: "¡Perfecto!" }).then(res => {
+                res.present();
+                this.reload();
+              });
+            } else {
+              if (objeto.resuelto == true) {
+                this.alertController.create({ message: "¡Ya has resuelto este enigma!" }).then(res => {
+                  res.present();
+                });
+              } else {
+                this.alertController.create({ message: "¡Error!" }).then(res => {
+                  res.present();
                 });
               }
-            });
+            }
           }
         }
       ]
@@ -285,7 +500,7 @@ export class PrimerEscenarioPage implements OnInit {
       res.present();
     });
   }
-  conseguirPista(objetoEnigma) {
+  conseguirPista() {
     Swal.fire({
       title: 'Felicidades! Has conseguido una pista',
       icon: 'success',
@@ -293,14 +508,14 @@ export class PrimerEscenarioPage implements OnInit {
       confirmButtonText: 'Recoger'
     }).then((result) => {
       if (result.value) {
-        this.calculos.añadirPistaMochila(this.objetoPista);
-        this.objetoPista.recogida = true;
-        this.sesion.TomaObjetoEnigma(objetoEnigma);
+        this.pistaActual.recogido = true;
+        this.mapPistaPorEscena.set(this.escenaActual.id, this.pistaActual);
+        this.sesion.TomaMapPistaEscena(this.mapPistaPorEscena);
         this.reload();
       }
     });
   }
-  conseguirLlave(objetoEnigma) {
+  conseguirLlave() {
 
     Swal.fire({
       title: 'Felicidades! Has conseguido la llave',
@@ -309,70 +524,42 @@ export class PrimerEscenarioPage implements OnInit {
       confirmButtonText: 'Recoger'
     }).then((result) => {
       if (result.value) {
-        this.calculos.añadirObjetoMochila(this.llave);
-        this.llave.recogido = true;
-        this.sesion.TomaLlave(this.llave);
+        this.llaveActual.recogido = true;
+        this.mapLlavePorEscena.set(this.escenaActual.id, this.llaveActual);
+        this.sesion.TomaMapLlaveEscena(this.mapLlavePorEscena);
         this.reload();
       }
     });
-
   }
-  cogerObjeto(objeto) {
+  cogerObjeto(objetoEscape: ObjetoEscape) {
+    let objeto: ObjetoEscape;
+    let mapObjetosRequeridos: Map<number, ObjetoEscape> = new Map<number, ObjetoEscape>();
 
-    if (objeto == this.objeto1escape.nombre) {
-      if (this.objeto1escape.usable == true) {
-        this.sesion.cambiaElEstadoDelObjeto(true, objeto);
-        Swal.fire({
-          title: '¿Seguro que quieres este objeto?   ' + objeto,
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Si, estoy seguro'
-        }).then((result) => {
-          if (result.value) {
-            this.calculos.añadirObjetoMochila(this.objeto1escape);
-            this.reload();
-          }
-        });
+    Swal.fire({
+      title: '¿Seguro que quieres este objeto?   ' + objetoEscape.nombre,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, estoy seguro'
+    }).then((result) => {
+      if (result.value) {
+        //coger el objeto del mapa y cambiarle el estado
+        objeto = this.mapObjetosEscapeFromObjetosJuego.get(objetoEscape.objetoJuegoId);
+        objeto.recogido = true;
+        this.mapObjetosEscapeFromObjetosJuego.set(objetoEscape.objetoJuegoId, objeto);
+
+        //ver si el objeto es requerido o no.
+        if (objeto.requerido == true) {
+          mapObjetosRequeridos = this.mapObjetosRequeridosPorEscena.get(objeto.requeridoEscenaId);
+          mapObjetosRequeridos.set(objeto.objetoJuegoId, objeto);
+          this.mapObjetosRequeridosPorEscena.set(this.escenaActual.id, mapObjetosRequeridos);
+          this.sesion.TomaMapObjetosRequeridosPorEscena(this.mapObjetosRequeridosPorEscena);
+        }
+        this.sesion.TomaMapObjetosEscapeFromObjetosJuego(this.mapObjetosEscapeFromObjetosJuego);
+        this.reload();
       }
-    }
-    if (objeto == this.objeto2escape.nombre) {
-      if (this.objeto2escape.usable == true) {
-        this.sesion.cambiaElEstadoDelObjeto(true, objeto);
-        Swal.fire({
-          title: '¿Seguro que quieres este objeto?   ' + objeto,
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Si, estoy seguro'
-        }).then((result) => {
-          if (result.value) {
-            this.calculos.añadirObjetoMochila(this.objeto2escape);
-            this.reload();
-          }
-        });
-      }
-    }
-    if (objeto == this.objeto3escape.nombre) {
-      if (this.objeto1escape.usable == true) {
-        this.sesion.cambiaElEstadoDelObjeto(true, objeto);
-        Swal.fire({
-          title: '¿Seguro que quieres este objeto?   ' + objeto,
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Si, estoy seguro'
-        }).then((result) => {
-          if (result.value) {
-            this.calculos.añadirObjetoMochila(this.objeto3escape);
-            this.reload();
-          }
-        });
-      }
-    }
+    });
   }
   guardarEscape() {
     this.calculos.GuardaEscapeRoom();
@@ -409,8 +596,12 @@ export class PrimerEscenarioPage implements OnInit {
   }
   pasarAlSiguienteEscenario() {
 
+    let cont: number = 0;
+    let mapObjetosRequeridos: Map<number, ObjetoEscape> = new Map<number, ObjetoEscape>();
+
+    console.log("eooooooooooooo");
     Swal.fire({
-      title: '¿Tiene la llave que abre este portal?',
+      title: '¿Tienes todo lo necesario para pasar al siguiente escenario?',
       icon: 'warning',
       confirmButtonColor: '#3085d6',
       confirmButtonText: 'Sí',
@@ -418,15 +609,63 @@ export class PrimerEscenarioPage implements OnInit {
       cancelButtonColor: '#d33',
       cancelButtonText: 'No'
     }).then((result) => {
+      console.log("RESULT VALUE: ", result.value);
       if (result.value) {
+        console.log("EEEEEEEEEEEEEEEEE");
+        // console.log("Escena actual id: ", this.escenaActual.id);
+        // console.log("Llave: ", this.llaveActual);
+        // console.log("Map objetos requeridos de todas las escenas: ", this.mapObjetosRequeridosPorEscena);
+        mapObjetosRequeridos = this.sesion.DameMapObjetosRequeridosPorEscena().get(this.escenaActual.id);
+         console.log("Map objetos requeridos de una escena: ", mapObjetosRequeridos);
+        mapObjetosRequeridos.forEach(objeto => {
+          if (objeto.recogido == true) {
+            cont = cont + 1;
+            console.log("Cont: ", cont);
+          }
+        });
+        if (cont == mapObjetosRequeridos.size) {
+          if (this.llaveActual.recogido == true) {
+            Swal.fire('¡Listo!', '', 'info');
+            if (this.escenaActual.id != 1) {
+              this.escenaAnterior = this.escenaAnterior + 1;
+            }
+            this.mapPosicionObjetosDeEscena.clear();
+            this.alumnoJuegoEscapeRoom.escenaActualId = this.escenaActual.id + 1;
+            console.log("Alumno: ", this.alumnoJuegoEscapeRoom);
+            this.sesion.TomaAlumnoEscape(this.alumnoJuegoEscapeRoom);
+            this.primerEscenario = this.primerEscenario + 1;
+           // console.clear();
+            this.reload();
+          } else {
+            Swal.fire('Me parece aquí que alguien me esta mintiendo... Vuelve al escenario del crimen y encuentra la llave!', '', 'info');
 
-        if (this.llave.recogido == true) {
-          this.router.navigateByUrl('segundo-escenario');
+          }
         } else {
-          Swal.fire('Me parece aquí que alguien me esta mintiendo... Vuelve al escenario del crimen y encuentra la llave!', '', 'info');
+          if (this.llaveActual.recogido == true) {
+            Swal.fire('¡Ahora hacen falta los objetos requeridos, pero la llave la tienes!', '', 'info');
+          } else {
+            Swal.fire('Me parece aquí que alguien me esta mintiendo... Vuelve al escenario del crimen y encuentra la llave!', '', 'info');
 
+          }
         }
       }
     });
+    ;
+  }
+  convertirObjetoJuegoEnObjetoEscape(objetoJuego: ObjetoJuego, objetoGlobal: ObjetoGlobalEscape): ObjetoEscape {
+    let objetoEscape: ObjetoEscape = new ObjetoEscape(objetoGlobal.nombre, objetoGlobal.imagen, objetoJuego.usable, objetoJuego.recogido, objetoJuego.posicion, objetoJuego.escenaId, objetoJuego.juegoDeEscapeRoomId, objetoJuego.objetoId, objetoJuego.id, objetoGlobal.tipo, objetoJuego.requerido, objetoJuego.requeridoEscenaId);
+    return objetoEscape;
+  }
+  convertirObjetoJuegoEnObjetoEnigma(objetoJuego: ObjetoJuego, objetoGlobal: ObjetoGlobalEscape): ObjetoEnigma {
+    let objetoEnigma: ObjetoEnigma = new ObjetoEnigma(objetoGlobal.nombre, objetoGlobal.imagen, objetoJuego.pregunta, objetoJuego.respuesta, objetoJuego.resuelto, objetoJuego.posicion, objetoJuego.escenaId, objetoJuego.juegoDeEscapeRoomId, objetoJuego.objetoId, objetoJuego.id, objetoGlobal.tipo, objetoJuego.principal);
+    return objetoEnigma;
+  }
+  convertirObjetoJuegoEnLlave(objetoJuego: ObjetoJuego, objetoGlobal: ObjetoGlobalEscape): Llave {
+    let llave: Llave = new Llave(objetoGlobal.nombre, objetoJuego.recogido, objetoJuego.escenaId, objetoJuego.juegoDeEscapeRoomId, objetoJuego.objetoId, objetoJuego.id, objetoGlobal.tipo);
+    return llave;
+  }
+  convertirObjetoJuegoEnPista(objetoJuego: ObjetoJuego, objetoGlobal: ObjetoGlobalEscape): Pista {
+    let pista: Pista = new Pista(objetoGlobal.nombre, objetoJuego.recogido, objetoJuego.escenaId, objetoJuego.pregunta, objetoJuego.juegoDeEscapeRoomId, objetoJuego.objetoId, objetoJuego.id, objetoGlobal.tipo);
+    return pista;
   }
 }

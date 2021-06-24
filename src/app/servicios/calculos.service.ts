@@ -29,16 +29,20 @@ import { ObjetoPista } from '../clases/ObjetoPista';
 import { EscenarioEscapeRoom } from '../clases/EscenarioEscapeRoom';
 import Swal from 'sweetalert2';
 import { element } from 'protractor';
+import { ObjetoGlobalEscape } from '../clases/ObjetoGlobalEscape';
+import { PartidaEscape } from '../clases/PartidaEscape';
+import { EscenaDeJuego } from '../clases/EscenaDeJuego';
+import { ObjetoJuego } from '../clases/ObjetoJuego';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CalculosService {
 
-  objetosEnigmaSegundoEscenario: ObjetoEnigma[];
+  objetosEnigmaSegundoEscenario: ObjetoEnigma[] = [];
   objetosEscapeAyuda: ObjetoEscape[] = [];
   objetosEscape: ObjetoEscape[] = [];
-  objetosEscapeSegundoEscenario: ObjetoEscape[];
+  objetosEscapeSegundoEscenario: ObjetoEscape[] = [];
   objetosEnigma: ObjetoEnigma[] = [];
   juegosDePuntosActivos: Juego[] = [];
   juegosDePuntosInactivos: Juego[] = [];
@@ -56,6 +60,12 @@ export class CalculosService {
   miImagenCromo: string;
   alumnoEscape: AlumnoJuegoDeEscapeRoom;
   juegoEscape: JuegoDeEscapeRoom;
+  mapEscenasPorJuego: Map<number, Map<number, EscenaDeJuego>> = new Map<number, Map<number, EscenaDeJuego>>();
+  mapEscenarioPorEscena: Map<number, EscenarioEscapeRoom> = new Map<number, EscenarioEscapeRoom>();
+  mapObjetosPorEscena: Map<number, Map<number, ObjetoJuego>> = new Map<number, Map<number, ObjetoJuego>>();
+  mapInformacionGlobalDelObjetoJuego: Map<number, ObjetoGlobalEscape> = new Map<number, ObjetoGlobalEscape>();
+  mapObjetosJuego: Map<number, ObjetoJuego> = new Map<number, ObjetoJuego>();
+
 
   constructor(
     private sesion: SesionService,
@@ -99,32 +109,58 @@ export class CalculosService {
     });
     this.sesion.TomaObjetosEnigma(this.objetosEnigma);
   }
-  public GuardarObjetosEscapeRoom(juego: JuegoDeEscapeRoom) {
+  public MapearInformacionEscape(juego: JuegoDeEscapeRoom) {
+    //Pedimos el alumno del escape room una vez tenemos el juego
+    this.peticionesAPI.DameAlumnoDeEscapeRoom(this.sesion.DameAlumno().id, juego.id).subscribe(alumno => {
+      console.log("Alumno escape room: ", alumno);
+      this.sesion.TomaAlumnoEscape(alumno);
+    });
 
-    juego.escenario.objetos.forEach(elemento => {
-      if (elemento.tipoDeObjeto == "objetoEscape") {
-       
-        this.peticionesAPI.DameObjetoEscape(elemento.id).subscribe(res => {
-          this.objetosEscape.push(res[0]);
-        });
-       
-      } else {
-        this.peticionesAPI.DameObjetoEnigma(elemento.id).subscribe(res => {
-          this.objetosEnigma.push(res[0]);
+    //Pedimos el objeto partida que es la relacion entre Juego y escena para poder pedir la informacion de cada escena
+    let map: Map<number, EscenaDeJuego> = new Map<number, EscenaDeJuego>();
+    let mapObjetos: Map<number, ObjetoJuego> = new Map<number, ObjetoJuego>();
+
+    this.peticionesAPI.DameTodasLasPartidasDelJuegoEscape(juego.id).subscribe(partidas => {
+      console.log("Partidas: ", partidas);
+      if (partidas[0] != null) {
+        partidas.forEach(partida => {
+          this.peticionesAPI.DameEscenaEscapeRoom(partida.escenaId).subscribe(escena => {
+            console.log("Escena: ", escena);
+            if (escena != null && escena != undefined) {
+              map.set(escena.id, escena);
+              this.sesion.TomaMapEscenas(map);
+
+              //Pedimos la informacion de los escenarios de todas las escenas y lo guardamos en el map de escenas
+              this.peticionesAPI.DameEscenarioEscapePorEscena(escena.escenarioId).subscribe(escenario => {
+                console.log("Escenario: ", escenario);
+                this.mapEscenarioPorEscena.set(escena.id, escenario);
+                this.sesion.TomaMapEscenarioPorEscena(this.mapEscenarioPorEscena);
+              });
+
+              //Pedimos todos los ObjetosJuego de la escena
+              this.peticionesAPI.DameTodosLosObjetosJuegoDeLaEscena(partida.escenaId).subscribe(objetosJuego => {
+                console.log("Objetos juego de la escena: ", objetosJuego);
+                objetosJuego.forEach(objeto => {
+                  mapObjetos.set(objeto.id, objeto);
+                  this.sesion.TomaMapObjetosJuego(mapObjetos);
+
+                  //Pedimos todos los objetosGlobales de todos los objetos juego
+                  this.peticionesAPI.DameObjetoGlobalEscape(objeto.objetoId).subscribe(objetoGlobal => {
+                    if (objetoGlobal != undefined && objetoGlobal != null) {
+                      this.mapInformacionGlobalDelObjetoJuego.set(objeto.id, objetoGlobal);
+                      this.sesion.TomaMapInformacionGlobalDelObjetoJuego(this.mapInformacionGlobalDelObjetoJuego);
+                    } else {
+                      console.log("No hay objeto Global.");
+                    }
+                  });
+
+                });
+              });
+            }
+          });
         });
       }
     });
-
-    if (juego.escenario.llave != undefined){
-      this.objetosEscape.push(juego.escenario.llave);
-      this.sesion.TomaLlave(juego.escenario.llave);
-    }
-    if (this.objetosEscape != undefined) {
-      this.sesion.TomaObjetosEscape(this.objetosEscape);
-    }
-    if (this.objetosEnigma != undefined) {
-      this.sesion.TomaObjetosEnigma(this.objetosEnigma);
-    }
   }
   // ESTA FUNCIÓN BORRARÁ EL GRUPO DE ID QUE PASEMOS DEL PROFESOR CON ID QUE PASEMOS Y VOLVERÁ A LA PÁGINA DE LISTAR
   // ACTUALIZANDO LA TABLA
@@ -177,23 +213,24 @@ export class CalculosService {
     });
     return lista;
   }
-  public añadirObjetoMochila(objeto: ObjetoEscape) {
-    let bool: boolean = false;
-
-    this.juegoEscape = this.sesion.DameJuegoEscapeRoom();
-
-    this.juegoEscape.mochila.objetos.forEach(element => {
-      if(element.nombre == objeto.nombre){
-        bool = true;
-        Swal.fire("Ya está añadido el objeto.", "", "info");
-      }
-    });
-    if (bool == false){
-      this.juegoEscape.mochila.objetos[this.juegoEscape.mochila.objetos.length] = objeto;
-      this.sesion.TomaJuegoEscapeRoom(this.juegoEscape);
-    }
+  public añadirObjetoMochila(objeto: ObjetoGlobalEscape) {
+    /*   let bool: boolean = false;
+   
+       console.log("Objeto llave que paxa: ", objeto);
+       this.juegoEscape = this.sesion.DameJuegoEscapeRoom();
+   
+       this.juegoEscape.mochila.objetos.forEach(element => {
+         if(element.nombre == objeto.nombre){
+           bool = true;
+           Swal.fire("Ya está añadido el objeto.", "", "info");
+         }
+       });
+       if (bool == false){
+         this.juegoEscape.mochila.objetos[this.juegoEscape.mochila.objetos.length] = objeto;
+         this.sesion.TomaJuegoEscapeRoom(this.juegoEscape);
+       }  */
   }
-  public añadirPistaMochila(objeto: ObjetoPista) {
+  public añadirPistaMochila(objeto: ObjetoPista) { /*
     this.juegoEscape = this.sesion.DameJuegoEscapeRoom();
     console.log("JUEGO Mochila pre: ", this.juegoEscape)
     console.log("JUEGO Mochila pre PISTAS: ", this.juegoEscape.mochila.pistasGuardadas);
@@ -205,11 +242,14 @@ export class CalculosService {
   }
   console.log("JUEGO Mochila POST PISTAS: ", this.juegoEscape.mochila.pistasGuardadas);
   this.sesion.TomaJuegoEscapeRoom(this.juegoEscape);
-  }
+*/}
   public GuardaEscapeRoom() {
     this.peticionesAPI.GuardaEscapeRoom(this.sesion.DameJuegoEscapeRoom()).subscribe(juego => {
       console.log("Juego guardado: ", juego);
     });
+
+    this.objetosEscapeSegundoEscenario = this.sesion.DameObjetosEscapeSegundoEscenario();
+    this.objetosEnigmaSegundoEscenario = this.sesion.DameObjetosEnigmaSegundoEscenario();
 
     this.objetosEscape = this.sesion.DameObjetosEscape();
     console.log("Objetos escape: ", this.objetosEscape);
@@ -221,6 +261,18 @@ export class CalculosService {
         });
       }
     });
+
+    console.log("Objetos escape: ", this.objetosEscape);
+    this.objetosEscapeSegundoEscenario.forEach(elemento => {
+      if (elemento != undefined && elemento.nombre != "llave") {
+        console.log("Elemento: ", elemento);
+        this.peticionesAPI.ActualizarObjetosEscape(elemento).subscribe(juego => {
+          console.log("objeto Escape de vuelta: ", juego);
+        });
+      }
+    });
+
+
     this.objetosEnigma = this.sesion.DameObjetosEnigma();
     console.log("objetos ENIGMA: ", this.objetosEnigma);
     this.objetosEnigma.forEach(elemento => {
@@ -232,10 +284,22 @@ export class CalculosService {
         });
       }
     });
-    console.log("Dame LLave", this.sesion.DameLlave());
-    this.peticionesAPI.GuardarEstadoLlave(this.sesion.DameLlave()).subscribe(res =>{
 
-    })
+    this.objetosEnigmaSegundoEscenario.forEach(elemento => {
+      if (elemento != undefined) {
+        console.log("elemento enigma: ", elemento);
+        this.peticionesAPI.ActualizarObjetosEnigma(elemento).subscribe(juego => {
+          console.log("objetos Enigma: ", juego);
+
+        });
+      }
+    });
+
+
+    console.log("Dame LLave", this.sesion.DameLlave());
+    this.peticionesAPI.GuardarEstadoLlave(this.sesion.DameLlave()).subscribe(res => {
+
+    });
   }
   public DameJuegosAlumno(AlumnoId: number): any {
     const Observables = new Observable(obs => {
@@ -363,6 +427,7 @@ export class CalculosService {
                                                 JuegosInactivos.push(juegosDelAlumno[i]);
                                               }
                                             }
+                                            console.log("Juegos escape del alumno: ", juegosDelAlumno);
                                           });
                                           console.log('Ya tengo los juegos de Escape');
 

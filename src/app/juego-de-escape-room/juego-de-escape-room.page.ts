@@ -22,10 +22,11 @@ export class JuegoDeEscapeRoomPage implements OnInit {
               { }
 
   ngOnInit() {
+    console.clear();
     this.juego = this.sesion.DameJuegoEscapeRoom();
     this.estado = this.juego.estado;
     this.sesion.TomaEstadoEscapeRoom(this.estado);
-    this.calculos.GuardarObjetosEscapeRoom(this.juego);
+    this.calculos.MapearInformacionEscape(this.juego);
     console.clear();
   }
 

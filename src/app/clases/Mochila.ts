@@ -1,14 +1,15 @@
 import { ObjetoEscape } from "./objetoEscape";
+import { ObjetoGlobalEscape } from "./ObjetoGlobalEscape";
 import { ObjetoPista } from "./ObjetoPista";
 
 export class Mochila {
 
-    objetos: ObjetoEscape [];
-    pistasGuardadas: ObjetoPista [];
+    objetos: ObjetoGlobalEscape [] = [];
+    pistasGuardadas: ObjetoPista [] = [];
     idJuegoDeEscapeRoom: number;
 
   
-    constructor(objetos?: ObjetoEscape [], idJuegoDeEscapeRoom?: number, pistasGuardadas?: ObjetoPista []) {
+    constructor(objetos?: ObjetoGlobalEscape [], idJuegoDeEscapeRoom?: number, pistasGuardadas?: ObjetoPista []) {
   
       this.objetos = objetos;
       this.idJuegoDeEscapeRoom = idJuegoDeEscapeRoom;

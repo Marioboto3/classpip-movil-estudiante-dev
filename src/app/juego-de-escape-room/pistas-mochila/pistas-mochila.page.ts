@@ -33,7 +33,8 @@ export class PistasMochilaPage implements OnInit {
 
     this.juegoEscape = this.sesion.DameJuegoEscapeRoom();
     this.objetos = this.sesion.DameObjetosEscape();
-    this.pistasGuardadas = this.juegoEscape.mochila.pistasGuardadas;
+    
+    //this.pistasGuardadas = this.juegoEscape.mochila.pistasGuardadas;
 
   }
   reload() {
