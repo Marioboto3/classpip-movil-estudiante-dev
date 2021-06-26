@@ -101,18 +101,21 @@ export class SesionService {
   cromosQueNoTengoImagenDetras;
   nickName;
 
+  escenaActual: number;
+
   mapEscenasPorJuego: Map<number, Map<number, EscenaDeJuego>> = new Map<number, Map<number, EscenaDeJuego>>();
   mapEscenarioPorEscena: Map<number, EscenarioEscapeRoom> = new Map<number, EscenarioEscapeRoom>();
   mapObjetosPorEscena: Map<number, Map<number, ObjetoJuego>> = new Map<number, Map<number, ObjetoJuego>>();
   mapInformacionGlobalDelObjetoJuego: Map<number, ObjetoGlobalEscape> = new Map<number, ObjetoGlobalEscape>();
   mapEscenas: Map<number, EscenaDeJuego> = new Map<number, EscenaDeJuego>();
   mapObjetosJuego:  Map<number, ObjetoJuego> = new Map<number, ObjetoJuego>();
-  mapObjetosEscapeFromObjetosJuego: Map<number,ObjetoEscape> = new Map<number, ObjetoEscape>();
-  mapObjetosEnigmaFromObjetosJuego: Map<number,ObjetoEnigma> = new Map<number, ObjetoEnigma>();
+  mapObjetosEscapeFromObjetosJuego: Map<number, Map<number, ObjetoEscape>> = new Map<number, Map<number, ObjetoEscape>>(); //todos
+  mapObjetosEnigmaFromObjetosJuego: Map<number, Map<number, ObjetoEnigma>> = new Map<number, Map<number, ObjetoEnigma>>(); //todos
   mapPosicionObjetosDeEscena: Map<number, any> = new Map<number, any>(); //escena actual
   mapLlavePorEscena: Map<number, Llave> = new Map<number, Llave>();
   mapPistaPorEscena: Map<number, Pista> = new Map<number, Pista>();
   mapObjetosRequeridosPorEscena: Map<number, Map<number,ObjetoEscape>> = new Map<number, Map<number,ObjetoEscape>>();
+  mapPosicionObjetosDeTodasLasEscenas: Map<number, Map<number, any>> = new Map<number, Map<number, any>>(); //escena actual
 
   constructor() { }
   public TomaProfesor(profesor: Profesor) {
@@ -178,6 +181,12 @@ export class SesionService {
   public DameMapEscenas(): any {
     return this.mapEscenas;
   }
+  public DameEscenaActualId(): number {
+    return this.escenaActual;
+  }
+  public TomaEscenaActualId(escenaActualId: number){
+    this.escenaActual = escenaActualId;
+  }
   public TomaMapLlaveEscena(map: Map<number, Llave>) {
     this.mapLlavePorEscena = map;
   }
@@ -202,13 +211,13 @@ export class SesionService {
   public DameMapObjetosJuego(): any {
     return this.mapObjetosJuego;
   }
-  public TomaMapObjetosEscapeFromObjetosJuego(map:Map<number, ObjetoEscape>) {
+  public TomaMapObjetosEscapeFromObjetosJuego(map: Map<number, Map<number, ObjetoEscape>>) {
     this.mapObjetosEscapeFromObjetosJuego = map;
   }
   public DameMapObjetosEscapeFromObjetosJuego(): any {
     return this.mapObjetosEscapeFromObjetosJuego;
   }
-  public TomaMapObjetosEnigmaFromObjetosJuego(map: Map<number, ObjetoEnigma>) {
+  public TomaMapObjetosEnigmaFromObjetosJuego(map:  Map<number, Map<number, ObjetoEnigma>>) {
     this.mapObjetosEnigmaFromObjetosJuego = map;
   }
   public DameMapObjetosEnigmaFromObjetosJuego(): any {
@@ -231,6 +240,12 @@ export class SesionService {
   }
   public DameMapPosicionObjetosDeEscena(): any {
     return this.mapPosicionObjetosDeEscena;
+  }
+  public TomaMapPosicionObjetosDeTodasLasEscenas(map:  Map<number, Map<number, any>>) {
+    this.mapPosicionObjetosDeTodasLasEscenas = map;
+  }
+  public DameMapPosicionObjetosDeTodasLasEscenas(): any {
+    return this.mapPosicionObjetosDeTodasLasEscenas;
   }
   public TomaMapInformacionGlobalDelObjetoJuego(map: Map<number, ObjetoGlobalEscape>) {
     this.mapInformacionGlobalDelObjetoJuego = map;

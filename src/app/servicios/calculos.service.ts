@@ -65,6 +65,9 @@ export class CalculosService {
   mapObjetosPorEscena: Map<number, Map<number, ObjetoJuego>> = new Map<number, Map<number, ObjetoJuego>>();
   mapInformacionGlobalDelObjetoJuego: Map<number, ObjetoGlobalEscape> = new Map<number, ObjetoGlobalEscape>();
   mapObjetosJuego: Map<number, ObjetoJuego> = new Map<number, ObjetoJuego>();
+  escenaActualId: number;
+  mapPosicionObjetosDeEscena: Map<number, any> = new Map<number, any>(); //escena actual
+  mapPosicionObjetosDeTodasLasEscenas: Map<number, Map<number, any>> = new Map<number, Map<number, any>>(); //escena actual
 
 
   constructor(
@@ -112,7 +115,7 @@ export class CalculosService {
   public MapearInformacionEscape(juego: JuegoDeEscapeRoom) {
     //Pedimos el alumno del escape room una vez tenemos el juego
     this.peticionesAPI.DameAlumnoDeEscapeRoom(this.sesion.DameAlumno().id, juego.id).subscribe(alumno => {
-      console.log("Alumno escape room: ", alumno);
+     // console.log("Alumno escape room: ", alumno);
       this.sesion.TomaAlumnoEscape(alumno);
     });
 
@@ -121,25 +124,25 @@ export class CalculosService {
     let mapObjetos: Map<number, ObjetoJuego> = new Map<number, ObjetoJuego>();
 
     this.peticionesAPI.DameTodasLasPartidasDelJuegoEscape(juego.id).subscribe(partidas => {
-      console.log("Partidas: ", partidas);
+     // console.log("Partidas: ", partidas);
       if (partidas[0] != null) {
         partidas.forEach(partida => {
           this.peticionesAPI.DameEscenaEscapeRoom(partida.escenaId).subscribe(escena => {
-            console.log("Escena: ", escena);
+         //   console.log("Escena: ", escena);
             if (escena != null && escena != undefined) {
               map.set(escena.id, escena);
               this.sesion.TomaMapEscenas(map);
 
               //Pedimos la informacion de los escenarios de todas las escenas y lo guardamos en el map de escenas
               this.peticionesAPI.DameEscenarioEscapePorEscena(escena.escenarioId).subscribe(escenario => {
-                console.log("Escenario: ", escenario);
+          //      console.log("Escenario: ", escenario);
                 this.mapEscenarioPorEscena.set(escena.id, escenario);
                 this.sesion.TomaMapEscenarioPorEscena(this.mapEscenarioPorEscena);
               });
 
               //Pedimos todos los ObjetosJuego de la escena
               this.peticionesAPI.DameTodosLosObjetosJuegoDeLaEscena(partida.escenaId).subscribe(objetosJuego => {
-                console.log("Objetos juego de la escena: ", objetosJuego);
+          //      console.log("Objetos juego de la escena: ", objetosJuego);
                 objetosJuego.forEach(objeto => {
                   mapObjetos.set(objeto.id, objeto);
                   this.sesion.TomaMapObjetosJuego(mapObjetos);
@@ -161,6 +164,27 @@ export class CalculosService {
         });
       }
     });
+  }
+
+  public GuardarEscapeRoom(){
+    
+    this.escenaActualId = this.sesion.DameEscenaActualId();
+    if (this.escenaActualId == 1){
+      this.alumnoEscape = this.sesion.DameAlumnoEscape();
+    }else{
+      this.alumnoEscape = this.sesion.DameAlumnoEscapeRoom();
+    }
+    this.peticionesAPI.GuardarAlumnoEscapeRoom(this.alumnoEscape).subscribe();
+    this.mapPosicionObjetosDeTodasLasEscenas = this.sesion.DameMapPosicionObjetosDeTodasLasEscenas();
+    console.log("-- Map con todas las posiciones: ", this.mapPosicionObjetosDeTodasLasEscenas);
+    Array.from(this.mapPosicionObjetosDeTodasLasEscenas.values()).forEach(mapObjetos =>{
+
+    });
+  
+    // this.mapObjetosJuego = this.sesion.DameMapObjetosJuego();
+    // Array.from(this.mapObjetosJuego.values()).forEach(objetoJuego =>{
+    //   this.peticionesAPI.GuardarObjetoJuego(objetoJuego).subscribe();
+    // });
   }
   // ESTA FUNCIÓN BORRARÁ EL GRUPO DE ID QUE PASEMOS DEL PROFESOR CON ID QUE PASEMOS Y VOLVERÁ A LA PÁGINA DE LISTAR
   // ACTUALIZANDO LA TABLA

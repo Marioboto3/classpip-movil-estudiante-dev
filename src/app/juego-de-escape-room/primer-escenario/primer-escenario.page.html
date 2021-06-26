@@ -19,6 +19,13 @@
               (click)="guardarEscape()">
               <mat-icon>save</mat-icon>
             </button>
+            <div *ngIf="notFirst">
+            <button  mat-mini-fab aria-label="miniFabButton"
+              style="background-color: black; position: fixed; margin-left: 100px; margin-top: 10px;"
+              (click)="volver()">
+              <mat-icon>save</mat-icon>
+            </button>
+          </div>
             <button style="background-color: blue; position: fixed; margin-left: 135px; margin-top: 200px;"
               (click)="pasarAlSiguienteEscenario()">SALIR
             </button>
@@ -47,9 +54,17 @@
                 (click)="guardarEscape()">
                 <mat-icon>save</mat-icon>
               </button>
+              <div *ngIf="notFirst">
+                <button  mat-mini-fab aria-label="miniFabButton"
+                  style="background-color: black; position: fixed; margin-left: 100px; margin-top: 10px;"
+                  (click)="volver()">
+                  <mat-icon>save</mat-icon>
+                </button>
+              </div>
               <button style="background-color: blue; position: fixed; margin-left: 135px; margin-top: 200px;"
                 (click)="pasarAlSiguienteEscenario()">SALIR
               </button>
+              
               <img style="position: fixed; margin-left: 270px; margin-top: 110px; height: 50px;"
                 (click)="abrirObjeto(objeto4enigma)" src="../../../assets/escape-room/{{objeto4enigma.imagen}}">
               <img style="position: fixed; margin-left: 340px; margin-top: 110px; height: 50px;"
@@ -74,6 +89,13 @@
                 (click)="guardarEscape()">
                 <mat-icon>save</mat-icon>
               </button>
+              <div *ngIf="notFirst">
+                <button  mat-mini-fab aria-label="miniFabButton"
+                  style="background-color: black; position: fixed; margin-left: 100px; margin-top: 10px;"
+                  (click)="volver()">
+                  <mat-icon>save</mat-icon>
+                </button>
+              </div>
               <button style="background-color: blue; position: fixed; margin-left: 135px; margin-top: 200px;"
                 (click)="pasarAlSiguienteEscenario()">SALIR
               </button>
@@ -101,6 +123,13 @@
                 (click)="guardarEscape()">
                 <mat-icon>save</mat-icon>
               </button>
+              <div *ngIf="notFirst">
+                <button  mat-mini-fab aria-label="miniFabButton"
+                  style="background-color: black; position: fixed; margin-left: 100px; margin-top: 10px;"
+                  (click)="volver()">
+                  <mat-icon>save</mat-icon>
+                </button>
+              </div>
               <button style="background-color: blue; position: fixed; margin-left: 135px; margin-top: 200px;"
                 (click)="pasarAlSiguienteEscenario()">SALIR
               </button>
@@ -129,6 +158,13 @@
                 (click)="guardarEscape()">
                 <mat-icon>save</mat-icon>
               </button>
+              <div *ngIf="notFirst">
+                <button  mat-mini-fab aria-label="miniFabButton"
+                  style="background-color: black; position: fixed; margin-left: 100px; margin-top: 10px;"
+                  (click)="volver()">
+                  <mat-icon>save</mat-icon>
+                </button>
+              </div>
               <button style="background-color: blue; position: fixed; margin-left: 135px; margin-top: 200px;"
                 (click)="pasarAlSiguienteEscenario()">SALIR
               </button>
@@ -154,6 +190,13 @@
                 (click)="guardarEscape()">
                 <mat-icon>save</mat-icon>
               </button>
+              <div *ngIf="notFirst">
+                <button  mat-mini-fab aria-label="miniFabButton"
+                  style="background-color: black; position: fixed; margin-left: 100px; margin-top: 10px;"
+                  (click)="volver()">
+                  <mat-icon>save</mat-icon>
+                </button>
+              </div>
               <button style="background-color: blue; position: fixed; margin-left: 135px; margin-top: 200px;"
                 (click)="pasarAlSiguienteEscenario()">SALIR
               </button>
@@ -178,6 +221,13 @@
                 (click)="guardarEscape()">
                 <mat-icon>save</mat-icon>
               </button>
+              <div *ngIf="notFirst">
+                <button  mat-mini-fab aria-label="miniFabButton"
+                  style="background-color: black; position: fixed; margin-left: 100px; margin-top: 10px;"
+                  (click)="volver()">
+                  <mat-icon>save</mat-icon>
+                </button>
+              </div>
               <button style="background-color: blue; position: fixed; margin-left: 135px; margin-top: 200px;"
                 (click)="pasarAlSiguienteEscenario()">SALIR
               </button>
@@ -202,6 +252,13 @@
                 (click)="guardarEscape()">
                 <mat-icon>save</mat-icon>
               </button>
+              <div *ngIf="notFirst">
+                <button  mat-mini-fab aria-label="miniFabButton"
+                  style="background-color: black; position: fixed; margin-left: 100px; margin-top: 10px;"
+                  (click)="volver()">
+                  <mat-icon>save</mat-icon>
+                </button>
+              </div>
               <button style="background-color: blue; position: fixed; margin-left: 135px; margin-top: 200px;"
                 (click)="pasarAlSiguienteEscenario()">SALIR
               </button>

@@ -115,7 +115,7 @@ export class PeticionesAPIService {
   private APIUrlPartidasEscape = this.base +  '3000/api/PartidasEscape';
   private APIUrlEscenaDeJuego= this.base +  '3000/api/EscenasDeJuego';
   private APIUrlEscenarioEscapeRoom= this.base +  '3000/api/EscenariosEscapeRoom';
-
+  private APIUrlObjetoJuego = this.base + '3000/api/ObjetosJuego';
   
 
 
@@ -634,6 +634,13 @@ export class PeticionesAPIService {
     return this.http.get<ObjetoEnigma>(this.APIUrlObjetosEnigma + '?filter[where][objetoId]='
     + idObjetoGlobal);
   }
+  
+  public GuardarAlumnoEscapeRoom(alumnoEscape: AlumnoJuegoDeEscapeRoom): Observable<AlumnoJuegoDeEscapeRoom> {
+    return this.http.put<AlumnoJuegoDeEscapeRoom>(this.APIUrlAlumnoJuegoDeEscapeRoom, alumnoEscape);}
+    
+  public GuardarObjetoJuego(objetoJuego: ObjetoJuego): Observable<ObjetoJuego> {
+    return this.http.put<ObjetoJuego>(this.APIUrlObjetoJuego, objetoJuego);}
+    
   public ActualizaObjetoEnigma(objetoEnigma: ObjetoEnigma): Observable<ObjetoEnigma> {
     return this.http.put<ObjetoEnigma>(this.APIUrlObjetosEnigma, objetoEnigma);}
 
