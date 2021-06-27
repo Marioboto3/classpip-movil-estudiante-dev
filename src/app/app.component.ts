@@ -39,7 +39,7 @@ export class AppComponent {
       this.splashScreen.hide();
       this.sesion.EnviameAlumno().subscribe ((alumno) => {
         this.MiAlumno = alumno;
-      //  this.imagenPerfil = URL.ImagenesPerfil + this.MiAlumno.ImagenPerfil;
+      //  this.imagenPerfil = URL.ImagenesPerfil + this.MiAlumno.imagenPerfil;
       });
     });
   }

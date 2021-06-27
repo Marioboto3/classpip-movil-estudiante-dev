@@ -5,20 +5,20 @@ export class MiAlumnoAMostrarJuegoDePuntos {
   juegoDePuntosId: number;
   id: number;
   nivelId: number;
-  Nombre: string;
-  PrimerApellido: string;
-  ImagenPerfil: string;
+  nombre: string;
+  primerApellido: string;
+  imagenPerfil: string;
 
   constructor(alumnoId?: number, juegoDePuntosId?: number, PuntosTotalesAlumno?: number,
-              nivelId?: number, Nombre?: string, PrimerApellido?: string, ImagenPerfil?: string) {
+              nivelId?: number, Nombre?: string, primerApellido?: string, imagenPerfil?: string) {
 
     this.alumnoId = alumnoId;
     this.juegoDePuntosId = juegoDePuntosId;
     this.nivelId = nivelId;
     this.PuntosTotalesAlumno = PuntosTotalesAlumno;
-    this.Nombre = Nombre;
-    this.PrimerApellido = PrimerApellido;
-    this.ImagenPerfil = ImagenPerfil;
+    this.nombre = Nombre;
+    this.primerApellido = primerApellido;
+    this.imagenPerfil = imagenPerfil;
 
   }
 }

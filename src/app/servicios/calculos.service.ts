@@ -369,9 +369,9 @@ export class CalculosService {
         console.log('este es el numero de alumnos en este juego' + listaAlumnos.length);
         for (let i = 0; i < (listaAlumnos.length); i++) {
           const MiAlumno = new MiAlumnoAMostrarJuegoDePuntos();
-          MiAlumno.Nombre = listaAlumnos[i].Nombre;
-          MiAlumno.PrimerApellido = listaAlumnos[i].PrimerApellido;
-          MiAlumno.ImagenPerfil = listaAlumnos[i].ImagenPerfil;
+          MiAlumno.nombre = listaAlumnos[i].nombre;
+          MiAlumno.primerApellido = listaAlumnos[i].primerApellido;
+          MiAlumno.imagenPerfil = listaAlumnos[i].imagenPerfil;
           this.peticionesAPI.DameInscripcionAlumnoJuegoDePuntos(listaAlumnos[i].id, juegoId).subscribe(
             Inscripcion => {
               MiAlumno.PuntosTotalesAlumno = Inscripcion[0].PuntosTotalesAlumno;
@@ -396,9 +396,9 @@ export class CalculosService {
       listaAlumnos => {
         for (let i = 0; i < (listaAlumnos.length); i++) {
           const MiAlumno = new MiAlumnoAMostrarJuegoDeCuestionario();
-          MiAlumno.Nombre = listaAlumnos[i].Nombre;
-          MiAlumno.PrimerApellido = listaAlumnos[i].PrimerApellido;
-          MiAlumno.ImagenPerfil = listaAlumnos[i].ImagenPerfil;
+          MiAlumno.nombre = listaAlumnos[i].nombre;
+          MiAlumno.primerApellido = listaAlumnos[i].primerApellido;
+          MiAlumno.imagenPerfil = listaAlumnos[i].imagenPerfil;
           this.peticionesAPI.DameInscripcionAlumnoJuegoDeCuestionario(listaAlumnos[i].id, juegoId).subscribe(
             Inscripcion => {
               MiAlumno.Nota = Inscripcion[0].Nota;
@@ -431,9 +431,9 @@ export class CalculosService {
         MiAlumno.juegoDeCuestionarioId = Inscripciones[i].juegoDeCuestionarioId;
         this.peticionesAPI.DameAlumnoConId(MiAlumno.alumnoId)
           .subscribe(res => {
-            MiAlumno.Nombre = res.Nombre;
-            MiAlumno.PrimerApellido = res.PrimerApellido;
-            MiAlumno.ImagenPerfil = res.ImagenPerfil;
+            MiAlumno.nombre = res.nombre;
+            MiAlumno.primerApellido = res.primerApellido;
+            MiAlumno.imagenPerfil = res.imagenPerfil;
           });
         InformacionAlumno.push(MiAlumno);
       }
@@ -769,11 +769,11 @@ export class CalculosService {
       }
 
       if (nivel !== undefined) {
-        rankingJuegoDePuntos[i] = new TablaAlumnoJuegoDePuntos(i + 1, alumno.id, alumno.Nombre, alumno.PrimerApellido, alumno.SegundoApellido,
+        rankingJuegoDePuntos[i] = new TablaAlumnoJuegoDePuntos(i + 1, alumno.id, alumno.nombre, alumno.primerApellido, alumno.segundoApellido,
           listaAlumnosOrdenadaPorPuntos[i].PuntosTotalesAlumno, nivel.Nombre);
 
       } else {
-        rankingJuegoDePuntos[i] = new TablaAlumnoJuegoDePuntos(i + 1, alumno.id, alumno.Nombre, alumno.PrimerApellido, alumno.SegundoApellido,
+        rankingJuegoDePuntos[i] = new TablaAlumnoJuegoDePuntos(i + 1, alumno.id, alumno.nombre, alumno.primerApellido, alumno.segundoApellido,
           listaAlumnosOrdenadaPorPuntos[i].PuntosTotalesAlumno);
       }
     }
@@ -856,7 +856,7 @@ export class CalculosService {
 
         // Busco al alumno
         alumno = alumnosDelJuego.filter(res => res.id === listaAlumnosOrdenadaPorPuntos[i].alumnoId)[0];
-        console.log('nombre ' + alumno.Nombre);
+        console.log('nombre ' + alumno.nombre);
 
         if (listaAlumnosOrdenadaPorPuntos[i].nivelId !== undefined) {
           console.log(listaAlumnosOrdenadaPorPuntos[i].alumnoId);
@@ -867,7 +867,7 @@ export class CalculosService {
         this.peticionesAPI.DameHistorialDeUnPunto(listaAlumnosOrdenadaPorPuntos[i].id, puntoSeleccionadoId)
           .subscribe(historial => {
             let puntos = 0;
-            console.log(alumno.Nombre + ' tieme ' + historial.length + 'asignaciones');
+            console.log(alumno.nombre + ' tieme ' + historial.length + 'asignaciones');
             // tslint:disable-next-line:prefer-for-of
             for (let j = 0; j < historial.length; j++) {
               puntos = puntos + historial[j].ValorPunto;
@@ -876,11 +876,11 @@ export class CalculosService {
 
             if (nivel !== undefined) {
               // tslint:disable-next-line:max-line-length
-              rankingJuegoDePuntos[i] = new TablaAlumnoJuegoDePuntos(i + 1, alumno.id, alumno.Nombre, alumno.PrimerApellido, alumno.SegundoApellido,
+              rankingJuegoDePuntos[i] = new TablaAlumnoJuegoDePuntos(i + 1, alumno.id, alumno.nombre, alumno.primerApellido, alumno.segundoApellido,
                 puntos, nivel.Nombre);
             } else {
               // tslint:disable-next-line:max-line-length
-              rankingJuegoDePuntos[i] = new TablaAlumnoJuegoDePuntos(i + 1, alumno.id, alumno.Nombre, alumno.PrimerApellido, alumno.SegundoApellido,
+              rankingJuegoDePuntos[i] = new TablaAlumnoJuegoDePuntos(i + 1, alumno.id, alumno.nombre, alumno.primerApellido, alumno.segundoApellido,
                 puntos);
             }
 
@@ -1510,7 +1510,7 @@ export class CalculosService {
       let alumno: Alumno;
       const alumnoId = listaAlumnosOrdenadaPorPuntos[i].AlumnoId;
       alumno = alumnosDelJuego.filter(res => res.id === alumnoId)[0];
-      rankingJuegoDeCompeticion[i] = new TablaAlumnoJuegoDeCompeticion(i + 1, alumno.Nombre, alumno.PrimerApellido, alumno.SegundoApellido,
+      rankingJuegoDeCompeticion[i] = new TablaAlumnoJuegoDeCompeticion(i + 1, alumno.nombre, alumno.primerApellido, alumno.segundoApellido,
         listaAlumnosOrdenadaPorPuntos[i].PuntosTotalesAlumno, alumnoId);
     }
     const individual = true;
@@ -1540,7 +1540,7 @@ export class CalculosService {
       let alumno: Alumno;
       const alumnoId = listaAlumnosOrdenadaPorPuntos[i].AlumnoId;
       alumno = alumnosDelJuego.filter(res => res.id === alumnoId)[0];
-      rankingJuegoDeCompeticion[i] = new TablaAlumnoJuegoDeCompeticion(i + 1, alumno.Nombre, alumno.PrimerApellido, alumno.SegundoApellido,
+      rankingJuegoDeCompeticion[i] = new TablaAlumnoJuegoDeCompeticion(i + 1, alumno.nombre, alumno.primerApellido, alumno.segundoApellido,
         listaAlumnosOrdenadaPorPuntos[i].PuntosTotalesAlumno, alumnoId);
     }
     const individual = true;
@@ -1907,7 +1907,7 @@ export class CalculosService {
       let alumno: Alumno;
       const alumnoId = listaAlumnosOrdenadaPorPuntos[i].AlumnoId;
       alumno = alumnosDelJuego.filter(res => res.id === alumnoId)[0];
-      rankingJuegoDeCompeticion[i] = new TablaAlumnoJuegoDeCompeticion(i + 1, alumno.Nombre, alumno.PrimerApellido, alumno.SegundoApellido,
+      rankingJuegoDeCompeticion[i] = new TablaAlumnoJuegoDeCompeticion(i + 1, alumno.nombre, alumno.primerApellido, alumno.segundoApellido,
         listaAlumnosOrdenadaPorPuntos[i].PuntosTotalesAlumno, alumnoId);
     }
     return rankingJuegoDeCompeticion;
@@ -2125,9 +2125,9 @@ export class CalculosService {
       listaAlumnos => {
         for ( let i = 0; i < (listaAlumnos.length); i++) {
           const MiAlumno = new MiAlumnoAMostrarJuegoDeGeocaching();
-          MiAlumno.Nombre = listaAlumnos[i].Nombre;
-          MiAlumno.PrimerApellido = listaAlumnos[i].PrimerApellido;
-          MiAlumno.ImagenPerfil = listaAlumnos[i].ImagenPerfil;
+          MiAlumno.nombre = listaAlumnos[i].nombre;
+          MiAlumno.primerApellido = listaAlumnos[i].primerApellido;
+          MiAlumno.imagenPerfil = listaAlumnos[i].imagenPerfil;
           this.peticionesAPI.DameInscripcionAlumnoJuegoDeGeocaching( listaAlumnos[i].id, juegoId).subscribe(
             Inscripcion => {
               MiAlumno.Puntuacion = Inscripcion[0].Puntuacion;
@@ -2168,9 +2168,9 @@ export class CalculosService {
         MiAlumno.juegoDeGeocachingId = Inscripciones[i].juegoDeGeocachingId;
         this.peticionesAPI.DameAlumnoConId (MiAlumno.alumnoId)
         .subscribe (res => {
-          MiAlumno.Nombre = res.Nombre;
-          MiAlumno.PrimerApellido = res.PrimerApellido;
-          MiAlumno.ImagenPerfil = res.ImagenPerfil;
+          MiAlumno.nombre = res.nombre;
+          MiAlumno.primerApellido = res.primerApellido;
+          MiAlumno.imagenPerfil = res.imagenPerfil;
         });
 
         InformacionAlumno.push(MiAlumno);
@@ -2237,7 +2237,7 @@ export class CalculosService {
         const alumnoId = listaAlumnosOrdenadaPorPuntos[i].alumnoId;
         alumno = alumnosDelJuego.filter(res => res.id === alumnoId)[0];
         // tslint:disable-next-line:max-line-length
-        rankingJuegoDeCompeticion[i] = new TablaAlumnoJuegoDeCuestionario(alumno.Nombre, alumno.PrimerApellido, alumno.SegundoApellido, alumno.ImagenPerfil,
+        rankingJuegoDeCompeticion[i] = new TablaAlumnoJuegoDeCuestionario(alumno.nombre, alumno.primerApellido, alumno.segundoApellido, alumno.imagenPerfil,
         // tslint:disable-next-line:max-line-length
         listaAlumnosOrdenadaPorPuntos[i].Nota, listaAlumnosOrdenadaPorPuntos[i].Contestado, alumnoId, listaAlumnosOrdenadaPorPuntos[i].TiempoEmpleado);
         console.log ('nueva tabla');

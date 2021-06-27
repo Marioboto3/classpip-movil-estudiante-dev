@@ -114,7 +114,7 @@ export class InformacionJornadasPage implements OnInit {
     console.log(this.GanadoresJornadaF1);
     this.imagenesDePerfil = [];
     this.GanadoresJornadaF1.forEach (participante => {
-      const imagen = this.alumnosDelGrupo.filter (alumno => alumno.id === participante.id)[0].ImagenPerfil;
+      const imagen = this.alumnosDelGrupo.filter (alumno => alumno.id === participante.id)[0].imagenPerfil;
       this.imagenesDePerfil.push (imagen);
     })
   }

@@ -5,11 +5,12 @@
       <div class="user-image">
         <div class="border">
           <div class="img-box">
-            <img *ngIf = "MiAlumno !== undefined" [src]="MiAlumno.ImagenPerfil">
+            <img *ngIf = "MiAlumno !== undefined && MiAlumno.imagenPerfil !== null" [src]="MiAlumno.imagenPerfil">
+            <img *ngIf = "MiAlumno !== undefined && MiAlumno.imagenPerfil === null" src="assets/img/userDefaultImg.png">
           </div>
         </div>
       </div>
-      <p *ngIf = "MiAlumno !== undefined"> {{MiAlumno.Nombre}} {{MiAlumno.PrimerApellido}} <br> {{MiAlumno.SegundoApellido}} </p>
+      <p *ngIf = "MiAlumno !== undefined"> {{MiAlumno.nombre}} {{MiAlumno.primerApellido}} <br> {{MiAlumno.segundoApellido}} </p>
       <ion-row style="height: 20px"></ion-row>
 
       <ion-menu-toggle auto-hide="true">

@@ -11,7 +11,7 @@
   <!-- Si el juego es individual creamos un div con la información-->
   <div *ngIf="juegoSeleccionado.Modo === 'Individual'" id="alumno-ranking" scrollY="true" class="info-alumno">
     <img class="logo" src="../../assets/img/puntosicon.svg" width="100px">
-    <h2> Hola {{MiAlumno.Nombre}}, actualmente tienes</h2>
+    <h2> Hola {{MiAlumno.nombre}}, actualmente tienes</h2>
     <h3> {{ MiAlumnoJDP }} pts</h3>
     <h2> en este juego de puntos </h2>
     <ion-list class="puntos-list-bg">
@@ -101,7 +101,7 @@
   <!-- Si el juego es por equipos creamos un div con la información-->
   <div *ngIf="juegoSeleccionado.Modo !== 'Individual'" class="info-equipo">
     <img class="logo" src="../../assets/img/puntosicon.svg" width="100px">
-    <h2> Hola {{MiAlumno.Nombre}}, formas parte del equipo</h2>
+    <h2> Hola {{MiAlumno.nombre}}, formas parte del equipo</h2>
     <h3 *ngIf="MiEquipo !== undefined"> {{MiEquipo.Nombre}} </h3>
     <h2> en este juego de puntos </h2>
     <mat-accordion>
@@ -147,7 +147,7 @@
                 <img src="../../assets/img/usuario.svg">
               </div>
             </div>
-            <p>{{alumno.Nombre}} <br> {{alumno.PrimerApellido}} </p>
+            <p>{{alumno.nombre}} <br> {{alumno.primerApellido}} </p>
           </div>
         </div>
 

@@ -281,8 +281,8 @@ MostrarHistorialSeleccionado() {
 
 AccederAlumno(alumno: TablaAlumnoJuegoDePuntos) {
   this.MuestraHistorial();
-  const alumnoSeleccionado = this.alumnosDelJuego.filter(res => res.Nombre === alumno.nombre &&
-    res.PrimerApellido === alumno.primerApellido && res.SegundoApellido === alumno.segundoApellido)[0];
+  const alumnoSeleccionado = this.alumnosDelJuego.filter(res => res.nombre === alumno.nombre &&
+    res.primerApellido === alumno.primerApellido && res.segundoApellido === alumno.segundoApellido)[0];
 
   const posicion = this.rankingJuegoDePuntos.filter(res => res.nombre === alumno.nombre &&
     res.primerApellido === alumno.primerApellido && res.segundoApellido === alumno.segundoApellido)[0].posicion;

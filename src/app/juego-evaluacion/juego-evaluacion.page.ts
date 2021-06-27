@@ -32,7 +32,7 @@ export class JuegoEvaluacionPage implements OnInit {
       if (typeof alumno === 'undefined') {
           return;
       }
-      return alumno.Nombre + ' ' + alumno.PrimerApellido + ' ' + alumno.SegundoApellido;
+      return alumno.nombre + ' ' + alumno.primerApellido + ' ' + alumno.segundoApellido;
   }
 
   DameNombreEquipo(id): string {

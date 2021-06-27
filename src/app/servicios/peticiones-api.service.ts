@@ -132,17 +132,11 @@ export class PeticionesAPIService {
   // FUNCIÓN TEMPORAL DE AUTENTIFICAR (PARA SIMPLIFICAR AHORA)
   public DameProfesor(nombre: string, apellido: string): Observable<Profesor> {
     console.log('Entro a mostrar a ' + nombre + ' ' + apellido);
-    return this.http.get<Profesor>(this.APIUrlProfesores + '?filter[where][Nombre]=' + nombre + '&filter[where][Apellido]=' + apellido);
+    return this.http.get<Profesor>(this.APIUrlProfesores + '?filter[where][nombre]=' + nombre + '&filter[where][apellido]=' + apellido);
   }
 
   public DameProfesorPorIdentificador(identificador: string): Observable<Profesor> {
-    return this.http.get<Profesor>(this.APIUrlProfesores + '?filter[where][Identificador]=' + identificador);
-  }
-
-  public DameAlumno(nombreUsuario: string, password: string): Observable<Alumno> {
-
-    return this.http.get<Alumno>(this.APIUrlAlumnos + '?filter[where][Username]=' + nombreUsuario
-      + '&filter[where][Password]=' + password);
+    return this.http.get<Profesor>(this.APIUrlProfesores + '?filter[where][identificador]=' + identificador);
   }
 
   public DameTodosLosAlumnos(): Observable<Alumno[]> {
@@ -155,13 +149,13 @@ export class PeticionesAPIService {
 
 
   public DameContrasena(nombre: string): Observable<Alumno> {
-    return this.http.get<Alumno>(this.APIUrlAlumnos + '?filter[where][Username]=' + nombre );
+    return this.http.get<Alumno>(this.APIUrlAlumnos + '?filter[where][username]=' + nombre );
   }
 
   public DameAlumnoAsignacion(nombre: string[]): Observable<Alumno> {
     console.log('Entro a mostrar a ' + nombre[0] + nombre[1]);
     // tslint:disable-next-line:max-line-length
-    return this.http.get<Alumno>(this.APIUrlAlumnos + '?filter[where][Nombre]=' + nombre[0] + '&filter[where][PrimerApellido]=' + nombre[1]);
+    return this.http.get<Alumno>(this.APIUrlAlumnos + '?filter[where][nombre]=' + nombre[0] + '&filter[where][primerApellido]=' + nombre[1]);
   }
 
   public DameGrupo(grupoId: number): Observable<Grupo> {
@@ -304,9 +298,9 @@ export class PeticionesAPIService {
 
   // BUSCA SI HAY ALGUN ALUMNO EN LA BASE DE DATOS CON ESE NOMBRE Y APELLIDOS
   public DameAlumnoConcreto(alumno: Alumno, ProfesorId: number): Observable<Alumno> {
-    console.log('Entro a buscar a ' + alumno.Nombre + ' ' + alumno.PrimerApellido + ' ' + alumno.SegundoApellido);
-    return this.http.get<Alumno>(this.APIUrlProfesores + '/' + ProfesorId + '/alumnos?filter[where][Nombre]=' + alumno.Nombre +
-      '&filter[where][PrimerApellido]=' + alumno.PrimerApellido + '&filter[where][SegundoApellido]=' + alumno.SegundoApellido);
+    console.log('Entro a buscar a ' + alumno.nombre + ' ' + alumno.primerApellido + ' ' + alumno.segundoApellido);
+    return this.http.get<Alumno>(this.APIUrlProfesores + '/' + ProfesorId + '/alumnos?filter[where][nombre]=' + alumno.nombre +
+      '&filter[where][primerApellido]=' + alumno.primerApellido + '&filter[where][segundoApellido]=' + alumno.segundoApellido);
   }
 
   // MATRICULAMOS A UN ALUMNO EN UN GRUPO NUEVO
@@ -1000,7 +994,7 @@ public PonerNotaAlumnoJuegoDeGeocaching(alumnoJuegoDeGeocaching: AlumnoJuegoDeGe
   }
 
 
-  public PonImagenPerfil(formData: FormData): Observable<any> {
+  public PonimagenPerfil(formData: FormData): Observable<any> {
     return this.http.post<any>(this.APIUrlImagenesPerfil + '/upload', formData);
   }
 

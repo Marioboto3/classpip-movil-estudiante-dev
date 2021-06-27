@@ -38,10 +38,10 @@ export class MiPerfilPage implements OnInit {
     console.log ('estoy en mi perfil');
     this.alumno = this.sesion.DameAlumno();
     console.log(this.alumno);
-    // this.MiImagenAlumno = this.calculos.VisualizarImagenAlumno(this.Alumno.ImagenPerfil);
+    // this.MiImagenAlumno = this.calculos.VisualizarImagenAlumno(this.Alumno.imagenPerfil);
     console.log('Ya tengo la imagen del Alumno');
     console.log(this.MiImagenAlumno);
-   // this.imagenPerfil = URL.ImagenesPerfil + this.Alumno.ImagenPerfil;
+   // this.imagenPerfil = URL.ImagenesPerfil + this.Alumno.imagenPerfil;
     
   }
 
@@ -102,19 +102,19 @@ export class MiPerfilPage implements OnInit {
     document.getElementById('inputImagen').click();
   }
 
-  EmailCorrecto(email) {
+  emailCorrecto(email) {
     const re = /\S+@\S+\.\S+/;
     return re.test(email);
   }
 
 
-  SeleccionarImagenPerfil($event) {
+  SeleccionarimagenPerfil($event) {
     const imagen = $event.target.files[0];
     const formData = new FormData();
     formData.append(imagen.name, imagen);
-    this.peticionesAPI.PonImagenPerfil(formData)
+    this.peticionesAPI.PonimagenPerfil(formData)
     .subscribe (() => {
-      this.alumno.ImagenPerfil = URL.ImagenesPerfil + imagen.name;
+      this.alumno.imagenPerfil = URL.ImagenesPerfil + imagen.name;
       this.peticionesAPI.ModificaAlumno (this.alumno).subscribe();
      });
   }
@@ -127,13 +127,13 @@ export class MiPerfilPage implements OnInit {
         {
           text: 'SI',
           handler: async () => {
-            if (this.cambioPass && (this.alumno.Password !== this.contrasenaRep)) {
+            if (this.cambioPass && (this.alumno.password !== this.contrasenaRep)) {
               const alert = await this.alertController.create({
                 header: 'No coincide la contraseña con la contraseña repetida',
                 buttons: ['OK']
               });
               await alert.present();
-            } else if (!this.EmailCorrecto (this.alumno.Email)) {
+            } else if (!this.emailCorrecto (this.alumno.email)) {
               const alert = await this.alertController.create({
                 header: 'El email es incorrecto',
                 buttons: ['OK']

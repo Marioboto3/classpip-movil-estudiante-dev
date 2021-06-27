@@ -84,7 +84,7 @@ export class IntercambiarCromosPage implements OnInit {
         this.alumnosJuegoDeColeccion.forEach (alumno => {
           const input = {
             type: 'radio',
-            label: alumno.Nombre + ' ' + alumno.PrimerApellido + ' ' + alumno.SegundoApellido,
+            label: alumno.nombre + ' ' + alumno.primerApellido + ' ' + alumno.segundoApellido,
             value: alumno.id,
             checked: false
           };
@@ -185,7 +185,7 @@ export class IntercambiarCromosPage implements OnInit {
       this.alumnosJuegoDeColeccion.forEach (alumno => {
         const input = {
           type: 'radio',
-          label: alumno.Nombre + ' ' + alumno.PrimerApellido + ' ' + alumno.SegundoApellido,
+          label: alumno.nombre + ' ' + alumno.primerApellido + ' ' + alumno.segundoApellido,
           value: alumno.id,
           checked: false
         };

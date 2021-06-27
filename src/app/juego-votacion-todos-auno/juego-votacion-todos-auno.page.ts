@@ -69,7 +69,7 @@ export class JuegoVotacionTodosAUnoPage implements OnInit {
       if (alumno.id !== this.alumno.id) {
             // tslint:disable-next-line:max-line-length
             const votosRecibidos = this.inscripcionAlumnoJuegoDeVotacionTodosAUno.VotosEmitidos.filter (votos => votos.alumnoId === alumno.id)[0];
-            console.log ('votos recibidos por ' + alumno.Nombre);
+            console.log ('votos recibidos por ' + alumno.nombre);
             console.log (votosRecibidos);
             if (votosRecibidos === undefined) {
               const item = {

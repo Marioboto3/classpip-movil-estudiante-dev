@@ -1,3 +1,4 @@
+import { AuthService } from './../servicios/auth.service';
 import { Component } from '@angular/core';
 import { NavController, LoadingController, AlertController, AngularDelegate } from '@ionic/angular';
 // import { HttpClient } from '@angular/common/http';
@@ -88,7 +89,7 @@ export class HomePage {
     private comServer: ComServerService,
     private selector: WheelSelector,
     private localNotifications: LocalNotifications,
-   
+    private auth: AuthService
     //private transfer: Transfer,
    // private camera: Camera
 
@@ -580,36 +581,50 @@ replay() {
 
     Autentificar() {
        
-        this.presentLoading();
-        this.peticionesAPI.DameAlumno(this.username, this.password)
-        .subscribe( (res) => {
-          if (res[0] !== undefined) {
-            this.alumno = res[0];
-            this.sesion.TomaAlumno(this.alumno);
-            console.log('bien logado');
-            this.comServer.Conectar(this.alumno);
-
-            this.comServer.EsperarNotificaciones()
-            .subscribe((notificacion: any) => {
-              console.log ('Pongo notificacion:  ' + notificacion );
-              this.localNotifications.schedule({
-                id: ++this.contNotif,
-                text: notificacion,
-              });
-
-            });
-
-            setTimeout(() => {
-              this.route.navigateByUrl('/tabs/inici');
-            }, 1500);
-          } else {
-            // Aqui habría que mostrar alguna alerta al usuario
+        if(this.username != '' && this.password != ''){
+          this.presentLoading();
+          let user = {
+            "username": this.username,
+            "password": this.password
+          };
+          this.auth.login(user).subscribe((data) => {
+            if(data != undefined){
+              console.log('respuesta login: ', data);
+              sessionStorage.setItem('ACCESS_TOKEN', data.id);
+              this.auth.getAlumno(data.userId).subscribe((data) => {
+                console.log('alumno loggeado: ', data);
+                this.alumno = data;
+                this.sesion.TomaAlumno(this.alumno);
+                console.log('bien logado');
+                this.comServer.Conectar(this.alumno);
+    
+                this.comServer.EsperarNotificaciones()
+                .subscribe((notificacion: any) => {
+                  console.log ('Pongo notificacion:  ' + notificacion );
+                  this.localNotifications.schedule({
+                    id: ++this.contNotif,
+                    text: notificacion,
+                  });
+    
+                });
+    
+                setTimeout(() => {
+                  this.route.navigateByUrl('/tabs/inici');
+                }, 1500);
+              }, (error) => {
+                Swal.fire('Error', 'Error obteniendo alumno', 'error');
+              })
+            }
+          }, (error) => {
+            console.log(error);
             setTimeout(() => {
               this.presentAlert();
+              console.log('alumno no existe');
             }, 1500);
-            console.log('alumno no existe');
-          }
-        });
+          })
+        } else {
+          Swal.fire('Error','Rellena todos los datos', 'error');
+        }
     }
 
     AccesoJuegoRapido() {
@@ -630,13 +645,13 @@ replay() {
       this.login = true;
     }
 
-    ValidaEmail(email) {
+    Validaemail(email) {
       const re = /\S+@\S+\.\S+/;
       return re.test(email);
     }
 
     UsernameUsado(username: string) {
-      return this.alumnosEnClasspip.some (alumno => alumno.Username === username);
+      return this.alumnosEnClasspip.some (alumno => alumno.username === username);
     }
     async Registro() {
       console.log ('registro');
@@ -655,7 +670,7 @@ replay() {
           buttons: ['OK']
         });
         await alert.present();
-      } else if (!this.ValidaEmail (this.email)) {
+      } else if (!this.Validaemail (this.email)) {
         const alert = await this.alertController.create({
           header: 'El email es incorrecto',
           buttons: ['OK']
