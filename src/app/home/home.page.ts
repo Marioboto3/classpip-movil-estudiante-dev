@@ -1,8 +1,8 @@
+import { Alumno } from './../clases/Alumno';
 import { AuthService } from './../servicios/auth.service';
 import { Component } from '@angular/core';
 import { NavController, LoadingController, AlertController, AngularDelegate } from '@ionic/angular';
 // import { HttpClient } from '@angular/common/http';
-import { Alumno } from '../clases';
 import { IniciPage } from '../inici/inici.page';
 import { TabsPage } from '../tabs/tabs.page';
 import { PeticionesAPIService, SesionService, ComServerService} from '../servicios/index';
@@ -63,6 +63,7 @@ export class HomePage {
   nickname: string;
   registro = false;
   login = true;
+  savePass = false;
 
   primerApellido: string;
   segundoApellido: string;
@@ -167,10 +168,15 @@ export class HomePage {
           }
         ]
       }
-      };
+    };
   }
 
-
+  ngOnInit() {
+    console.log('entra oninit');
+    if(this.auth.isLoggedIn()){
+      this.route.navigate(['/tabs/inici']);
+    }
+  }
     
   updateAnswer(index,ansindex,value,checked){
     if(!Array.isArray(this.answer[index])){
@@ -194,8 +200,6 @@ export class HomePage {
     ionViewDidEnter() {
       this.peticionesAPI.DameTodosLosAlumnos()
       .subscribe (alumnos => this.alumnosEnClasspip = alumnos);
-
-
       // this.StartTimer();
     }
 
@@ -590,7 +594,11 @@ replay() {
           this.auth.login(user).subscribe((data) => {
             if(data != undefined){
               console.log('respuesta login: ', data);
-              sessionStorage.setItem('ACCESS_TOKEN', data.id);
+              if(this.savePass){
+                this.auth.setLocalAccessToken(data.id);
+              } else {
+                this.auth.setAccessToken(data.id);
+              }
               this.auth.getAlumno(data.userId).subscribe((data) => {
                 console.log('alumno loggeado: ', data);
                 this.alumno = data;
@@ -627,19 +635,21 @@ replay() {
         }
     }
 
-    AccesoJuegoRapido() {
+    /* AccesoJuegoRapido() {
       this.juegoRapido = true;
       this.login = false;
-    }
+    } */
     
     AccesoRegistro() {
       this.registro = true;
       this.login = false;
     }
+
     VolverDeJuegoRapido() {
       this.juegoRapido = false;
       this.login = true;
     }
+
     VolverDeRegistro() {
       this.registro = false;
       this.login = true;
@@ -653,6 +663,7 @@ replay() {
     UsernameUsado(username: string) {
       return this.alumnosEnClasspip.some (alumno => alumno.username === username);
     }
+
     async Registro() {
       console.log ('registro');
       console.log (this.nombre);
@@ -700,7 +711,10 @@ replay() {
                     buttons: ['OK']
                   });
                   await alert.present();
-                  this.VolverDeRegistro();
+                  this.auth.login({"username": this.username, "password": this.contrasena}).subscribe((data) => {
+                    this.auth.setLocalAccessToken(data.id);
+                    this.route.navigateByUrl('home');
+                  })
                 });
               },
               async error => {
@@ -714,37 +728,37 @@ replay() {
       }
     }
 
-    async EnviarContrasena() {
-      if (this.username === undefined) {
-        const alert = await this.alertController.create({
-          header: 'Atención: Introduce un nombre de usuario en el formulario',
-          buttons: ['OK']
-        });
-        await alert.present();
-      } else {
-        console.log ('voy a pedir contraseña');
-        this.peticionesAPI.DameContrasena (this.username)
-        .subscribe (async (res) => {
-            if (res[0] !== undefined) {
-              const alumno = res[0]; // Si es diferente de null, el alumno existe
-              // le enviamos la contraseña
-              this.comServer.RecordarContrasena (alumno);
-              const alert = await this.alertController.create({
-                header: 'En breve recibirás un email con tu contraseña',
-                buttons: ['OK']
-              });
-              await alert.present();
-            } else {
-              const alert = await this.alertController.create({
-                header: 'No hay ningun alumno con este nombre de usuario',
-                buttons: ['OK']
-              });
-              await alert.present();
-            }
-        });
-      }
+    // async EnviarContrasena() {
+    //   if (this.username === undefined) {
+    //     const alert = await this.alertController.create({
+    //       header: 'Atención: Introduce un nombre de usuario en el formulario',
+    //       buttons: ['OK']
+    //     });
+    //     await alert.present();
+    //   } else {
+    //     console.log ('voy a pedir contraseña');
+    //     this.peticionesAPI.DameContrasena (this.username)
+    //     .subscribe (async (res) => {
+    //         if (res[0] !== undefined) {
+    //           const alumno = res[0]; // Si es diferente de null, el alumno existe
+    //           // le enviamos la contraseña
+    //           this.comServer.RecordarContrasena (alumno);
+    //           const alert = await this.alertController.create({
+    //             header: 'En breve recibirás un email con tu contraseña',
+    //             buttons: ['OK']
+    //           });
+    //           await alert.present();
+    //         } else {
+    //           const alert = await this.alertController.create({
+    //             header: 'No hay ningun alumno con este nombre de usuario',
+    //             buttons: ['OK']
+    //           });
+    //           await alert.present();
+    //         }
+    //     });
+    //   }
   
-    }
+    // }
 }
 
 

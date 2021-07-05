@@ -1,3 +1,4 @@
+import { AuthService } from './servicios/auth.service';
 import { Component, OnInit} from '@angular/core';
 import { NavController, LoadingController, AlertController } from '@ionic/angular';
 import { Platform } from '@ionic/angular';
@@ -7,6 +8,7 @@ import { Router } from '@angular/router';
 import { Alumno } from '../app/clases/Alumno';
 import { SesionService, ComServerService } from '../app/servicios';
 import * as URL from '../app//URLs/urls';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -27,7 +29,8 @@ export class AppComponent {
     public navCtrl: NavController,
     private platform: Platform,
     private splashScreen: SplashScreen,
-    private statusBar: StatusBar
+    private statusBar: StatusBar,
+    private authService: AuthService
   ) {
     this.initializeApp();
   }
@@ -37,16 +40,51 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
-      this.sesion.EnviameAlumno().subscribe ((alumno) => {
-        this.MiAlumno = alumno;
-      //  this.imagenPerfil = URL.ImagenesPerfil + this.MiAlumno.imagenPerfil;
-      });
+      if(localStorage.getItem('ACCESS_TOKEN') != null){
+        this.authService.getUserIdByToken(this.authService.getAccessToken()).subscribe((data: any) => {
+          this.authService.getAlumno(data.userId).subscribe((alumno: Alumno) => {
+            this.MiAlumno = alumno;
+            this.sesion.TomaAlumno(alumno);
+            this.comServer.Conectar(alumno);
+            if(alumno.imagenPerfil != null){
+              this.imagenPerfil = URL.ImagenesPerfil + this.MiAlumno.imagenPerfil;
+            } else {
+              this.imagenPerfil = URL.ImagenesPerfil + "/UsuarioAlumno.jpg"
+            }
+          });        
+        })
+      } else {
+        this.sesion.EnviameAlumno().subscribe((alumno) => {
+          this.MiAlumno = alumno;
+          if(alumno.imagenPerfil != null){
+            this.imagenPerfil = URL.ImagenesPerfil + this.MiAlumno.imagenPerfil;
+          } else {
+            this.imagenPerfil = URL.ImagenesPerfil + "/UsuarioAlumno.jpg"
+          }
+        })
+      }
+      
+      // this.sesion.EnviameAlumno().subscribe ((alumno) => {
+      //   if(alumno != null){
+          
+      //   }
+      // //  this.imagenPerfil = URL.ImagenesPerfil + this.MiAlumno.imagenPerfil;
+      // });
     });
   }
 
   GoOut() {
-    this.comServer.Desconectar(this.MiAlumno);
-    this.route.navigateByUrl('/home');
+    this.authService.logout().subscribe(() => {
+      if(localStorage.getItem('ACCESS_TOKEN') != null){
+        localStorage.removeItem('ACCESS_TOKEN');
+      } else {
+        sessionStorage.removeItem('ACCESS_TOKEN');
+      }
+      this.comServer.Desconectar(this.MiAlumno);
+      this.route.navigateByUrl('/home');
+    }, (error) => {
+      Swal.fire('Error','No se puede cerrar sesión ahora, pruebalo de nuevo más tarde', 'error');
+    });
   }
 
   GoMiPerfil() {

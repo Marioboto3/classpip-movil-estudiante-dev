@@ -9,7 +9,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HttpModule } from '@angular/http';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { IniciPageModule } from './inici/inici.module';
 
 import { Camera } from '@ionic-native/camera/ngx';
@@ -49,6 +49,7 @@ import { WheelSelector } from '@ionic-native/wheel-selector/ngx';
 import { DateAdapter } from '@angular/material';
 import { CustomDateAdapter } from './CustomDataAdapter';
 import {DatePipe} from '@angular/common';
+import { AuthInterceptor } from './servicios/auth.interceptor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -87,7 +88,8 @@ import {DatePipe} from '@angular/common';
     Media,
     {provide: HAMMER_GESTURE_CONFIG, useClass: IonicGestureConfig},
     {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
-    {provide: DateAdapter, useClass: CustomDateAdapter}
+    {provide: DateAdapter, useClass: CustomDateAdapter},
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })
