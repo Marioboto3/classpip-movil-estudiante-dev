@@ -710,11 +710,12 @@ replay() {
                     header: 'Registro realizado con éxito',
                     buttons: ['OK']
                   });
-                  await alert.present();
-                  this.auth.login({"username": this.username, "password": this.contrasena}).subscribe((data) => {
-                    this.auth.setLocalAccessToken(data.id);
-                    this.route.navigateByUrl('home');
-                  })
+                  await alert.present().then(() => {
+                    this.auth.login({"username": this.username, "password": this.contrasena}).subscribe((data) => {
+                      this.auth.setLocalAccessToken(data.id);
+                      this.route.navigateByUrl('tabs/inici');
+                    })
+                  });
                 });
               },
               async error => {

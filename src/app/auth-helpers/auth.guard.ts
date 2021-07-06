@@ -1,6 +1,6 @@
-import { Alumno } from './../clases/Alumno';
-import { SesionService } from './../servicios/sesion.service';
-import { AuthService } from './../servicios/auth.service';
+import { Alumno } from '../clases/Alumno';
+import { SesionService } from '../servicios/sesion.service';
+import { AuthService } from '../servicios/auth.service';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { CanActivate } from '@angular/router';

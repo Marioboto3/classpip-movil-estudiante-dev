@@ -49,7 +49,7 @@ import { WheelSelector } from '@ionic-native/wheel-selector/ngx';
 import { DateAdapter } from '@angular/material';
 import { CustomDateAdapter } from './CustomDataAdapter';
 import {DatePipe} from '@angular/common';
-import { AuthInterceptor } from './servicios/auth.interceptor';
+import { AuthInterceptor } from './auth-helpers/auth.interceptor';
 
 @NgModule({
   declarations: [AppComponent],
