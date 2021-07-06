@@ -6,7 +6,7 @@ export class Alumno {
   username: string;
   password: string;
   email: string;
-  permisoCambioimagenPerfil: boolean;
+  permisoCambioImagenPerfil: boolean;
   profesorId: number;
   id: number;
 
@@ -18,7 +18,7 @@ export class Alumno {
     this.primerApellido = primerApellido;
     this.segundoApellido = segundoApellido;
     this.imagenPerfil = null;
-    this.permisoCambioimagenPerfil = false;
+    this.permisoCambioImagenPerfil = false;
     this.username = Username;
     this.password = password;
     this.email = email;

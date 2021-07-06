@@ -1,4 +1,3 @@
-
 <ion-header class="juegos-header">
   <ion-toolbar class="header-toolbar">
     <ion-buttons slot="start">
@@ -9,62 +8,75 @@
 </ion-header>
 
 <ion-content>
-  <ion-list style="text-align:center">
-    
-    <img *ngIf="alumno.imagenPerfil != null"  [src]="alumno.imagenPerfil" style="width: 100px; height: 100px"> 
-    <img *ngIf="alumno.imagenPerfil == null"  src="assets/img/userDefaultImg.png" style="width: 100px; height: 100px"> 
+  <ion-list style="text-align:center" *ngIf="alumno">
 
-    <p style="text-align: center; color: rgb(0, 0, 0);font-size:15px;"><b>{{alumno.nombre}} {{alumno.primerApellido}} {{alumno.segundoApellido}}</b> </p>
-    <ion-button *ngIf = "alumno.permisoCambioimagenPerfil" class="ranking-btn" (click)=CambiarImagen()>Cambiar imagen de perfil</ion-button>
-    <input #file id = "inputImagen" type="file" accept= 'image/*' (change)="SeleccionarimagenPerfil($event)" style="display:none" multiple>
-              
-    
+    <br>
+    <img *ngIf="alumno.imagenPerfil != null" [src]="alumno.imagenPerfil" style="width: 100px; height: 100px">
+    <img *ngIf="alumno.imagenPerfil == null" src="assets/img/userDefaultImg.png" style="width: 100px; height: 100px">
+
+    <br>
+    <ion-button *ngIf="alumno.permisoCambioImagenPerfil" class="ranking-btn" (click)=CambiarImagen()>Cambiar imagen de
+      perfil</ion-button>
+    <input #file id="inputImagen" type="file" accept='image/*' (change)="SeleccionarimagenPerfil($event)"
+      style="display:none" multiple>
+
+    <p style="text-align: center; color: rgb(0, 0, 0);font-size:15px;"><b>{{alumno.nombre}} {{alumno.primerApellido}}
+        {{alumno.segundoApellido}}</b>
+
+
+
   </ion-list>
-  
-  <div class="login-credentials">
+
+  <div class="login-credentials" *ngIf="alumno">
     <ion-item lines="none">
-      <ion-label style = "color:blue; font-size: 1em; width: 40%">Nombre: </ion-label>
-      <ion-input type="text" value="" name="nombre" placeholder="Nombre" requiered [(ngModel)]="alumno.nombre"></ion-input>
+      <ion-label style="color:blue; font-size: 1em; width: 40%">Nombre: </ion-label>
+      <ion-input type="text" value="" name="nombre" placeholder="Nombre" requiered [(ngModel)]="alumno.nombre">
+      </ion-input>
     </ion-item>
 
 
     <ion-item lines="none">
-      <ion-label style = "color:blue; font-size: 1em; width: 40% ">Primer apellido: </ion-label>
-      <ion-input type="text" name="primerApellido" placeholder="Primer apellido" requiered [(ngModel)]="alumno.primerApellido" (ngModelChange)= "cambio = true"></ion-input>
-    </ion-item>
-   
-
-    <ion-item lines="none">
-      <ion-label style = "color:blue; font-size: 1em; width: 40%">Segundo apellido: </ion-label>
-      <ion-input type="text" name="segundoApellido" placeholder="Segundo apellido" requiered [(ngModel)]="alumno.segundoApellido" (ngModelChange)= "cambio = true"></ion-input>
-    </ion-item>
-  
-
-    <ion-item lines="none">
-      <ion-label style = "color:blue; font-size: 1em;  width: 40%">Nombre de usuario: </ion-label>
-      <ion-input type="text" name="username" placeholder="Nombre de usuario" requiered [(ngModel)]="alumno.username" (ngModelChange)= "cambio = true"></ion-input>
-    </ion-item>
-  
-    <ion-item lines="none">
-      <ion-label style = "color:blue; font-size: 1em; width: 40%">email: </ion-label>
-      <ion-input type="text" name="email" placeholder="email" requiered [(ngModel)]="alumno.email" (ngModelChange)= "cambio = true"></ion-input>
+      <ion-label style="color:blue; font-size: 1em; width: 40% ">Primer apellido: </ion-label>
+      <ion-input type="text" name="primerApellido" placeholder="Primer apellido" requiered
+        [(ngModel)]="alumno.primerApellido" (ngModelChange)="cambio = true"></ion-input>
     </ion-item>
 
+
     <ion-item lines="none">
-      <ion-label style = "color:blue; font-size: 1em;width: 40%">Contraseña: </ion-label>
-      <ion-input type="text" name="contrasena" placeholder="Contraseña" requiered [(ngModel)]="alumno.password" (ngModelChange)= "cambio = true; cambioPass = true"></ion-input>
+      <ion-label style="color:blue; font-size: 1em; width: 40%">Segundo apellido: </ion-label>
+      <ion-input type="text" name="segundoApellido" placeholder="Segundo apellido" requiered
+        [(ngModel)]="alumno.segundoApellido" (ngModelChange)="cambio = true"></ion-input>
     </ion-item>
-  
-    <ion-item *ngIf = "cambioPass" lines="none">
-      <ion-label style = "color:blue; font-size: 1em; width: 40%">Repite contraseña: </ion-label>
-      <ion-input type="text" name="contrasenaRep" placeholder="Repite la contraseña" requiered [(ngModel)]="contrasenaRep" (ngModelChange)= "cambio = true"></ion-input>
+
+
+    <ion-item lines="none">
+      <ion-label style="color:blue; font-size: 1em;  width: 40%">Nombre de usuario: </ion-label>
+      <ion-input type="text" name="username" placeholder="Nombre de usuario" requiered [(ngModel)]="alumno.username"
+        (ngModelChange)="cambio = true"></ion-input>
+    </ion-item>
+
+    <ion-item lines="none">
+      <ion-label style="color:blue; font-size: 1em; width: 40%">email: </ion-label>
+      <ion-input type="text" name="email" placeholder="email" requiered [(ngModel)]="alumno.email"
+        (ngModelChange)="cambio = true"></ion-input>
+    </ion-item>
+
+    <ion-item lines="none">
+      <ion-label style="color:blue; font-size: 1em;width: 40%">Nueva contraseña: </ion-label>
+      <ion-input type="text" name="contrasena" placeholder="Nueva contraseña" requiered [(ngModel)]="alumno.password"
+        (ngModelChange)="cambio = true; cambioPass = true"></ion-input>
+    </ion-item>
+
+    <ion-item *ngIf="cambioPass" lines="none">
+      <ion-label style="color:blue; font-size: 1em; width: 40%">Repite contraseña: </ion-label>
+      <ion-input type="text" name="contrasenaRep" placeholder="Repite la nueva contraseña" requiered
+        [(ngModel)]="contrasenaRep" (ngModelChange)="cambio = true"></ion-input>
     </ion-item>
 
     <ion-list style="text-align:center">
-      <ion-button *ngIf = "cambio" (click)="CambiarDatos();" class="ranking-btn">Cambiar tus datos</ion-button>
+      <ion-button *ngIf="cambio" (click)="CambiarDatos();" class="ranking-btn">Cambiar tus datos</ion-button>
     </ion-list>
 
-  </div> 
-  
-  
+  </div>
+
 </ion-content>

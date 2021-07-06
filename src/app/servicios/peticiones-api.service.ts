@@ -999,7 +999,7 @@ public PonerNotaAlumnoJuegoDeGeocaching(alumnoJuegoDeGeocaching: AlumnoJuegoDeGe
   }
 
   public ModificaAlumno(alumno: Alumno): Observable<Alumno> {
-    return this.http.put<Alumno>(this.APIUrlAlumnos + '/' + alumno.id, alumno);
+    return this.http.patch<Alumno>(this.APIUrlAlumnos + '/' + alumno.id, alumno);
   }
 
   // Juegos de cuestionario de satisfaccion
