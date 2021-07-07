@@ -33,10 +33,10 @@
         <!--Se define el contenido de la tabla , es decir los nombbres y los puntos-->
         <ion-row class="casillas-tabla" *ngFor="let item of MisAlumnosAMostrar">
           <ion-col col-1>
-            <p><b>{{item.Nombre}}</b></p>
+            <p><b>{{item.nombre}}</b></p>
           </ion-col>
           <ion-col col-2>
-            <p><b>{{item.PrimerApellido}}</b></p>
+            <p><b>{{item.primerApellido}}</b></p>
           </ion-col>
           <ion-col col-3 style="margin-left:5%">
             <p><b>{{item.PuntosTotalesAlumno}}</b></p>
@@ -127,10 +127,10 @@
         <!--Se define el contenido de la tabla que recoge los alumnos del juego-->
         <ion-row class="casillas-tabla" *ngFor="let item of MisAlumnosJuegoColeccion">
           <ion-col col-3>
-            <p><b>{{item.Nombre}}</b></p>
+            <p><b>{{item.nombre}}</b></p>
           </ion-col>
           <ion-col col-7>
-            <p><b>{{item.PrimerApellido}} {{item.SegundoApellido}}</b></p>
+            <p><b>{{item.primerApellido}} {{item.segundoApellido}}</b></p>
           </ion-col>
           <ion-col col-2 style="margin-top:6%;margin-left: 5%">
             <ion-icon style="color: rgb(0, 68, 107);" name="albums" (click)="VerCromosAlumno(item);"></ion-icon>

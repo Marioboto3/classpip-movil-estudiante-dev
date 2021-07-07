@@ -123,8 +123,8 @@
             </mat-expansion-panel-header>
             
             <div  *ngFor="let alumno of alumnosEquipo">
-              <p *ngIf="alumno.id !== MiAlumno.id" >{{alumno.Nombre}} {{alumno.PrimerApellido}} </p>
-              <p *ngIf="alumno.id === MiAlumno.id" style="color:rgb(33, 163, 102);" >{{alumno.Nombre}} {{alumno.PrimerApellido}} </p>
+              <p *ngIf="alumno.id !== MiAlumno.id" >{{alumno.nombre}} {{alumno.primerApellido}} </p>
+              <p *ngIf="alumno.id === MiAlumno.id" style="color:rgb(33, 163, 102);" >{{alumno.nombre}} {{alumno.primerApellido}} </p>
             </div>
             <ion-list class="puntos-list-bg-acordeon">
               <p>Este equipo está en la posición <b>{{ infoMiEquipo.posicion }}</b> porque:</p>

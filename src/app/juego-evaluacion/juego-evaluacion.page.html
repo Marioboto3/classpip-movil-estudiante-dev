@@ -11,7 +11,7 @@
   <!--JUEGO INDIVIDUAL-->
   <ion-list *ngIf="juego.Modo === 'Individual'">
     <ion-item *ngIf="juego.autoEvaluacion">
-      <ion-label>{{miAlumno.Nombre}} {{miAlumno.PrimerApellido}} {{miAlumno.SegundoApellido}}</ion-label>
+      <ion-label>{{miAlumno.nombre}} {{miAlumno.primerApellido}} {{miAlumno.segundoApellido}}</ion-label>
     </ion-item>
     <ion-item *ngFor="let alumno of alumnosJuegoEvaluado | filtrarAlumnoEvaluador:miAlumno.id">
       <ion-label>{{DameNombreCompleto(alumno.alumnoEvaluadoId)}}</ion-label>

@@ -16,7 +16,7 @@
       <ion-item *ngFor="let alumno of alumnosVotados; let i=index">
         <ion-item>
         <ion-label >
-          {{alumno.al.Nombre}} {{alumno.al.PrimerApellido}} {{alumno.al.SegundoApellido}}
+          {{alumno.al.Nombre}} {{alumno.al.primerApellido}} {{alumno.al.segundoApellido}}
         </ion-label>
         </ion-item>
         <ion-label style="font-size: large; color: green; text-align: right;">
@@ -39,7 +39,7 @@
         <ion-item *ngFor="let alumno of alumnos; let i=index">
           <ion-item>
           <ion-label>
-            {{alumno.Nombre}} {{alumno.PrimerApellido}} {{alumno.SegundoApellido}}
+            {{alumno.nombre}} {{alumno.primerApellido}} {{alumno.segundoApellido}}
           </ion-label>
           </ion-item>
           <!-- En el caso de que estemos en una de las posiciones que recibe puntos, muestro los puntos que le corresponden -->
@@ -71,7 +71,7 @@
     <ion-item *ngFor="let item of alumnosConPuntos; let i=index">
       
       <ion-label>
-          {{item.al.Nombre}} {{item.al.PrimerApellido}} {{item.al.SegundoApellido}}
+          {{item.al.Nombre}} {{item.al.primerApellido}} {{item.al.segundoApellido}}
       </ion-label>
 
       <ion-label style="text-align: right;">

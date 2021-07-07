@@ -1,3 +1,4 @@
+import { AuthService } from './../servicios/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { IonSlides } from '@ionic/angular';
 import { Router } from '@angular/router';
@@ -12,8 +13,15 @@ export class SlidesPage{
 
 
   constructor(
-    private router: Router) {}
+    private router: Router,
+    private auth: AuthService) {}
 
+  ngOnInit() {
+    if(this.auth.isLoggedIn()){
+      this.router.navigateByUrl('/tabs');
+    }
+  }
+  
   slides = [
     {
       /* Theme 2 */

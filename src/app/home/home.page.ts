@@ -1,7 +1,8 @@
+import { Alumno } from './../clases/Alumno';
+import { AuthService } from './../servicios/auth.service';
 import { Component } from '@angular/core';
 import { NavController, LoadingController, AlertController, AngularDelegate } from '@ionic/angular';
 // import { HttpClient } from '@angular/common/http';
-import { Alumno } from '../clases';
 import { IniciPage } from '../inici/inici.page';
 import { TabsPage } from '../tabs/tabs.page';
 import { PeticionesAPIService, SesionService, ComServerService} from '../servicios/index';
@@ -62,6 +63,7 @@ export class HomePage {
   nickname: string;
   registro = false;
   login = true;
+  savePass = false;
 
   primerApellido: string;
   segundoApellido: string;
@@ -88,7 +90,7 @@ export class HomePage {
     private comServer: ComServerService,
     private selector: WheelSelector,
     private localNotifications: LocalNotifications,
-   
+    private auth: AuthService
     //private transfer: Transfer,
    // private camera: Camera
 
@@ -166,10 +168,15 @@ export class HomePage {
           }
         ]
       }
-      };
+    };
   }
 
-
+  ngOnInit() {
+    console.log('entra oninit');
+    if(this.auth.isLoggedIn()){
+      this.route.navigate(['/tabs/inici']);
+    }
+  }
     
   updateAnswer(index,ansindex,value,checked){
     if(!Array.isArray(this.answer[index])){
@@ -188,13 +195,15 @@ export class HomePage {
     console.log ('resultado');
     console.log (this.answer);
   }
+
   ionViewDidEnter() {
-    this.peticionesAPI.DameTodosLosAlumnos()
-    .subscribe (alumnos => this.alumnosEnClasspip = alumnos);
+      this.peticionesAPI.DameTodosLosAlumnos()
+      .subscribe (alumnos => this.alumnosEnClasspip = alumnos);
+      // this.StartTimer();
+    }
 
 
-    // this.StartTimer();
-  }
+
   StartTimer() {
     this.timer = setTimeout(x => {
           if (this.maxTime <= 0) { }
@@ -570,51 +579,71 @@ replay() {
 
     Autentificar() {
        
-        this.presentLoading();
-        this.peticionesAPI.DameAlumno(this.username, this.password)
-        .subscribe( (res) => {
-          if (res[0] !== undefined) {
-            this.alumno = res[0];
-            this.sesion.TomaAlumno(this.alumno);
-            console.log('bien logado');
-            this.comServer.Conectar(this.alumno);
-
-            this.comServer.EsperarNotificaciones()
-            .subscribe((notificacion: any) => {
-              console.log ('Pongo notificacion:  ' + notificacion );
-              this.localNotifications.schedule({
-                id: ++this.contNotif,
-                text: notificacion,
-              });
-
-            });
-
-            setTimeout(() => {
-              this.route.navigateByUrl('/tabs/inici');
-            }, 1500);
-          } else {
-            // Aqui habría que mostrar alguna alerta al usuario
+        if(this.username != '' && this.password != ''){
+          this.presentLoading();
+          let user = {
+            "username": this.username,
+            "password": this.password
+          };
+          this.auth.login(user).subscribe((data) => {
+            if(data != undefined){
+              console.log('respuesta login: ', data);
+              if(this.savePass){
+                this.auth.setLocalAccessToken(data.id);
+              } else {
+                this.auth.setAccessToken(data.id);
+              }
+              this.auth.getAlumno(data.userId).subscribe((data) => {
+                console.log('alumno loggeado: ', data);
+                this.alumno = data;
+                this.sesion.TomaAlumno(this.alumno);
+                console.log('bien logado');
+                this.comServer.Conectar(this.alumno);
+    
+                this.comServer.EsperarNotificaciones()
+                .subscribe((notificacion: any) => {
+                  console.log ('Pongo notificacion:  ' + notificacion );
+                  this.localNotifications.schedule({
+                    id: ++this.contNotif,
+                    text: notificacion,
+                  });
+    
+                });
+    
+                setTimeout(() => {
+                  this.route.navigateByUrl('/tabs/inici');
+                }, 1500);
+              }, (error) => {
+                Swal.fire('Error', 'Error obteniendo alumno', 'error');
+              })
+            }
+          }, (error) => {
+            console.log(error);
             setTimeout(() => {
               this.presentAlert();
+              console.log('alumno no existe');
             }, 1500);
-            console.log('alumno no existe');
-          }
-        });
+          })
+        } else {
+          Swal.fire('Error','Rellena todos los datos', 'error');
+        }
     }
 
-    AccesoJuegoRapido() {
+    /* AccesoJuegoRapido() {
       this.juegoRapido = true;
       this.login = false;
-    }
+    } */
     
     AccesoRegistro() {
       this.registro = true;
       this.login = false;
     }
+
     VolverDeJuegoRapido() {
       this.juegoRapido = false;
       this.login = true;
     }
+
     VolverDeRegistro() {
       this.registro = false;
       this.login = true;
@@ -626,6 +655,7 @@ replay() {
     UsernameUsado(username: string) {
       return this.alumnosEnClasspip.some (alumno => alumno.username === username);
     }
+
     async Registro() {
       console.log ('registro');
       console.log (this.nombre);
@@ -672,8 +702,12 @@ replay() {
                     header: 'Registro realizado con éxito',
                     buttons: ['OK']
                   });
-                  await alert.present();
-                  this.VolverDeRegistro();
+                  await alert.present().then(() => {
+                    this.auth.login({"username": this.username, "password": this.contrasena}).subscribe((data) => {
+                      this.auth.setLocalAccessToken(data.id);
+                      this.route.navigateByUrl('tabs/inici');
+                    })
+                  });
                 });
               },
               async error => {
@@ -686,37 +720,38 @@ replay() {
           );
       }
     }
-    async EnviarContrasena() {
-      if (this.username === undefined) {
-        const alert = await this.alertController.create({
-          header: 'Atención: Introduce un nombre de usuario en el formulario',
-          buttons: ['OK']
-        });
-        await alert.present();
-      } else {
-        console.log ('voy a pedir contraseña');
-        this.peticionesAPI.DameContrasena (this.username)
-        .subscribe (async (res) => {
-            if (res[0] !== undefined) {
-              const alumno = res[0]; // Si es diferente de null, el alumno existe
-              // le enviamos la contraseña
-              this.comServer.RecordarContrasena (alumno);
-              const alert = await this.alertController.create({
-                header: 'En breve recibirás un email con tu contraseña',
-                buttons: ['OK']
-              });
-              await alert.present();
-            } else {
-              const alert = await this.alertController.create({
-                header: 'No hay ningun alumno con este nombre de usuario',
-                buttons: ['OK']
-              });
-              await alert.present();
-            }
-        });
-      }
+
+    // async EnviarContrasena() {
+    //   if (this.username === undefined) {
+    //     const alert = await this.alertController.create({
+    //       header: 'Atención: Introduce un nombre de usuario en el formulario',
+    //       buttons: ['OK']
+    //     });
+    //     await alert.present();
+    //   } else {
+    //     console.log ('voy a pedir contraseña');
+    //     this.peticionesAPI.DameContrasena (this.username)
+    //     .subscribe (async (res) => {
+    //         if (res[0] !== undefined) {
+    //           const alumno = res[0]; // Si es diferente de null, el alumno existe
+    //           // le enviamos la contraseña
+    //           this.comServer.RecordarContrasena (alumno);
+    //           const alert = await this.alertController.create({
+    //             header: 'En breve recibirás un email con tu contraseña',
+    //             buttons: ['OK']
+    //           });
+    //           await alert.present();
+    //         } else {
+    //           const alert = await this.alertController.create({
+    //             header: 'No hay ningun alumno con este nombre de usuario',
+    //             buttons: ['OK']
+    //           });
+    //           await alert.present();
+    //         }
+    //     });
+    //   }
   
-    }
+    // }
 }
 
 

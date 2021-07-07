@@ -11,7 +11,7 @@ export class Alumno {
   id: number;
 
   constructor(nombre?: string, primerApellido?: string, segundoApellido?: string,
-              Username?: string, Password?: string, Email?: string, profesorId?: number,
+              Username?: string, password?: string, email?: string, profesorId?: number,
               imagenPerfil?: string) {
 
     this.nombre = nombre;
@@ -20,8 +20,8 @@ export class Alumno {
     this.imagenPerfil = null;
     this.permisoCambioImagenPerfil = false;
     this.username = Username;
-    this.password = Password;
-    this.email = Email;
+    this.password = password;
+    this.email = email;
     this.profesorId = profesorId;
   }
 }

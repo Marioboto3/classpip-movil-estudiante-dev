@@ -1,9 +1,12 @@
+import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
+import { ComServerService } from './../servicios/com-server.service';
+import { AuthService } from './../servicios/auth.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { SesionService } from '../servicios/sesion.service';
 import { NavController, LoadingController, AlertController } from '@ionic/angular';
 import { PeticionesAPIService } from '../servicios/index';
 import { CalculosService } from '../servicios/calculos.service';
-import { Juego, Equipo } from '../clases/index';
+import { Juego, Equipo, Alumno } from '../clases/index';
 import { Router } from '@angular/router';
 import { JuegoSeleccionadoPage } from '../juego-seleccionado/juego-seleccionado.page';
 import { IonSlides } from '@ionic/angular';
@@ -18,6 +21,8 @@ export class IniciPage implements OnInit {
 
   /* Creamos los array con los juegos activos e inactivos que solicitaremos a la API */
   id: number;
+  alumno: Alumno;
+  contNotif = 0;
   juegosActivos: Juego[] = [];
   disablePrevBtn = true;
   disableNextBtn = false;
@@ -36,15 +41,38 @@ export class IniciPage implements OnInit {
     public navCtrl: NavController,
     private sesion: SesionService,
     private peticionesAPI: PeticionesAPIService,
-    private calculos: CalculosService
+    private calculos: CalculosService,
+    private auth: AuthService,
+    private comServer: ComServerService,
+    private localNotifications: LocalNotifications
   ) { }
 
 
   ngOnInit() {
-    this.id = this.sesion.DameAlumno().id;
-    this.calculos.DameJuegosAlumno(this.id)
-      .subscribe(listas => {
-        this.juegosActivos = listas.activos;
+    let token = this.auth.getAccessToken();
+    console.log('token: ', token);
+    this.auth.getUserIdByToken(token).subscribe((data: any) => {
+      this.auth.getAlumno(data.userId).subscribe((user: Alumno) => {
+        console.log('response: ', user);
+        this.id = user.id;
+        this.alumno = user;
+        this.sesion.TomaAlumno(this.alumno);
+        this.comServer.Conectar(this.alumno);
+
+        this.comServer.EsperarNotificaciones()
+        .subscribe((notificacion: any) => {
+          console.log ('Pongo notificacion:  ' + notificacion );
+          this.localNotifications.schedule({
+            id: ++this.contNotif,
+            text: notificacion,
+          });
+          console.log('Este es el id del alumno que se ha logado: ' + this.id);
+          this.calculos.DameJuegosAlumno(this.id)
+            .subscribe(listas => {
+              this.juegosActivos = listas.activos;
+          });
+        });
+      });        
     });
   }
 

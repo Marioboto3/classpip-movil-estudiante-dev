@@ -157,12 +157,6 @@ export class PeticionesAPIService {
     return this.http.get<Profesor>(this.APIUrlProfesores + '?filter[where][identificador]=' + identificador);
   }
 
-  public DameAlumno(nombreUsuario: string, password: string): Observable<Alumno> {
-
-    return this.http.get<Alumno>(this.APIUrlAlumnos + '?filter[where][username]=' + nombreUsuario
-      + '&filter[where][password]=' + password);
-  }
-
   public DameTodosLosAlumnos(): Observable<Alumno[]> {
     return this.http.get<Alumno[]>(this.APIUrlAlumnos);
   }
@@ -1100,12 +1094,12 @@ public PonerNotaAlumnoJuegoDeGeocaching(alumnoJuegoDeGeocaching: AlumnoJuegoDeGe
   }
 
 
-  public PonImagenPerfil(formData: FormData): Observable<any> {
+  public PonimagenPerfil(formData: FormData): Observable<any> {
     return this.http.post<any>(this.APIUrlImagenesPerfil + '/upload', formData);
   }
 
   public ModificaAlumno(alumno: Alumno): Observable<Alumno> {
-    return this.http.put<Alumno>(this.APIUrlAlumnos + '/' + alumno.id, alumno);
+    return this.http.patch<Alumno>(this.APIUrlAlumnos + '/' + alumno.id, alumno);
   }
 
   // Juegos de cuestionario de satisfaccion

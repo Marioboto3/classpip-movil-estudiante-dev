@@ -1,3 +1,4 @@
+import { AuthService } from './../servicios/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { PeticionesAPIService} from '../servicios/index';
 import { SesionService} from '../servicios/sesion.service';
@@ -7,6 +8,7 @@ import { File } from '@ionic-native/file/ngx';
 import { ActionSheetController, AlertController } from '@ionic/angular';
 // import { Camera, CameraOptions } from '@ionic-native/Camera/ngx';
 import * as URL from '../URLs/urls';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-mi-perfil',
@@ -23,6 +25,7 @@ export class MiPerfilPage implements OnInit {
   contrasenaRep: string;
   cambio = false;
   cambioPass = false;
+  originalUsername: string;
 
   constructor(
     private peticionesAPI: PeticionesAPIService,
@@ -31,18 +34,25 @@ export class MiPerfilPage implements OnInit {
     public alertController: AlertController,
     //public camera: Camera,
     public actionSheetController: ActionSheetController,
-    private file: File
+    private file: File,
+    private auth: AuthService
   ) { }
 
   ngOnInit() {
     console.log ('estoy en mi perfil');
-    this.alumno = this.sesion.DameAlumno();
-    console.log(this.alumno);
-    // this.MiImagenAlumno = this.calculos.VisualizarImagenAlumno(this.Alumno.ImagenPerfil);
-    console.log('Ya tengo la imagen del Alumno');
-    console.log(this.miImagenAlumno);
-   // this.imagenPerfil = URL.ImagenesPerfil + this.Alumno.ImagenPerfil;
-    
+    if(this.sesion.DameAlumno() == undefined){
+      this.auth.getUserIdByToken(this.auth.getAccessToken()).subscribe((data: any) => {
+        this.auth.getAlumno(data.userId).subscribe((alumno: Alumno) => {
+          this.alumno = alumno;
+          this.originalUsername = alumno.username;
+          console.log(this.originalUsername);
+        })
+      })
+    } else {
+      this.alumno = this.sesion.DameAlumno();
+      this.originalUsername = this.alumno.username;
+      console.log(this.originalUsername);
+    } 
   }
 
   // accessGallery() {
@@ -102,65 +112,124 @@ export class MiPerfilPage implements OnInit {
     document.getElementById('inputImagen').click();
   }
 
-  EmailCorrecto(email) {
+  emailCorrecto(email) {
     const re = /\S+@\S+\.\S+/;
     return re.test(email);
   }
 
 
-  SeleccionarImagenPerfil($event) {
+  SeleccionarimagenPerfil($event) {
     const imagen = $event.target.files[0];
     const formData = new FormData();
     formData.append(imagen.name, imagen);
-    this.peticionesAPI.PonImagenPerfil(formData)
+    this.peticionesAPI.PonimagenPerfil(formData)
     .subscribe (() => {
       this.alumno.imagenPerfil = URL.ImagenesPerfil + imagen.name;
-      this.peticionesAPI.ModificaAlumno (this.alumno).subscribe();
+      this.peticionesAPI.ModificaAlumno(this.alumno).subscribe(() => {
+        this.sesion.TomaAlumno(this.alumno);
+      });
      });
   }
+
   async CambiarDatos () {
 
-
-    const confirm = await this.alertController.create({
-      header: '¿Seguro que quieres modificar tus datos?',
-      buttons: [
-        {
-          text: 'SI',
-          handler: async () => {
-            if (this.cambioPass && (this.alumno.password !== this.contrasenaRep)) {
-              const alert = await this.alertController.create({
-                header: 'No coincide la contraseña con la contraseña repetida',
-                buttons: ['OK']
-              });
-              await alert.present();
-            } else if (!this.EmailCorrecto (this.alumno.email)) {
-              const alert = await this.alertController.create({
-                header: 'El email es incorrecto',
-                buttons: ['OK']
-              });
-              await alert.present();
-            } else {
-                this.peticionesAPI.ModificaAlumno (this.alumno)
-                .subscribe (async () => {
-                  const alert = await this.alertController.create({
-                    header: 'Datos modificados con éxito',
-                    buttons: ['OK']
-                  });
-                  await alert.present();
-                });
-            }
+    this.auth.checkEmail(this.alumno.email).subscribe(async (data: any) => {
+      console.log('email data: ', data);
+      let filter = data.filter(user => user.id == this.alumno.id);
+      if((filter != null && data.length == 1) || data.length == 0){
+        this.auth.checkUsername(this.alumno.username).subscribe(async (data: any) => {
+          console.log('user data: ', data);
+          let filter = data.filter(user => user.id == this.alumno.id);
+          if((filter != null && data.length == 1) || data.length == 0){
+            const confirm = await this.alertController.create({
+              header: 'Por motivos de seguridad, introduce tu contraseña actual',
+              inputs: [
+                {
+                  name: 'password',
+                  placeholder: 'Password',
+                  type: 'password'
+                }
+              ],
+              buttons: [
+                {
+                  text: 'Cancelar',
+                  role: 'cancel',
+                  handler: () => {
+                  }
+                },
+                {
+                  text: 'Actualizar',
+                  handler: async (secConfirm) => {
+                    if (this.cambioPass && (this.alumno.password !== this.contrasenaRep)) {
+                      const alert = await this.alertController.create({
+                        header: 'No coincide la contraseña con la contraseña repetida',
+                        buttons: ['OK']
+                      });
+                      await alert.present();
+                    } else if(this.alumno.password == secConfirm.password){
+                      const alert = await this.alertController.create({
+                        header: 'La nueva contraseña no puede coincidir con la actual',
+                        buttons: ['OK']
+                      });
+                      await alert.present();
+                    } else if (!this.emailCorrecto (this.alumno.email)) {
+                      const alert = await this.alertController.create({
+                        header: 'El email es incorrecto',
+                        buttons: ['OK']
+                      });
+                      await alert.present();
+                    } else {
+                      let user = {"username": this.originalUsername, "password": secConfirm.password}
+                      console.log('credentials: ', user);
+                      this.auth.login(user).subscribe((data) => {
+                        if(localStorage.getItem('ACCESS_TOKEN') != null){
+                          this.auth.setLocalAccessToken(data.id);
+                        } else {
+                          this.auth.setAccessToken(data.id);
+                        }
+                        this.peticionesAPI.ModificaAlumno (this.alumno)
+                        .subscribe (async (data) => {
+                          console.log('respuesta mod: ', data);
+                          this.sesion.TomaAlumno(data)
+                          this.originalUsername = this.alumno.username;
+                          this.alumno.password = null;
+                          this.cambioPass = false;
+                          this.contrasenaRep = null;
+                          this.cambio = false;
+                          const alert = await this.alertController.create({
+                            header: 'Datos modificados con éxito',
+                            buttons: ['OK']
+                          });
+                          await alert.present();
+                        });
+                      }, async (error) => {
+                        const alert = await this.alertController.create({
+                          header: 'Contraseña actual incorrecta',
+                          buttons: ['OK']
+                        });
+                        await alert.present();
+                      })
+                    }
+                  }
+                }
+              ]
+            });
+            await confirm.present();
+          } else {
+            const alert = await this.alertController.create({
+              header: 'El nombre de usuario ya existe',
+              buttons: ['OK']
+            });
+            await alert.present();
           }
-        }, {
-          text: 'NO',
-          role: 'cancel',
-          handler: () => {
-          }
-        }
-      ]
+        })
+      } else {
+        const alert = await this.alertController.create({
+          header: 'El email ya existe',
+          buttons: ['OK']
+        });
+        await alert.present();
+      }
     });
-    await confirm.present();
-
-
-
   }
 }

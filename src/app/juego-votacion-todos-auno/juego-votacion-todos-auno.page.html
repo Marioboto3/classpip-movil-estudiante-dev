@@ -24,7 +24,7 @@
             <mat-expansion-panel-header>
                 <ion-item style= "width: 50%">
                   <ion-label>
-                    {{item.al.Nombre}} {{item.al.PrimerApellido}}
+                    {{item.al.Nombre}} {{item.al.primerApellido}}
                   </ion-label>
                 </ion-item> 
                 <ion-item  *ngFor="let concepto of juegoSeleccionado.Conceptos; let i=index" style= "width: 15%">
@@ -43,7 +43,7 @@
             <mat-expansion-panel-header (click)="MuestraPicker(pos)">
                 <ion-item style= "width: 50%">
                   <ion-label>
-                    {{item.al.Nombre}} {{item.al.PrimerApellido}}
+                    {{item.al.Nombre}} {{item.al.primerApellido}}
                   </ion-label>
                 </ion-item> 
                 <ion-item *ngFor="let concepto of juegoSeleccionado.Conceptos; let i=index" style= "width: 15%">

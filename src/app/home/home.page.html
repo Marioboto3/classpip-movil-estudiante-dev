@@ -1,5 +1,4 @@
-
-<ion-content padding class="login-content" *ngIf ="login">
+<ion-content padding class="login-content" *ngIf="login">
   <div>
     <!-- <ion-item>
       <ion-label>step=100, snaps, </ion-label>
@@ -9,7 +8,7 @@
 
     <!-- Prueba de wheel selector -->
     <!-- Esto solo lo puedo probar en el emulardor o en el movil -->
-<!-- 
+    <!-- 
     <ion-grid>
       <ion-row>
         <ion-col col-12><span class="selected-tag">Selected:</span> <span class="selected">{{selected}}</span></ion-col>
@@ -37,8 +36,8 @@
 
 
 
-    
-     <!-- ///////////////////////// -->
+
+    <!-- ///////////////////////// -->
     <!-- <mat-accordion>
       <mat-expansion-panel *ngFor="let item of data.questionnaire.item;let i = index" hideToggle>
         <mat-expansion-panel-header>
@@ -57,7 +56,7 @@
       </ion-list>
       </mat-expansion-panel> 
       Esto es una variante -->
-      <!-- <mat-expansion-panel (opened)="panelOpenState = true"
+    <!-- <mat-expansion-panel (opened)="panelOpenState = true"
                            (closed)="panelOpenState = false">
         <mat-expansion-panel-header>
           <mat-panel-title>
@@ -82,67 +81,74 @@
     <button type="button" *ngIf = "playing" (click)= pause() > Pause </button>
     <button type="button" (click)= replay() > Replay </button>
     -->
-  <!-- <input #file id = "inputInfo" type="file" accept=".mp3,audio/*" (change)="SeleccionarFichero($event)" style="display:none">
+    <!-- <input #file id = "inputInfo" type="file" accept=".mp3,audio/*" (change)="SeleccionarFichero($event)" style="display:none">
   <button style = "height:100px; width:80%" (click) = "ActivarInput()" type="button" class="btn Agregar">
             Seleccionar audio<i class="material-icons">add_photo_alternate</i>
   </button> -->
-  <!-- <audio *ngIf = "disponible" controls>
+    <!-- <audio *ngIf = "disponible" controls>
     <source src="http://147.83.118.92:3000/api/imagenes/ImagenColeccion/download/audioFile.mp3" type="audio/mpeg">
   </audio> -->
-<!-- 
+    <!-- 
   <p>{{ this.coords.lat }}</p>
   <p>{{ this.coords.lng }}</p>
   <button type="button" (click)= empezar() > Obtener Coordenadas </button> -->
 
 
-     <div class="login-logo">
+    <div class="login-logo">
       <img class="logo" width="100" height="100">
-    </div>  
+    </div>
 
     <div class="login-credentials">
-      <ion-item  lines="none">
-        <ion-input type="text" value="" name="User" placeholder="Nombre de usuario" requiered [(ngModel)]="username"></ion-input>
+      <ion-item lines="none">
+        <ion-input type="text" value="" name="User" placeholder="Nombre de usuario" requiered [(ngModel)]="username">
+        </ion-input>
         <img class="user-input-logo" width="21" height="21" slot="end">
       </ion-item>
       <ion-row style="height: 5px"></ion-row>
 
       <ion-item lines="none">
-        <ion-input type="password" name="password" placeholder="Contraseña" requiered [(ngModel)]="password"></ion-input>
+        <ion-input type="password" name="password" placeholder="Contraseña" requiered [(ngModel)]="password">
+        </ion-input>
         <img class="pass-input-logo" width="20" height="20" slot="end">
       </ion-item>
 
-  
-    
-      <ion-button  (click)="Autentificar();" class="login-btn">Log In
+
+
+      <ion-button (click)="Autentificar();" class="login-btn">Log In
       </ion-button>
       <br>
       <br>
-      <ion-label  (click)="EnviarContrasena();">¿Olvidaste tu contraseña?
-      </ion-label>
+      <!-- <ion-label  (click)="EnviarContrasena();">¿Olvidaste tu contraseña?
+      </ion-label> -->
 
-   
-      <ion-button  *ngIf ="!juegoRapido" (click)="AccesoJuegoRapido();" class="login-btn">Juego Rápido
+      <ion-checkbox color="primary" [(ngModel)]="this.savePass" slot="start"></ion-checkbox>
+      <ion-label> Guardar contraseña</ion-label>
+      <br>
+      <br>
+      <br>
+
+      <!-- <ion-button *ngIf="!juegoRapido" (click)="AccesoJuegoRapido();" class="login-btn">Juego Rápido
       </ion-button>
 
       <br>
       <br>
-      <br>
-      <ion-label  (click)="AccesoRegistro();">Regístrate en Classpip
+      <br> -->
+      <ion-label (click)="AccesoRegistro();">Regístrate en Classpip
       </ion-label>
 
 
-    </div> 
-    
+    </div>
+
   </div>
 </ion-content>
 
-<ion-content padding class="login-content-juego-rapido" *ngIf ="juegoRapido">
+<!-- <ion-content padding class="login-content-juego-rapido" *ngIf="juegoRapido">
   <div>
 
 
     <div class="login-logo">
       <img class="logo" width="100" height="100">
-    </div> 
+    </div>
 
     <div class="login-credentials">
       <ion-item lines="none">
@@ -160,14 +166,14 @@
       </ion-button>
       <ion-button (click)="VolverDeJuegoRapido();" class="login-btn">VOLVER A LOGIN
       </ion-button>
-    </div> 
-    
-  </div>
-</ion-content>
+    </div>
 
-<ion-content padding class="login-content-registro" *ngIf ="registro">
+  </div>
+</ion-content> -->
+
+<ion-content padding class="login-content-registro" *ngIf="registro">
   <div>
-<!-- 
+    <!-- 
 
     <div class="login-logo">
       <img class="logo" width="150" height="150">
@@ -181,19 +187,22 @@
       <ion-row style="height: 5px"></ion-row>
 
       <ion-item lines="none">
-        <ion-input type="text" name="primerApellido" placeholder="Primer apellido" requiered [(ngModel)]="primerApellido"></ion-input>
+        <ion-input type="text" name="primerApellido" placeholder="Primer apellido" requiered
+          [(ngModel)]="primerApellido"></ion-input>
         <img class="user-input-logo" width="20" height="20" slot="end">
       </ion-item>
       <ion-row style="height: 5px"></ion-row>
 
       <ion-item lines="none">
-        <ion-input type="text" name="segundoApellido" placeholder="Segundo apellido" requiered [(ngModel)]="segundoApellido"></ion-input>
+        <ion-input type="text" name="segundoApellido" placeholder="Segundo apellido" requiered
+          [(ngModel)]="segundoApellido"></ion-input>
         <img class="user-input-logo" width="20" height="20" slot="end">
       </ion-item>
       <ion-row style="height: 5px"></ion-row>
 
       <ion-item lines="none">
-        <ion-input type="text" name="username" placeholder="Nombre de usuario" requiered [(ngModel)]="username"></ion-input>
+        <ion-input type="text" name="username" placeholder="Nombre de usuario" requiered [(ngModel)]="username">
+        </ion-input>
         <img class="user-input-logo" width="20" height="20" slot="end">
       </ion-item>
       <ion-row style="height: 5px"></ion-row>
@@ -203,17 +212,20 @@
       </ion-item>
       <ion-row style="height: 5px"></ion-row>
       <ion-item lines="none">
-        <ion-input type="text" name="contrasena" placeholder="Contraseña" requiered [(ngModel)]="contrasena"></ion-input>
+        <ion-input type="text" name="contrasena" placeholder="Contraseña" requiered [(ngModel)]="contrasena">
+        </ion-input>
         <img class="pass-input-logo" width="20" height="20" slot="end">
       </ion-item>
       <ion-row style="height: 5px"></ion-row>
       <ion-item lines="none">
-        <ion-input type="text" name="contrasenaRep" placeholder="Repite la contraseña" requiered [(ngModel)]="contrasenaRep"></ion-input>
+        <ion-input type="text" name="contrasenaRep" placeholder="Repite la contraseña" requiered
+          [(ngModel)]="contrasenaRep"></ion-input>
         <img class="pass-input-logo" width="20" height="20" slot="end">
       </ion-item>
       <ion-row style="height: 5px"></ion-row>
       <ion-item lines="none">
-        <ion-input type="text" name="identificador" placeholder="Identificador" requiered [(ngModel)]="identificador"></ion-input>
+        <ion-input type="text" name="identificador" placeholder="Identificador" requiered [(ngModel)]="identificador">
+        </ion-input>
         <img class="user-input-logo" width="20" height="20" slot="end">
       </ion-item>
 
@@ -221,7 +233,7 @@
       </ion-button>
       <ion-button (click)="VolverDeRegistro();" class="login-btn">VOLVER A LOGIN
       </ion-button>
-    </div> 
-    
+    </div>
+
   </div>
 </ion-content>
