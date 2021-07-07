@@ -13,7 +13,7 @@
       <th>Objeto</th>
     </tr>
     <tr>
-      <div *ngFor="let objeto of objetosMochila">
+      <div *ngFor="let objeto of listaObjetosEscapeNoUsados">
         <td (click)="ensenarObjeto(objeto)">{{objeto.nombre}}</td>
       </div>
     </tr>

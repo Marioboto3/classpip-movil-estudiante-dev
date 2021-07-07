@@ -6,7 +6,7 @@ export class ObjetoJuego {
     escenarioId: number;
     pregunta: string;
     respuesta: string;
-    usable: boolean;
+    usado: boolean;
     recogido: boolean;
     resuelto: boolean;
     posicion: number;
@@ -22,7 +22,7 @@ export class ObjetoJuego {
       this.escenarioId = escenarioId;
       this.pregunta = pregunta;
       this.respuesta = respuesta;
-      this.usable = usable;
+      this.usado = usable;
       this.recogido = recogido;
       this.resuelto = resuelto;
       this.posicion = posicion;

@@ -9,6 +9,8 @@ import { AlertController } from '@ionic/angular';
 import { ObjetoPista } from 'src/app/clases/ObjetoPista';
 import { ObjetoGlobalEscape } from 'src/app/clases/ObjetoGlobalEscape';
 import { ObjetoEnigma } from 'src/app/clases/ObjetoEnigma';
+import { ObjetoJuego } from 'src/app/clases/ObjetoJuego';
+import { EscenaDeJuego } from 'src/app/clases/EscenaDeJuego';
 
 
 
@@ -23,54 +25,43 @@ export class MochilaPage implements OnInit {
 
   estancia: string;
 
-  objetosMochila: ObjetoGlobalEscape[] = [];
-
-  objetosEnigma: ObjetoEnigma[] = [];
-  objetosEscape: ObjetoEscape[] = [];
-  objetosGlobales: ObjetoGlobalEscape [] = [];
-
-  objetosEnigmaPrimerEscenario: ObjetoEnigma[] = [];
-  objetosEscapePrimerEscenario: ObjetoEscape[] = [];
-  objetosGlobalesPrimerEscenario: ObjetoGlobalEscape [] = [];
-
+  mapObjetosEscapeFromObjetosJuego: Map<number, Map<number, ObjetoEscape>> = new Map<number, Map<number, ObjetoEscape>>(); //todos
+  listaObjetosEscapeNoUsados: ObjetoEscape[] = [];
   pistasGuardadas: ObjetoPista[] = [];
+  mapEscenas: Map<number, EscenaDeJuego> = new Map<number, EscenaDeJuego>();
+
 
   constructor(private router: Router,
     private sesion: SesionService,
-    private calculos: CalculosService,
-    private peticionesAPI: PeticionesAPIService,
-    private alertController: AlertController) { }
+   private alertController: AlertController) { }
 
   ngOnInit() {
 
-    this.estancia = this.sesion.DameEstanciaEscenario();
-    this.juegoEscape = this.sesion.DameJuegoEscapeRoom();
-    this.objetosMochila = this.sesion.DameObjetosMochila();
-    this.pistasGuardadas = this.sesion.DamePistasGuardadas();
+    this.mapObjetosEscapeFromObjetosJuego = this.sesion.DameMapObjetosEscapeFromObjetosJuego();
+    this.mapEscenas = this.sesion.DameMapEscenas();
+    this.mapEscenas.forEach(escena =>{
+      
+     Array.from(this.mapObjetosEscapeFromObjetosJuego.get(escena.id).values()).forEach(objetoEscape =>{
 
-    this.objetosEscape = this.sesion.DameObjetosEscapeSegundoEscenario();
-    this.objetosEnigma = this.sesion.DameObjetosEnigmaSegundoEscenario();
-    this.objetosGlobales = this.sesion.DameObjetosGlobalesSegundoEscenario();
-
-    this.objetosEscapePrimerEscenario = this.sesion.DameObjetosEscape();
-    this.objetosEnigmaPrimerEscenario = this.sesion.DameObjetosEnigma();
-    this.objetosGlobalesPrimerEscenario = this.sesion.DameObjetosGlobalesPrimerEscenario();
+      if(objetoEscape.usado == false && objetoEscape.recogido == true && objetoEscape.usado == false){
+        this.listaObjetosEscapeNoUsados.push(objetoEscape);
+      }
+     });
+    });
+    
   }
 
   reload() {
     this.ngOnInit();
   }
   ionViewWillEnter() {
-    this.reload();
+  //  this.reload();
   }
 
   volver() {
 
-    if (this.estancia == "Principal") {
-      this.router.navigateByUrl('primer-escenario');
-    } else {
-      this.router.navigateByUrl('segundo-escenario');
-    }
+    this.router.navigateByUrl('primer-escenario');
+    
   }
 
   ensenarObjeto(objeto: ObjetoGlobalEscape) {
@@ -89,36 +80,6 @@ export class MochilaPage implements OnInit {
           handler: (data: any) => {
             this.alertController.create({ message: "Devuelto a su sitio!" }).then(res => {
 
-              this.objetosMochila.forEach((element, index) => {
-
-                if (objeto.id == element.id) {
-
-                  // element.recogido = false;
-
-                  this.objetosMochila.splice(index, 1)
-                  console.log("Mostrar lista: ", this.objetosMochila);
-                  this.sesion.TomaObjetosMochila(this.objetosMochila);
-                  
-               /*   if(objeto.escenario == "Principal"){
-                    this.objetosGlobalesPrimerEscenario.forEach(elemento =>{
-                      if(elemento.id == objeto.id){
-                        elemento.recogido = false;
-                      }
-                    });
-                    this.sesion.TomaObjetosGlobalesPrimerEscenario(this.objetosGlobalesPrimerEscenario);
-                  }else{
-                    this.objetosGlobales.forEach(elemento =>{
-                      if(elemento.id == objeto.id){
-                        elemento.recogido = false;
-                      }
-                    });
-                    this.sesion.TomaObjetosGlobalesSegundoEscenario(this.objetosGlobales);
-                  }              
-                  */
-                  console.log("Como queda la lista? ", this.objetosMochila);
-                  res.present();
-                }
-              });
             });
           }
         }

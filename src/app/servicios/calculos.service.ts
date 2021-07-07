@@ -33,6 +33,8 @@ import { ObjetoGlobalEscape } from '../clases/ObjetoGlobalEscape';
 import { PartidaEscape } from '../clases/PartidaEscape';
 import { EscenaDeJuego } from '../clases/EscenaDeJuego';
 import { ObjetoJuego } from '../clases/ObjetoJuego';
+import { Llave } from '../clases/Llave';
+import { Pista } from '../clases/Pista';
 
 @Injectable({
   providedIn: 'root'
@@ -68,6 +70,11 @@ export class CalculosService {
   escenaActualId: number;
   mapPosicionObjetosDeEscena: Map<number, any> = new Map<number, any>(); //escena actual
   mapPosicionObjetosDeTodasLasEscenas: Map<number, Map<number, any>> = new Map<number, Map<number, any>>(); //escena actual
+  mapObjetosEscapeFromObjetosJuego: Map<number, Map<number, ObjetoEscape>> = new Map<number, Map<number, ObjetoEscape>>(); //todos
+  mapObjetosEnigmaFromObjetosJuego: Map<number, Map<number, ObjetoEnigma>> = new Map<number, Map<number, ObjetoEnigma>>(); //todos
+  mapLlavePorEscena: Map<number, Llave> = new Map<number, Llave>();
+  mapPistaPorEscena: Map<number, Pista> = new Map<number, Pista>();
+
 
 
   constructor(
@@ -114,9 +121,15 @@ export class CalculosService {
   }
   public MapearInformacionEscape(juego: JuegoDeEscapeRoom) {
     //Pedimos el alumno del escape room una vez tenemos el juego
-    this.peticionesAPI.DameAlumnoDeEscapeRoom(this.sesion.DameAlumno().id, juego.id).subscribe(alumno => {
-     // console.log("Alumno escape room: ", alumno);
-      this.sesion.TomaAlumnoEscape(alumno);
+    this.peticionesAPI.DameAlumnoDeEscapeRoom(this.sesion.DameAlumno().id, juego.id).subscribe({
+      next: data => {
+        // console.log("Data alumno: ", data[0]);
+        this.sesion.TomaAlumnoEscape(data[0]);
+      },
+      error: error => {
+        console.log("Error: ", error);
+      }
+      // console.log("Alumno escape room: ", alumno);
     });
 
     //Pedimos el objeto partida que es la relacion entre Juego y escena para poder pedir la informacion de cada escena
@@ -124,39 +137,42 @@ export class CalculosService {
     let mapObjetos: Map<number, ObjetoJuego> = new Map<number, ObjetoJuego>();
 
     this.peticionesAPI.DameTodasLasPartidasDelJuegoEscape(juego.id).subscribe(partidas => {
-     // console.log("Partidas: ", partidas);
+      // console.log("Partidas: ", partidas);
       if (partidas[0] != null) {
         partidas.forEach(partida => {
           this.peticionesAPI.DameEscenaEscapeRoom(partida.escenaId).subscribe(escena => {
-         //   console.log("Escena: ", escena);
+            //   console.log("Escena: ", escena);
             if (escena != null && escena != undefined) {
               map.set(escena.id, escena);
               this.sesion.TomaMapEscenas(map);
 
               //Pedimos la informacion de los escenarios de todas las escenas y lo guardamos en el map de escenas
               this.peticionesAPI.DameEscenarioEscapePorEscena(escena.escenarioId).subscribe(escenario => {
-          //      console.log("Escenario: ", escenario);
+                //      console.log("Escenario: ", escenario);
                 this.mapEscenarioPorEscena.set(escena.id, escenario);
                 this.sesion.TomaMapEscenarioPorEscena(this.mapEscenarioPorEscena);
               });
 
               //Pedimos todos los ObjetosJuego de la escena
-              this.peticionesAPI.DameTodosLosObjetosJuegoDeLaEscena(partida.escenaId).subscribe(objetosJuego => {
-          //      console.log("Objetos juego de la escena: ", objetosJuego);
+              this.peticionesAPI.DameTodosLosObjetosJuegoDeLaEscena(partida.escenaId, juego.id).subscribe(objetosJuego => {
+                // console.log("Objetos juego de la escena: ", objetosJuego);
                 objetosJuego.forEach(objeto => {
                   mapObjetos.set(objeto.id, objeto);
                   this.sesion.TomaMapObjetosJuego(mapObjetos);
-
+                  // console.log("Objeto: ", objeto);
                   //Pedimos todos los objetosGlobales de todos los objetos juego
-                  this.peticionesAPI.DameObjetoGlobalEscape(objeto.objetoId).subscribe(objetoGlobal => {
-                    if (objetoGlobal != undefined && objetoGlobal != null) {
-                      this.mapInformacionGlobalDelObjetoJuego.set(objeto.id, objetoGlobal);
-                      this.sesion.TomaMapInformacionGlobalDelObjetoJuego(this.mapInformacionGlobalDelObjetoJuego);
-                    } else {
-                      console.log("No hay objeto Global.");
-                    }
-                  });
-
+                  if (objeto.objetoId == undefined) {
+                    // console.log("Objeto undefined: ", objeto)
+                  } else {
+                    this.peticionesAPI.DameObjetoGlobalEscape(objeto.objetoId).subscribe(objetoGlobal => {
+                      if (objetoGlobal != undefined && objetoGlobal != null) {
+                        this.mapInformacionGlobalDelObjetoJuego.set(objeto.id, objetoGlobal);
+                        this.sesion.TomaMapInformacionGlobalDelObjetoJuego(this.mapInformacionGlobalDelObjetoJuego);
+                      } else {
+                        // console.log("No hay objeto Global.");
+                      }
+                    });
+                  }
                 });
               });
             }
@@ -164,23 +180,78 @@ export class CalculosService {
         });
       }
     });
+    console.clear();
   }
 
-  public GuardarEscapeRoom(){
-    
+  public pasarDeObjetoEscapeAObjetoJuego(objetoEscape: ObjetoEscape): ObjetoJuego {
+
+    let objetoJuego: ObjetoJuego = new ObjetoJuego(objetoEscape.objetoGlobalId, objetoEscape.escenaId, "string", "string", objetoEscape.usado, objetoEscape.recogido, false, objetoEscape.posicion, objetoEscape.juegoDeEscapeRoomId, objetoEscape.escenaId, false, objetoEscape.requerido, objetoEscape.requeridoEscenaId);
+    objetoJuego.id = objetoEscape.objetoJuegoId;
+    return objetoJuego;
+  }
+  public pasarDeObjetoEnigmaAObjetoJuego(objetoEnigma: ObjetoEnigma): ObjetoJuego {
+
+    let objetoJuego: ObjetoJuego = new ObjetoJuego(objetoEnigma.objetoGlobalId, objetoEnigma.escenaId, objetoEnigma.pregunta, objetoEnigma.respuesta, false, false, objetoEnigma.resuelto, objetoEnigma.posicion, objetoEnigma.juegoDeEscapeRoomId, objetoEnigma.escenaId, objetoEnigma.principal, false, 1);
+    objetoJuego.id = objetoEnigma.objetoJuegoId;
+    return objetoJuego;
+  }
+  public pasarDeObjetoLlaveAObjetoJuego(llave: Llave): ObjetoJuego {
+
+    let objetoJuego: ObjetoJuego = new ObjetoJuego(llave.objetoGlobalId, llave.escenaId, "string", "string", false, llave.recogido, false, 1, llave.juegoDeEscapeRoomId, llave.escenaId, false, false, 1);
+    objetoJuego.id = llave.objetoJuegoId;
+    return objetoJuego;
+  }
+  public pasarDeObjetoPistaAObjetoJuego(pista: Pista): ObjetoJuego {
+
+    let objetoJuego: ObjetoJuego = new ObjetoJuego(pista.objetoGlobalId, pista.escenaId, pista.texto, "string", false, pista.recogido, false, 1, pista.juegoDeEscapeRoomId, pista.escenaId, false, false, 1);
+    objetoJuego.id = pista.objetoJuegoId;
+    return objetoJuego;
+  }
+  public GuardarEscapeRoom() {
+
     this.escenaActualId = this.sesion.DameEscenaActualId();
-    if (this.escenaActualId == 1){
+    if (this.escenaActualId == 1) {
       this.alumnoEscape = this.sesion.DameAlumnoEscape();
-    }else{
+    } else {
       this.alumnoEscape = this.sesion.DameAlumnoEscapeRoom();
     }
     this.peticionesAPI.GuardarAlumnoEscapeRoom(this.alumnoEscape).subscribe();
-    this.mapPosicionObjetosDeTodasLasEscenas = this.sesion.DameMapPosicionObjetosDeTodasLasEscenas();
-    console.log("-- Map con todas las posiciones: ", this.mapPosicionObjetosDeTodasLasEscenas);
-    Array.from(this.mapPosicionObjetosDeTodasLasEscenas.values()).forEach(mapObjetos =>{
-
+    // this.mapPosicionObjetosDeTodasLasEscenas = this.sesion.DameMapPosicionObjetosDeTodasLasEscenas();
+    // console.log("-- Map con todas las posiciones: ", this.mapPosicionObjetosDeTodasLasEscenas);
+    // Array.from(this.mapPosicionObjetosDeTodasLasEscenas.values()).forEach(mapObjetos =>{
+    //   Array.from(mapObjetos.values()).forEach(objeto =>{
+    //     console.log("Objeto: ", objeto);
+    //     this.peticionesAPI.GuardarObjetoJuego(objeto).subscribe();
+    //   })
+    // });
+    this.mapObjetosEscapeFromObjetosJuego = this.sesion.DameMapObjetosEscapeFromObjetosJuego();
+    console.log("-- map objetos escape: ", this.mapObjetosEscapeFromObjetosJuego);
+    let list: ObjetoJuego[] = [];
+    Array.from(this.mapObjetosEscapeFromObjetosJuego.values()).forEach(mapObjetos => {
+      Array.from(mapObjetos.values()).forEach(objetoEscape => {
+        console.log("Objeto escape: ", objetoEscape);
+        list.push(this.pasarDeObjetoEscapeAObjetoJuego(objetoEscape));
+      });
     });
-  
+    Array.from(this.mapObjetosEnigmaFromObjetosJuego.values()).forEach(mapObjetos => {
+      Array.from(mapObjetos.values()).forEach(objetoEnigma => {
+        console.log("Objeto enigma: ", objetoEnigma);
+        list.push(this.pasarDeObjetoEnigmaAObjetoJuego(objetoEnigma));
+      });
+    });
+    this.mapLlavePorEscena = this.sesion.DameMapLlaveEscena();
+    Array.from(this.mapLlavePorEscena.values()).forEach(llave => {
+      console.log("Objeto llave: ", llave);
+      list.push(this.pasarDeObjetoLlaveAObjetoJuego(llave));
+    });
+    this.mapPistaPorEscena = this.sesion.DameMapPistaEscena();
+    Array.from(this.mapPistaPorEscena.values()).forEach(pista => {
+      console.log("Objeto pista: ", pista);
+      list.push(this.pasarDeObjetoPistaAObjetoJuego(pista));
+    });
+    Array.from(list.values()).forEach(objetoJuego => {
+      this.peticionesAPI.GuardarObjetoJuego(objetoJuego).subscribe();
+    })
     // this.mapObjetosJuego = this.sesion.DameMapObjetosJuego();
     // Array.from(this.mapObjetosJuego.values()).forEach(objetoJuego =>{
     //   this.peticionesAPI.GuardarObjetoJuego(objetoJuego).subscribe();
@@ -267,64 +338,7 @@ export class CalculosService {
   console.log("JUEGO Mochila POST PISTAS: ", this.juegoEscape.mochila.pistasGuardadas);
   this.sesion.TomaJuegoEscapeRoom(this.juegoEscape);
 */}
-  public GuardaEscapeRoom() {
-    this.peticionesAPI.GuardaEscapeRoom(this.sesion.DameJuegoEscapeRoom()).subscribe(juego => {
-      console.log("Juego guardado: ", juego);
-    });
 
-    this.objetosEscapeSegundoEscenario = this.sesion.DameObjetosEscapeSegundoEscenario();
-    this.objetosEnigmaSegundoEscenario = this.sesion.DameObjetosEnigmaSegundoEscenario();
-
-    this.objetosEscape = this.sesion.DameObjetosEscape();
-    console.log("Objetos escape: ", this.objetosEscape);
-    this.objetosEscape.forEach(elemento => {
-      if (elemento != undefined && elemento.nombre != "llave") {
-        console.log("Elemento: ", elemento);
-        this.peticionesAPI.ActualizarObjetosEscape(elemento).subscribe(juego => {
-          console.log("objeto Escape de vuelta: ", juego);
-        });
-      }
-    });
-
-    console.log("Objetos escape: ", this.objetosEscape);
-    this.objetosEscapeSegundoEscenario.forEach(elemento => {
-      if (elemento != undefined && elemento.nombre != "llave") {
-        console.log("Elemento: ", elemento);
-        this.peticionesAPI.ActualizarObjetosEscape(elemento).subscribe(juego => {
-          console.log("objeto Escape de vuelta: ", juego);
-        });
-      }
-    });
-
-
-    this.objetosEnigma = this.sesion.DameObjetosEnigma();
-    console.log("objetos ENIGMA: ", this.objetosEnigma);
-    this.objetosEnigma.forEach(elemento => {
-      if (elemento != undefined) {
-        console.log("elemento enigma: ", elemento);
-        this.peticionesAPI.ActualizarObjetosEnigma(elemento).subscribe(juego => {
-          console.log("objetos Enigma: ", juego);
-
-        });
-      }
-    });
-
-    this.objetosEnigmaSegundoEscenario.forEach(elemento => {
-      if (elemento != undefined) {
-        console.log("elemento enigma: ", elemento);
-        this.peticionesAPI.ActualizarObjetosEnigma(elemento).subscribe(juego => {
-          console.log("objetos Enigma: ", juego);
-
-        });
-      }
-    });
-
-
-    console.log("Dame LLave", this.sesion.DameLlave());
-    this.peticionesAPI.GuardarEstadoLlave(this.sesion.DameLlave()).subscribe(res => {
-
-    });
-  }
   public DameJuegosAlumno(AlumnoId: number): any {
     const Observables = new Observable(obs => {
       const JuegosActivos: any[] = [];
@@ -446,6 +460,7 @@ export class CalculosService {
                                             for (let i = 0; i < juegosDelAlumno.length; i++) {
                                               //REVISAR CLASES POR TEMA DE MAYUSCULAS
                                               if (juegosDelAlumno[i].juegoActivo === true) {
+                                                console.log("Juego active: ", juegosDelAlumno[i]);
                                                 JuegosActivos.push(juegosDelAlumno[i]);
                                               } else {
                                                 JuegosInactivos.push(juegosDelAlumno[i]);
@@ -741,10 +756,14 @@ export class CalculosService {
   public añadirPersonaje(alumnoId: number, escapeRoomId: number, personaje: string) {
     this.peticionesAPI.DameAlumnoDeEscapeRoom(alumnoId, escapeRoomId)
       .subscribe(alumnoEscapeDevuelto => {
-        this.alumnoEscape = new AlumnoJuegoDeEscapeRoom(alumnoId, personaje, escapeRoomId);
+        console.log("Alumno escape devuelto: ", alumnoEscapeDevuelto);
+        this.alumnoEscape = new AlumnoJuegoDeEscapeRoom(alumnoId, personaje, escapeRoomId, alumnoEscapeDevuelto[0].escenaActualId);
         this.alumnoEscape.id = alumnoEscapeDevuelto[0].id;
+        console.log("Alumno eeeesc: ", this.alumnoEscape);
         this.peticionesAPI.AñadePersonaje(this.alumnoEscape)
           .subscribe(alumnoDevuelto => {
+            console.log("alumnoDevuelto: ", alumnoDevuelto);
+            this.sesion.TomaAlumnoEscape
             this.juegoEscape = this.sesion.DameJuegoEscapeRoom();
             this.juegoEscape.estado = true;
             console.log("This.juegoEscape: ", this.juegoEscape);

@@ -7,6 +7,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { AlertController } from '@ionic/angular';
 import { ObjetoPista } from 'src/app/clases/ObjetoPista';
+import { Pista } from 'src/app/clases/Pista';
+import { ObjetoJuego } from 'src/app/clases/ObjetoJuego';
 
 
 @Component({
@@ -18,10 +20,12 @@ export class PistasMochilaPage implements OnInit {
 
   juegoEscape: JuegoDeEscapeRoom;
 
+  pistasGuardadas: Pista [] = [];
+
   objetos: ObjetoEscape[] = [];
 
-  pistasGuardadas: ObjetoPista [] = [];
   mostarPistasVar: boolean = false;
+  mapPistaPorEscena: Map<number, Pista> = new Map<number, Pista>();
 
   constructor(private router: Router,
     private sesion: SesionService,
@@ -31,17 +35,20 @@ export class PistasMochilaPage implements OnInit {
 
   ngOnInit() {
 
-    this.juegoEscape = this.sesion.DameJuegoEscapeRoom();
-    this.objetos = this.sesion.DameObjetosEscape();
-    
-    //this.pistasGuardadas = this.juegoEscape.mochila.pistasGuardadas;
+  
+    this.mapPistaPorEscena = this.sesion.DameMapPistaEscena();
 
+    Array.from(this.mapPistaPorEscena.values()).forEach(pista =>{
+      if(pista.recogido == true){
+        this.pistasGuardadas.push(pista);
+      }
+    });
   }
   reload() {
     this.ngOnInit();
   }
   ionViewWillEnter() {
-    this.reload();
+  //  this.reload();
   }
   mostrarPista (pista: ObjetoPista){
     this.alertController.create({

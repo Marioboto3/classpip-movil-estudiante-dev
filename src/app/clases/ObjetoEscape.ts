@@ -4,7 +4,7 @@ export class ObjetoEscape {
 
   nombre: string;
   imagen: string;
-  usable: boolean;
+  usado: boolean;
   recogido: boolean;
   posicion: number;
   escenaId: number;
@@ -22,7 +22,7 @@ export class ObjetoEscape {
 
     this.nombre = nombre;
     this.imagen = imagen;
-    this.usable = usable;
+    this.usado = usable;
     this.recogido = recogido;
     this.posicion = posicion;
     this.escenaId = escenaId;

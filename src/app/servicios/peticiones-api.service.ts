@@ -639,7 +639,7 @@ export class PeticionesAPIService {
     return this.http.put<AlumnoJuegoDeEscapeRoom>(this.APIUrlAlumnoJuegoDeEscapeRoom, alumnoEscape);}
     
   public GuardarObjetoJuego(objetoJuego: ObjetoJuego): Observable<ObjetoJuego> {
-    return this.http.put<ObjetoJuego>(this.APIUrlObjetoJuego, objetoJuego);}
+    return this.http.put<ObjetoJuego>(this.APIUrlObjetoJuego + '/' + objetoJuego.id, objetoJuego);}
     
   public ActualizaObjetoEnigma(objetoEnigma: ObjetoEnigma): Observable<ObjetoEnigma> {
     return this.http.put<ObjetoEnigma>(this.APIUrlObjetosEnigma, objetoEnigma);}
@@ -1048,14 +1048,14 @@ public PonerNotaAlumnoJuegoDeGeocaching(alumnoJuegoDeGeocaching: AlumnoJuegoDeGe
   public DameEscenarioEscapePorEscena(escenarioId: number): Observable<EscenarioEscapeRoom> {
     return this.http.get<EscenarioEscapeRoom>(this.APIUrlEscenarioEscapeRoom + '/' + escenarioId);
   }
-  public DameTodosLosObjetosJuegoDeLaEscena(escenaId: number): Observable<ObjetoJuego[]> {
-    return this.http.get<ObjetoJuego[]>(this.APIUrlEscenaDeJuego + '/' + escenaId + '/ObjetosJuego');
+  public DameTodosLosObjetosJuegoDeLaEscena(escenaId: number, juegoId: number): Observable<ObjetoJuego[]> {
+    return this.http.get<ObjetoJuego[]>(this.APIUrlEscenaDeJuego + '/' + escenaId + '/ObjetosJuego' + '?filter[where][juegoDeEscapeRoomId]=' + juegoId);
   }
   public DameObjetoGlobalEscape(objetoId: number): Observable<ObjetoGlobalEscape> {
     return this.http.get<ObjetoGlobalEscape>(this.APIUrlObjetosGlobalEscape + '/' + objetoId);
   }
   public DameAlumnoDeEscapeRoom(alumnoId: number, escapeRoomId: number): Observable<AlumnoJuegoDeEscapeRoom> {
-    return this.http.get<AlumnoJuegoDeEscapeRoom>(this.APIUrlAlumnoJuegoDeEscapeRoom + '?filter[where][juegoDeEscapeRoomId]=' + escapeRoomId + '&?filter[where][alumnoId]=' + alumnoId);
+    return this.http.get<AlumnoJuegoDeEscapeRoom>(this.APIUrlAlumnoJuegoDeEscapeRoom  + '?filter[where][juegoDeEscapeRoomId]=' + escapeRoomId + '&?filter[where][alumnoId]=' + alumnoId);
   }
   public DameJuegosDeEscapeRoom(alumnoId: number): Observable<JuegoDeEscapeRoom[]> {
     return this.http.get<JuegoDeEscapeRoom[]>(this.APIUrlAlumnos + '/' + alumnoId + '/JuegosDeEscapeRoom');

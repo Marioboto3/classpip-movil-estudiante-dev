@@ -50,7 +50,8 @@ export class IniciPage implements OnInit {
 
 
   JuegoSeleccionado(juego: any) {
-
+    console.log("Juego: ", juego);
+    console.log("Tipo juego: ", juego.tipo);
     this.sesion.TomaJuego(juego);
     if (juego.tipo === 'Juego De Puntos') {
       this.navCtrl.navigateForward('/juego-puntos');
@@ -76,6 +77,7 @@ export class IniciPage implements OnInit {
       this.navCtrl.navigateForward('/juego-evaluacion');
     } else if (juego.tipo === 'Juego De Escape Room') {
       this.sesion.TomaJuegoEscapeRoom(juego);
+      console.log("Holaa");
       this.navCtrl.navigateForward('/juego-de-escape-room');}
     else {
       this.navCtrl.navigateForward('/juego-colleccion');

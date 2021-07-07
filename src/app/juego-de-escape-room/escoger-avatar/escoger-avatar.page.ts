@@ -56,7 +56,10 @@ export class EscogerAvatarPage implements OnInit {
     }).then((result) => {
       if (result.value) {
           this.calculos.añadirPersonaje(this.alumnoEscape.alumnoId, this.alumnoEscape.juegoDeEscapeRoomId, this.alumnoEscape.personaje);
-          this.router.navigateByUrl('primer-escenario');
+          Swal.fire("¡Que comience el juego!", "", "success").then((result) => {
+            console.log("Result: ", result);
+            this.router.navigateByUrl('primer-escenario');
+          });
       }
     });
   }
