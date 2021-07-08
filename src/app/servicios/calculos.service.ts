@@ -74,6 +74,8 @@ export class CalculosService {
   mapObjetosEnigmaFromObjetosJuego: Map<number, Map<number, ObjetoEnigma>> = new Map<number, Map<number, ObjetoEnigma>>(); //todos
   mapLlavePorEscena: Map<number, Llave> = new Map<number, Llave>();
   mapPistaPorEscena: Map<number, Pista> = new Map<number, Pista>();
+  mapEscenas: Map<number, EscenaDeJuego> = new Map<number, EscenaDeJuego>();
+  mapObjetosRequeridosPorEscena: Map<number, Map<number,ObjetoEscape>> = new Map<number, Map<number,ObjetoEscape>>();
 
 
 
@@ -120,6 +122,7 @@ export class CalculosService {
     this.sesion.TomaObjetosEnigma(this.objetosEnigma);
   }
   public MapearInformacionEscape(juego: JuegoDeEscapeRoom) {
+   
     //Pedimos el alumno del escape room una vez tenemos el juego
     this.peticionesAPI.DameAlumnoDeEscapeRoom(this.sesion.DameAlumno().id, juego.id).subscribe({
       next: data => {
@@ -145,7 +148,7 @@ export class CalculosService {
             if (escena != null && escena != undefined) {
               map.set(escena.id, escena);
               this.sesion.TomaMapEscenas(map);
-
+              console.log("map escenas: ", map);
               //Pedimos la informacion de los escenarios de todas las escenas y lo guardamos en el map de escenas
               this.peticionesAPI.DameEscenarioEscapePorEscena(escena.escenarioId).subscribe(escenario => {
                 //      console.log("Escenario: ", escenario);
@@ -210,11 +213,12 @@ export class CalculosService {
   public GuardarEscapeRoom() {
 
     this.escenaActualId = this.sesion.DameEscenaActualId();
-    if (this.escenaActualId == 1) {
-      this.alumnoEscape = this.sesion.DameAlumnoEscape();
-    } else {
+    // if (this.escenaActualId == 1) {
+    //   this.alumnoEscape = this.sesion.DameAlumnoEscape();
+    // } else {
       this.alumnoEscape = this.sesion.DameAlumnoEscapeRoom();
-    }
+    // }
+    console.log("alumno escape: ", this.alumnoEscape);
     this.peticionesAPI.GuardarAlumnoEscapeRoom(this.alumnoEscape).subscribe();
     // this.mapPosicionObjetosDeTodasLasEscenas = this.sesion.DameMapPosicionObjetosDeTodasLasEscenas();
     // console.log("-- Map con todas las posiciones: ", this.mapPosicionObjetosDeTodasLasEscenas);
@@ -233,6 +237,9 @@ export class CalculosService {
         list.push(this.pasarDeObjetoEscapeAObjetoJuego(objetoEscape));
       });
     });
+    this.mapObjetosEnigmaFromObjetosJuego = this.sesion.DameMapObjetosEnigmaFromObjetosJuego();
+    console.log("-- map objetos enigma: ", this.mapObjetosEnigmaFromObjetosJuego);
+
     Array.from(this.mapObjetosEnigmaFromObjetosJuego.values()).forEach(mapObjetos => {
       Array.from(mapObjetos.values()).forEach(objetoEnigma => {
         console.log("Objeto enigma: ", objetoEnigma);
@@ -249,9 +256,39 @@ export class CalculosService {
       console.log("Objeto pista: ", pista);
       list.push(this.pasarDeObjetoPistaAObjetoJuego(pista));
     });
+    console.log("Lista: ", list);
     Array.from(list.values()).forEach(objetoJuego => {
-      this.peticionesAPI.GuardarObjetoJuego(objetoJuego).subscribe();
+      this.peticionesAPI.GuardarObjetoJuego(objetoJuego).subscribe(objReturn => {
+        console.log("Obj return: ", objReturn);
+      });
     })
+
+    // this.mapEscenasPorJuego = new Map<number, Map<number, EscenaDeJuego>>();
+    // this.sesion.TomaMapEscenasPorJuego(this.mapEscenasPorJuego);
+    // this.mapEscenarioPorEscena= new Map<number, EscenarioEscapeRoom>();
+    // this.sesion.TomaMapEscenarioPorEscena(this.mapEscenarioPorEscena);
+    // this.mapObjetosPorEscena = new Map<number, Map<number, ObjetoJuego>>();
+    // this.sesion.TomaMapObjetosPorEscena(this.mapObjetosPorEscena);
+    // this.mapInformacionGlobalDelObjetoJuego = new Map<number, ObjetoGlobalEscape>();
+    // this.sesion.TomaMapInformacionGlobalDelObjetoJuego(this.mapInformacionGlobalDelObjetoJuego);
+    // this.mapEscenas = new Map<number, EscenaDeJuego>();
+    // this.sesion.TomaMapEscenas(this.mapEscenas);
+    // this.mapObjetosJuego = new Map<number, ObjetoJuego>();
+    // this.sesion.TomaMapObjetosJuego(this.mapObjetosJuego);
+    // this.mapObjetosEscapeFromObjetosJuego = new Map<number, Map<number, ObjetoEscape>>(); //todos
+    // this.sesion.TomaMapObjetosEscapeFromObjetosJuego(this.mapObjetosEscapeFromObjetosJuego);
+    // this.mapObjetosEnigmaFromObjetosJuego = new Map<number, Map<number, ObjetoEnigma>>(); //todos
+    // this.sesion.TomaMapObjetosEnigmaFromObjetosJuego(this.mapObjetosEnigmaFromObjetosJuego);
+    // this.mapPosicionObjetosDeEscena= new Map<number, any>(); //escena actual
+    // this.sesion.TomaMapPosicionObjetosDeEscena(this.mapPosicionObjetosDeEscena);
+    // this.mapLlavePorEscena = new Map<number, Llave>();
+    // this.sesion.TomaMapLlaveEscena(this.mapLlavePorEscena);
+    // this.mapPistaPorEscena = new Map<number, Pista>();
+    // this.sesion.TomaMapPistaEscena(this.mapPistaPorEscena);
+    // this.mapObjetosRequeridosPorEscena = new Map<number, Map<number,ObjetoEscape>>();
+    // this.sesion.TomaMapObjetosRequeridosPorEscena(this.mapObjetosRequeridosPorEscena);
+    // this.mapPosicionObjetosDeTodasLasEscenas = new Map<number, Map<number, any>>(); //escena actual
+    // this.sesion.TomaMapPosicionObjetosDeTodasLasEscenas(this.mapPosicionObjetosDeTodasLasEscenas);
     // this.mapObjetosJuego = this.sesion.DameMapObjetosJuego();
     // Array.from(this.mapObjetosJuego.values()).forEach(objetoJuego =>{
     //   this.peticionesAPI.GuardarObjetoJuego(objetoJuego).subscribe();

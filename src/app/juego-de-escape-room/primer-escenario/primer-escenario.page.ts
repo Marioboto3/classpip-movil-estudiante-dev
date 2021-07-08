@@ -137,25 +137,25 @@ export class PrimerEscenarioPage implements OnInit {
   }
   ngOnInit() {
 
-
+    console.clear();
     if (this.final != true) {
       //Recoger toda la info que nos ha quedado de la pantalla anterior y mostrarla
 
       this.juegoEscape = this.sesion.DameJuegoEscapeRoom();
-      //  console.log("Juego: ", this.juegoEscape);
+       console.log("Juego: ", this.juegoEscape);
 
       if (this.primerEscenario == 1) {
         this.alumnoJuegoEscapeRoom = this.sesion.DameAlumnoEscapeRoom();
-        //   console.log("Alumno si es primer escenario: ", this.alumnoJuegoEscapeRoom);
+           console.log("Alumno si es primer escenario: ", this.alumnoJuegoEscapeRoom);
 
       } else {
         this.alumnoJuegoEscapeRoom = this.sesion.DameAlumnoEscapeRoom();
-        //   console.log("Alumno si NO es primer escenario: ", this.alumnoJuegoEscapeRoom);
+          console.log("Alumno si NO es primer escenario: ", this.alumnoJuegoEscapeRoom);
 
       }
-      //   console.log("Alumno Escape: ", this.alumnoJuegoEscapeRoom);
+        console.log("Alumno Escape: ", this.alumnoJuegoEscapeRoom);
       this.mapEscenas = this.sesion.DameMapEscenas();
-        //  console.log("Map escenas:", this.mapEscenas.size);
+         console.log("Map escenas:", this.mapEscenas.size);
 
       this.mapEscenasPorJuego = this.sesion.DameMapEscenasPorJuego();
       if (this.mapEscenasPorJuego.size == 0) {
@@ -167,9 +167,9 @@ export class PrimerEscenarioPage implements OnInit {
       console.log("Map escenas:", this.mapEscenas);
 
       this.mapObjetosJuego = this.sesion.DameMapObjetosJuego();
-      //    console.log("Map objetos juego inicial: ", this.mapObjetosJuego);
+        console.log("Map objetos juego inicial: ", this.mapObjetosJuego);
       this.mapObjetosPorEscena = this.sesion.DameMapObjetosPorEscena();
-      //    console.log("Map objetos por escena del dame sesion: ", this.mapObjetosPorEscena);
+         console.log("Map objetos por escena del dame sesion: ", this.mapObjetosPorEscena);
 
       if (this.mapObjetosPorEscena.size == 0) {
         // this.mapObjetosPorEscena = new Map<number, Map<number, ObjetoJuego>>();
@@ -194,7 +194,7 @@ export class PrimerEscenarioPage implements OnInit {
       // console.log("Map escenas por juego:", this.mapEscenasPorJuego);
       // console.log("Map escenarios por escena:", this.mapEscenarioPorEscena);
       // console.log("Map objetos por escena:", this.mapObjetosPorEscena);
-      // console.log("Map info por objeto:", this.mapInformacionGlobalDelObjetoJuego);
+      console.log("Map info por objeto:", this.mapInformacionGlobalDelObjetoJuego);
 
 
       //Conseguir escena actual para cargar el escenario
@@ -268,7 +268,7 @@ export class PrimerEscenarioPage implements OnInit {
         // console.log("Map de pistas por escenas: ", this.mapPistaPorEscena);
         console.log("---------------");
         console.log("Map de objetos escape: ", this.mapObjetosEscapeFromObjetosJuego);
-        // console.log("Map de objetos enigma: ", this.mapObjetosEnigmaFromObjetosJuego);
+       console.log("Map de objetos enigma: ", this.mapObjetosEnigmaFromObjetosJuego);
 
 
       }
@@ -344,7 +344,7 @@ export class PrimerEscenarioPage implements OnInit {
 
         });
 
-        // console.log("MAP OPBJETOS REQUERIDOS: ", this.mapObjetosRequeridosPorEscena);
+       console.log("MAP OPBJETOS REQUERIDOS: ", this.mapObjetosRequeridosPorEscena);
         this.sesion.TomaMapObjetosRequeridosPorEscena(this.mapObjetosRequeridosPorEscena);
       }
       //    console.log("Map de objetos escape: ", this.mapObjetosEscapeFromObjetosJuego);
@@ -353,14 +353,14 @@ export class PrimerEscenarioPage implements OnInit {
 
 
 
-      // console.log("Map de posiciones con objetos escape y enigma: ", this.mapPosicionObjetosDeEscena);
-      // console.log("ObjetoEnigma: 1, ", this.objeto4enigma);
-      // console.log("ObjetoEnigma: 2, ", this.objeto5enigma);
-      // console.log("ObjetoEnigma: 1, ", this.objeto1escape);
-      // console.log("ObjetoEnigma: 2, ", this.objeto2escape);
-      // console.log("ObjetoEnigma: 3, ", this.objeto3escape);
-      // console.log("ObjetoEnigma: 4, ", this.objeto4escape);
-      // console.log("ObjetoEnigma: 5, ", this.objeto5escape);
+      console.log("Map de posiciones con objetos escape y enigma: ", this.mapPosicionObjetosDeEscena);
+      console.log("ObjetoEnigma: 1, ", this.objeto4enigma);
+      console.log("ObjetoEnigma: 2, ", this.objeto5enigma);
+       console.log("ObjetoEnigma: 1, ", this.objeto1escape);
+     console.log("ObjetoEnigma: 2, ", this.objeto2escape);
+     console.log("ObjetoEnigma: 3, ", this.objeto3escape);
+      console.log("ObjetoEnigma: 4, ", this.objeto4escape);
+      console.log("ObjetoEnigma: 5, ", this.objeto5escape);
 
 
       if (this.mapPosicionObjetosDeTodasLasEscenas.get(this.escenaActual.id).get(1) != undefined) {
@@ -412,6 +412,7 @@ export class PrimerEscenarioPage implements OnInit {
       }
       if (this.mapPosicionObjetosDeTodasLasEscenas.get(this.escenaActual.id).get(4) != undefined) {
 
+        console.log("objetooooo 4: ", this.mapPosicionObjetosDeTodasLasEscenas.get(this.escenaActual.id).get(4));
         if (this.mapPosicionObjetosDeTodasLasEscenas.get(this.escenaActual.id).get(4).tipo == "objetoEscape") {
           objetoEscape = this.mapPosicionObjetosDeTodasLasEscenas.get(this.escenaActual.id).get(4);
           this.objeto4escape = new ObjetoEscape(objetoEscape.nombre, objetoEscape.imagen, objetoEscape.usado, objetoEscape.recogido, objetoEscape.posicion, objetoEscape.escenaId, objetoEscape.juegoDeEscapeRoomId, objetoEscape.objetoGlobalId, objetoEscape.objetoJuegoId, objetoEscape.tipo, objetoEscape.requerido, objetoEscape.requeridoEscenaId);;
@@ -422,7 +423,7 @@ export class PrimerEscenarioPage implements OnInit {
           objetoEnigma = this.mapPosicionObjetosDeTodasLasEscenas.get(this.escenaActual.id).get(4);
           this.objeto4enigma = new ObjetoEnigma(objetoEnigma.nombre, objetoEnigma.imagen, objetoEnigma.pregunta, objetoEnigma.respuesta, objetoEnigma.resuelto, objetoEnigma.posicion, objetoEnigma.escenaId, objetoEnigma.juegoDeEscapeRoomId, objetoEnigma.objetoGlobalId, objetoEnigma.objetoJuegoId, objetoEnigma.tipo, objetoEnigma.principal);
           this.resuelto4 = this.objeto4enigma.resuelto;
-          // console.log("Objeto4: ", this.objeto4enigma);
+           console.log("Objeto4: ", this.objeto4enigma);
 
         }
       }

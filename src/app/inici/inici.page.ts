@@ -59,6 +59,10 @@ export class IniciPage implements OnInit {
         this.sesion.TomaAlumno(this.alumno);
         this.comServer.Conectar(this.alumno);
 
+        this.calculos.DameJuegosAlumno(this.id)
+        .subscribe(listas => {
+          this.juegosActivos = listas.activos;
+      });
         this.comServer.EsperarNotificaciones()
         .subscribe((notificacion: any) => {
           console.log ('Pongo notificacion:  ' + notificacion );
@@ -67,10 +71,7 @@ export class IniciPage implements OnInit {
             text: notificacion,
           });
           console.log('Este es el id del alumno que se ha logado: ' + this.id);
-          this.calculos.DameJuegosAlumno(this.id)
-            .subscribe(listas => {
-              this.juegosActivos = listas.activos;
-          });
+         
         });
       });        
     });
