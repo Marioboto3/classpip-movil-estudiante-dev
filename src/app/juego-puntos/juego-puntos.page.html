@@ -31,14 +31,16 @@
     <div *ngIf="hideMe">
       <mat-accordion>
         <div *ngFor="let alum of rankingJuegoDePuntos">
-          <mat-expansion-panel class="ranking-acordeon" *ngIf="alum.id !== MiAlumno.id">
+          <mat-expansion-panel class="ranking-acordeon">
             <mat-expansion-panel-header (click)="cierraHistorial();">
               <div class="span">
+                <h2><b>{{alum.posicion}}</b></h2>
                 <ion-avatar slot="start" class="avatar">
                   <img src="../../assets/img/usuario.svg">
                 </ion-avatar>
                 <ion-label>
                   <h2> <b>{{alum.nombre}} {{alum.primerApellido}}</b> </h2>
+                  <mat-panel-description>Puntos: {{alum.puntos}}</mat-panel-description>
                 </ion-label>
               </div>
             </mat-expansion-panel-header>
@@ -76,7 +78,7 @@
                     <p><b>Valor</b></p>
                   </ion-col>
                 </ion-row>
-    
+
                 <ion-row class="casillas-tabla" *ngIf="!historialalumno || historialalumno.length === 0">
                   <h1>"Todavía no ha conseguido <br> puntos"</h1>
                 </ion-row>
@@ -242,5 +244,5 @@
   </div>
 
   <ion-row style="height: 120px"></ion-row>
-  
+
 </ion-content>
