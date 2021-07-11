@@ -1,20 +1,20 @@
 export class FamiliaAvatares {
 
-  NombreFamilia: string;
-  Silueta: string;
-  NombreComplemento1: string;
-  Complemento1: string[];
-  NombreComplemento2: string;
-  Complemento2: string[];
-  NombreComplemento3: string;
-  Complemento3: string[];
-  NombreComplemento4: string;
-  Complemento4: string[];
+  nombreFamilia: string;
+  silueta: string;
+  nombreComplemento1: string;
+  complemento1: string[];
+  nombreComplemento2: string;
+  complemento2: string[];
+  nombreComplemento3: string;
+  complemento3: string[];
+  nombreComplemento4: string;
+  complemento4: string[];
   profesorId: number;
   id: number;
   constructor(nombre?: string) {
 
-    this.NombreFamilia = nombre;
+    this.nombreFamilia = nombre;
 
   }
 

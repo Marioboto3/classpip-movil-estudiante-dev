@@ -40,8 +40,13 @@ const routes: Routes = [
   { path: 'juego-votacion-rapida', loadChildren: './juego-votacion-rapida/juego-votacion-rapida.module#JuegoVotacionRapidaPageModule', canActivate: [AuthGuard] },
   { path: 'mis-juegos-inactivos', loadChildren: './mis-juegos-inactivos/mis-juegos-inactivos.module#MisJuegosInactivosPageModule', canActivate: [AuthGuard] },
   // tslint:disable-next-line:max-line-length
+  { path: 'juego-de-escape-room', loadChildren: './juego-de-escape-room/juego-de-escape-room.module#JuegoDeEscapeRoomPageModule', canActivate: [AuthGuard] },
+  { path: 'escoger-avatar', loadChildren: './juego-de-escape-room/escoger-avatar/escoger-avatar.module#EscogerAvatarPageModule', canActivate: [AuthGuard] },
+  { path: 'primer-escenario', loadChildren: './juego-de-escape-room/primer-escenario/primer-escenario.module#PrimerEscenarioPageModule', canActivate: [AuthGuard] },
+  { path: 'mochila', loadChildren: './juego-de-escape-room/mochila/mochila.module#MochilaPageModule', canActivate: [AuthGuard] },
+  { path: 'pistas-mochila', loadChildren: './juego-de-escape-room/pistas-mochila/pistas-mochila.module#PistasMochilaPageModule',  canActivate: [AuthGuard] },
   { path: 'juego-coger-turno-rapido', loadChildren: './juego-coger-turno-rapido/juego-coger-turno-rapido.module#JuegoCogerTurnoRapidoPageModule', canActivate: [AuthGuard] },
-  { path: 'juego-evaluacion', loadChildren: './juego-evaluacion/juego-evaluacion.module#JuegoEvaluacionPageModule', canActivate: [AuthGuard] },
+  { path: 'juego-evaluacion', loadChildren: './juego-evaluacion/juego-evaluacion.module#JuegoEvaluacionPageModule', canActivate: [AuthGuard] }
 
 
 

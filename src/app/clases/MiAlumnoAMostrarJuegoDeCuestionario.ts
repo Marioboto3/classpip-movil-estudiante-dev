@@ -1,6 +1,6 @@
 export class MiAlumnoAMostrarJuegoDeCuestionario {
 
-    Nota: number;
+    nota: number;
     alumnoId: number;
     juegoDeCuestionarioId: number;
     id: number;
@@ -13,7 +13,7 @@ export class MiAlumnoAMostrarJuegoDeCuestionario {
   
       this.alumnoId = alumnoId;
       this.juegoDeCuestionarioId = juegoDeCuestionarioId;
-      this.Nota = Nota;
+      this.nota = Nota;
       this.nombre = Nombre;
       this.primerApellido = primerApellido;
       this.imagenPerfil = imagenPerfil;

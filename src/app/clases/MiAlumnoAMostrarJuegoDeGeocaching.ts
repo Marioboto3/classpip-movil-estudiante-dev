@@ -1,7 +1,7 @@
 export class MiAlumnoAMostrarJuegoDeGeocaching {
 
-    Puntuacion: number;
-    Etapa: number;
+    puntuacion: number;
+    etapa: number;
     alumnoId: number;
     juegoDeGeocachingId: number;
     id: number;
@@ -9,14 +9,14 @@ export class MiAlumnoAMostrarJuegoDeGeocaching {
     primerApellido: string;
     imagenPerfil: string;
   
-    constructor(alumnoId?: number, juegoDeGeocachingId?: number, Puntuacion?: number, Etapa?: number,
-                Nombre?: string, primerApellido?: string, imagenPerfil?: string) {
+    constructor(alumnoId?: number, juegoDeGeocachingId?: number, puntuacion?: number, etapa?: number,
+                nombre?: string, primerApellido?: string, imagenPerfil?: string) {
   
       this.alumnoId = alumnoId;
       this.juegoDeGeocachingId = juegoDeGeocachingId;
-      this.Puntuacion = Puntuacion;
-      this.Etapa = Etapa;
-      this.nombre = Nombre;
+      this.puntuacion = puntuacion;
+      this.etapa = etapa;
+      this.nombre = nombre;
       this.primerApellido = primerApellido;
       this.imagenPerfil = imagenPerfil;
   

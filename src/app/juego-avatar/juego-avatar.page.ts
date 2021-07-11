@@ -16,7 +16,7 @@ import {AvatarEditorPage} from '../avatar-editor/avatar-editor.page';
 export class JuegoAvatarPage implements OnInit {
 
   alumno: Alumno;
-  InfoMiAlumno: AlumnoJuegoDeAvatar;
+  infoMiAlumno: AlumnoJuegoDeAvatar;
   juegoSeleccionado: JuegoDeAvatar;
   alumnosDelJuego: Alumno[];
   inscripcionesAlumnosJuegodeAvatar: AlumnoJuegoDeAvatar[];
@@ -43,15 +43,15 @@ export class JuegoAvatarPage implements OnInit {
   ngOnInit() {
     this.juegoSeleccionado = this.sesion.DameJuegoAvatar();
     this.alumno = this.sesion.DameAlumno();
-    if (this.juegoSeleccionado.Modo === 'Individual') {
+    if (this.juegoSeleccionado.modo === 'Individual') {
       this.peticionesAPI.DameInscripcionAlumnoJuegoDeAvatar (this.juegoSeleccionado.id, this.alumno.id)
       .subscribe (inscripcion => {
         this.inscripcionAlumnoJuegoAvatar = inscripcion[0];
-        if (this.inscripcionAlumnoJuegoAvatar.Silueta !== undefined) {
+        if (this.inscripcionAlumnoJuegoAvatar.silueta !== undefined) {
           this.tieneAvatar = true;
-          if ((this.inscripcionAlumnoJuegoAvatar.Privilegios[4]) && (this.inscripcionAlumnoJuegoAvatar.Voz)) {
+          if ((this.inscripcionAlumnoJuegoAvatar.privilegios[4]) && (this.inscripcionAlumnoJuegoAvatar.voz)) {
             this.tieneVoz = true;
-            this.audioAvatar = URL.AudiosAvatares + this.inscripcionAlumnoJuegoAvatar.Voz;
+            this.audioAvatar = URL.AudiosAvatares + this.inscripcionAlumnoJuegoAvatar.voz;
           }
         }
         this.PrepararCriterios();
@@ -64,12 +64,12 @@ export class JuegoAvatarPage implements OnInit {
 
   PrepararCriterios() {
     this.criterios = [
-      {nombre: 'Complemento 1', criterio: this.juegoSeleccionado.CriteriosPrivilegioComplemento1},
-      {nombre: 'Complemento 2', criterio: this.juegoSeleccionado.CriteriosPrivilegioComplemento2},
-      {nombre: 'Complemento 3', criterio: this.juegoSeleccionado.CriteriosPrivilegioComplemento3},
-      {nombre: 'Complemento 4', criterio: this.juegoSeleccionado.CriteriosPrivilegioComplemento4},
-      {nombre: 'Nota de Voz', criterio: this.juegoSeleccionado.CriteriosPrivilegioVoz},
-      {nombre: 'Espiar Compañeros', criterio: this.juegoSeleccionado.CriteriosPrivilegioVerTodos}
+      {nombre: 'Complemento 1', criterio: this.juegoSeleccionado.criteriosPrivilegioComplemento1},
+      {nombre: 'Complemento 2', criterio: this.juegoSeleccionado.criteriosPrivilegioComplemento2},
+      {nombre: 'Complemento 3', criterio: this.juegoSeleccionado.criteriosPrivilegioComplemento3},
+      {nombre: 'Complemento 4', criterio: this.juegoSeleccionado.criteriosPrivilegioComplemento4},
+      {nombre: 'Nota de Voz', criterio: this.juegoSeleccionado.criteriosPrivilegioVoz},
+      {nombre: 'Espiar Compañeros', criterio: this.juegoSeleccionado.criteriosPrivilegioVerTodos}
 
     ]
   }
@@ -106,12 +106,12 @@ export class JuegoAvatarPage implements OnInit {
 async SeleccionarFicheroVoz($event) {
 
     const file = $event.target.files[0];
-    if (this.inscripcionAlumnoJuegoAvatar.Voz) {
+    if (this.inscripcionAlumnoJuegoAvatar.voz) {
       // borro el fichero de audio de la voz anterior
-      this.peticionesAPI.BorraAudioAvatar (this.inscripcionAlumnoJuegoAvatar.Voz).subscribe();
+      this.peticionesAPI.BorraAudioAvatar (this.inscripcionAlumnoJuegoAvatar.voz).subscribe();
     }
 
-    this.inscripcionAlumnoJuegoAvatar.Voz = file.name;
+    this.inscripcionAlumnoJuegoAvatar.voz = file.name;
     this.peticionesAPI.ModificaInscripcionAlumnoJuegoDeAvatar (this.inscripcionAlumnoJuegoAvatar)
     .subscribe ();
     const formDataOpcion = new FormData();
@@ -121,7 +121,7 @@ async SeleccionarFicheroVoz($event) {
       this.tieneVoz = true;
         // Notifico al server que se ha modificado un avatar
       this.comServer.Emitir('modificacionAvatar', { inscripcion: this.inscripcionAlumnoJuegoAvatar});
-      this.audioAvatar = URL.AudiosAvatares + this.inscripcionAlumnoJuegoAvatar.Voz;
+      this.audioAvatar = URL.AudiosAvatares + this.inscripcionAlumnoJuegoAvatar.voz;
       const alert2 = await this.alertController.create({
         cssClass: 'my-custom-class',
         header: 'voz asignada con exito',
@@ -132,10 +132,10 @@ async SeleccionarFicheroVoz($event) {
 }
 
 QuitaVoz() {
-  if (this.inscripcionAlumnoJuegoAvatar.Voz) {
+  if (this.inscripcionAlumnoJuegoAvatar.voz) {
     // borro el fichero de audio de la voz anterior
-    this.peticionesAPI.BorraAudioAvatar (this.inscripcionAlumnoJuegoAvatar.Voz).subscribe();
-    this.inscripcionAlumnoJuegoAvatar.Voz = undefined;
+    this.peticionesAPI.BorraAudioAvatar (this.inscripcionAlumnoJuegoAvatar.voz).subscribe();
+    this.inscripcionAlumnoJuegoAvatar.voz = undefined;
     this.peticionesAPI.ModificaInscripcionAlumnoJuegoDeAvatar (this.inscripcionAlumnoJuegoAvatar)
     .subscribe ();
     this.tieneVoz = false;

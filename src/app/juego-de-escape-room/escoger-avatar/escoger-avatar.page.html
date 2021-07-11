@@ -1,0 +1,130 @@
+<ion-content scroll-y="true">
+  <div id="container">
+  <ion-slides pager>
+    <ion-slide >
+      <ion-grid style="width: 95%;">
+        <ion-row style="width: 95%; height: 50%;">
+          <ion-col>
+            <div *ngIf="verDescripcion2 == undefined">
+              <ion-card class="left" >
+                <img src= "../../../assets/escape-room/elder.png"/>
+                <ion-card-header>
+                  <ion-card-title (click)="descripcion1()">
+                    Elvis Tek 
+                  </ion-card-title>
+                </ion-card-header>
+              </ion-card>
+          </div>
+            <div *ngIf="verDescripcion2 != undefined">
+              <ion-card class="right">
+                <ion-card-header>
+                  <ion-card-title>
+                    Conpa Tatas 
+                  </ion-card-title>
+                </ion-card-header>
+                <ion-card-content>
+                  <p>Altura: 1.60</p>
+                  <p>Alumno: Muy buena</p>
+                  <p>Persona: Pequeña pero matona</p>
+                  <ion-button (click)="cogerpersonaje(name2)">¡Coger personaje!</ion-button>
+                  <ion-button (click)="volver()">Volver</ion-button>
+                </ion-card-content>
+              </ion-card>
+            </div>
+          </ion-col>
+        <ion-col>
+          <div *ngIf="verDescripcion1 != undefined">
+            <ion-card class="right">
+              <ion-card-header>
+                <ion-card-title>
+                  Elvis Tek 
+                </ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <p>Altura: 1.80</p>
+                <p>Alumno: Bastante paquete</p>
+                <p>Persona: Encantador</p>
+                <ion-button (click)="cogerpersonaje(name1)">¡Coger personaje!</ion-button>
+                <ion-button (click)="volver()">Volver</ion-button>
+              </ion-card-content>
+            </ion-card>
+          </div>
+          <div *ngIf="verDescripcion1 == undefined">
+            <ion-card class="right">
+              <img src= "../../../assets/escape-room/manteca.jpg"/>
+              <ion-card-header>
+                <ion-card-title (click)="descripcion2()">
+                  Conpa Tatas 
+                </ion-card-title>
+              </ion-card-header>
+            </ion-card>
+          </div>
+        </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-slide>
+    <ion-slide>
+      <ion-grid style="width: 95%;">
+        <ion-row style="width: 95%; height: 50%;">
+          <ion-col>
+            <div *ngIf="verDescripcion4 == undefined">
+              <ion-card class="left" >
+                <img src= "../../../assets/escape-room/AitorTugas.png"/>
+                <ion-card-header>
+                  <ion-card-title (click)="descripcion3()">
+                    Aitor Tugas 
+                  </ion-card-title>
+                </ion-card-header>
+              </ion-card>
+          </div>
+            <div *ngIf="verDescripcion4 != undefined">
+              <ion-card class="right">
+                <ion-card-header>
+                  <ion-card-title>
+                    Inés Table 
+                  </ion-card-title>
+                </ion-card-header>
+                <ion-card-content>
+                  <p>Altura: 1.75</p>
+                  <p>Alumno: Buena</p>
+                  <p>Persona: La amabilidad personificada</p>
+                  <ion-button (click)="cogerpersonaje(name4)">¡Coger personaje!</ion-button>
+                  <ion-button (click)="volver()">Volver</ion-button>
+                </ion-card-content>
+              </ion-card>
+            </div>
+          </ion-col>
+        <ion-col>
+          <div *ngIf="verDescripcion3 != undefined">
+            <ion-card class="right">
+              <ion-card-header>
+                <ion-card-title>
+                  Aitor Tugas 
+                </ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <p>Altura: 1.69</p>
+                <p>Alumno: Buen estudiante</p>
+                <p>Persona: El gracioso</p>
+                <ion-button (click)="cogerpersonaje(name3)">¡Coger personaje!</ion-button>
+                <ion-button (click)="volver()">Volver</ion-button>
+              </ion-card-content>
+            </ion-card>
+          </div>
+          <div *ngIf="verDescripcion3 == undefined">
+            <ion-card class="right">
+              <img src= "../../../assets/escape-room/InesTable.png"/>
+              <ion-card-header>
+                <ion-card-title (click)="descripcion4()">
+                  Inés Table 
+                </ion-card-title>
+              </ion-card-header>
+            </ion-card>
+          </div>
+        </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-slide>  
+  </ion-slides> 
+</div>
+</ion-content>

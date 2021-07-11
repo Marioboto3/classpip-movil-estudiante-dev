@@ -1,0 +1,105 @@
+#containerCocina{
+  background: url("../../../assets/escape-room/cocina.jpg");
+  background-size: cover;
+  height: 100%;
+}
+#containerBaño{
+  background: url("../../../assets/escape-room/baño.jpg");
+  background-size: cover;
+  height: 100%;
+}
+#containerHabitacion{
+  background: url("../../../assets/escape-room/imagenBase.jpg");
+  background-size: cover;
+  height: 100%;
+}
+
+/*ion-content {
+  --background: rgba(44,39,45,0.84);
+}
+.close-fake {
+  --background: transparent;
+  ion-icon {
+    font-size: 2rem;
+  }
+  margin-top: 40px;
+}*/
+
+/*.container{
+  margin: 0 auto;
+  text-align: center;
+  width: 80%;
+}
+.box{
+  display: inline-block;
+  margin:80px;
+  padding: 10px;
+  text-align: center;
+  vertical-align: top;
+  width: 150px;
+}
+#caja1,#caja2{
+  border: 1px solid #333;
+  height: 150px;
+  width: 100%;
+}
+h3{
+  font-family: Arial;
+  font-size: 20px;
+}
+image{
+  width: 100%;
+}
+.detectar{
+  background: #ddd;
+  border: 3px dashed #aaa !important;
+}*/
+
+/*.fixed-box{
+  width: 100%;
+  background: #fff;
+  height: 160px;
+  z-index: 11;
+}
+
+.drop-area {
+  border: 2px dashed #ff00ff;
+  margin: 2px;
+  width: calc(50% - 4px);
+  align-items: center;
+  height: 150px;
+  display: inline-flex;
+  justify-content: center;
+  user-select: none;
+  background: #fff;
+}
+
+.item-group {
+  margin-top:160px
+}*/
+
+.example-box {
+  width: 200px;
+  height: 200px;
+  border: solid 1px #ccc;
+  color: rgba(0, 0, 0, 0.87);
+  cursor: move;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: #fff;
+  border-radius: 4px;
+  position: relative;
+  z-index: 1;
+  transition: box-shadow 200ms cubic-bezier(0, 0, 0.2, 1);
+  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+              0 2px 2px 0 rgba(0, 0, 0, 0.14),
+              0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.example-box:active {
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+              0 8px 10px 1px rgba(0, 0, 0, 0.14),
+              0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}

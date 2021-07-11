@@ -23,7 +23,7 @@ export class IniciPage implements OnInit {
   id: number;
   alumno: Alumno;
   contNotif = 0;
-  JuegosActivos: Juego[] = [];
+  juegosActivos: Juego[] = [];
   disablePrevBtn = true;
   disableNextBtn = false;
 
@@ -59,6 +59,10 @@ export class IniciPage implements OnInit {
         this.sesion.TomaAlumno(this.alumno);
         this.comServer.Conectar(this.alumno);
 
+        this.calculos.DameJuegosAlumno(this.id)
+        .subscribe(listas => {
+          this.juegosActivos = listas.activos;
+      });
         this.comServer.EsperarNotificaciones()
         .subscribe((notificacion: any) => {
           console.log ('Pongo notificacion:  ' + notificacion );
@@ -67,10 +71,7 @@ export class IniciPage implements OnInit {
             text: notificacion,
           });
           console.log('Este es el id del alumno que se ha logado: ' + this.id);
-          this.calculos.DameJuegosAlumno(this.id)
-            .subscribe(listas => {
-              this.JuegosActivos = listas.activos;
-          });
+         
         });
       });        
     });
@@ -78,31 +79,36 @@ export class IniciPage implements OnInit {
 
 
   JuegoSeleccionado(juego: any) {
-
+    console.log("Juego: ", juego);
+    console.log("Tipo juego: ", juego.tipo);
     this.sesion.TomaJuego(juego);
-    if (juego.Tipo === 'Juego De Puntos') {
+    if (juego.tipo === 'Juego De Puntos') {
       this.navCtrl.navigateForward('/juego-puntos');
-    } else if (juego.Tipo === 'Juego De Competición Liga') {
+    } else if (juego.tipo === 'Juego De Competición Liga') {
       this.navCtrl.navigateForward('/juego-competicion-liga');
-    } else if (juego.Tipo === 'Juego De Competición Fórmula Uno') {
+    } else if (juego.tipo === 'Juego De Competición Fórmula Uno') {
       this.navCtrl.navigateForward('/juego-competicion-f1');
-    } else if (juego.Tipo === 'Juego De Cuestionario') {
+    } else if (juego.tipo === 'Juego De Cuestionario') {
       this.navCtrl.navigateForward('/juego-de-cuestionario');
-    } else if (juego.Tipo === 'Juego De Geocaching') {
+    } else if (juego.tipo === 'Juego De Geocaching') {
       this.navCtrl.navigateForward('/juego-de-geocaching');
-    } else if (juego.Tipo === 'Juego De Avatar') {
+    } else if (juego.tipo === 'Juego De Avatar') {
       this.sesion.TomaJuegoAvatar(juego);
       this.navCtrl.navigateForward('/juego-avatar');
-    } else if (juego.Tipo === 'Juego De Votación Uno A Todos') {
+    } else if (juego.tipo === 'Juego De Votación Uno A Todos') {
       this.navCtrl.navigateForward('/juego-votacion-uno-atodos');
-    } else if (juego.Tipo === 'Juego De Votación Todos A Uno') {
+    } else if (juego.tipo === 'Juego De Votación Todos A Uno') {
       this.navCtrl.navigateForward('/juego-votacion-todos-auno');
-    } else if (juego.Tipo === 'Juego De Cuestionario de Satisfacción') {
+    } else if (juego.tipo === 'Juego De Cuestionario de Satisfacción') {
       this.navCtrl.navigateForward('/juego-cuestionario-satisfaccion');
-    } else if (juego.Tipo === 'Evaluacion') {
+    } else if (juego.tipo === 'Evaluacion') {
       this.sesion.TomaJuegoEvaluacion(juego);
       this.navCtrl.navigateForward('/juego-evaluacion');
-    } else {
+    } else if (juego.tipo === 'Juego De Escape Room') {
+      this.sesion.TomaJuegoEscapeRoom(juego);
+      console.log("Holaa");
+      this.navCtrl.navigateForward('/juego-de-escape-room');}
+    else {
       this.navCtrl.navigateForward('/juego-colleccion');
     }
   }

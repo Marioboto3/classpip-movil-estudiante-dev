@@ -196,8 +196,7 @@ export class HomePage {
     console.log (this.answer);
   }
 
-
-    ionViewDidEnter() {
+  ionViewDidEnter() {
       this.peticionesAPI.DameTodosLosAlumnos()
       .subscribe (alumnos => this.alumnosEnClasspip = alumnos);
       // this.StartTimer();
@@ -272,8 +271,6 @@ selectANumber() {
     );
 }
 
-
-
 // basic selection, setting initial displayed default values: '3' 'Banana'
 selectFruit() {
   this.selector.show({
@@ -294,8 +291,6 @@ selectFruit() {
     err => console.log('Error: ' + JSON.stringify(err))
     );
 }
-
-
 
 // more complex as overrides which key to display
 // then retrieve properties from original data
@@ -319,9 +314,8 @@ selectNamesUsingDisplayKey() {
     );
 }
 
-
   // Activa la función SeleccionarInfoFamilia
-  ActivarInput() {
+ActivarInput() {
     console.log('Activar input');
     document.getElementById('inputInfo').click();
 }
@@ -339,13 +333,12 @@ SeleccionarFichero($event) {
     .subscribe(() => Swal.fire('Fichero cargado con exito', '', 'success'));
 }
 
-
-
 startRecord() {
   this.audioFile = this.media.create(this.file.externalRootDirectory + '/audioFile.mp3');
   this.audioFile.startRecord();
   this.recording = true;
 }
+
 stopRecord() {
   this.audioFile.stopRecord();
   this.recording = false;
@@ -376,6 +369,7 @@ play () {
   this.audioFile.play();
   this.playing = true;
 }
+
 pause () {
   this.audioFile.pause();
   this.playing = false;
@@ -654,12 +648,10 @@ replay() {
       this.registro = false;
       this.login = true;
     }
-
-    Validaemail(email) {
+    ValidaEmail(email) {
       const re = /\S+@\S+\.\S+/;
       return re.test(email);
     }
-
     UsernameUsado(username: string) {
       return this.alumnosEnClasspip.some (alumno => alumno.username === username);
     }
@@ -681,7 +673,7 @@ replay() {
           buttons: ['OK']
         });
         await alert.present();
-      } else if (!this.Validaemail (this.email)) {
+      } else if (!this.ValidaEmail (this.email)) {
         const alert = await this.alertController.create({
           header: 'El email es incorrecto',
           buttons: ['OK']

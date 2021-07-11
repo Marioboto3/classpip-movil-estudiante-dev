@@ -17,7 +17,7 @@ export class MisJuegosInactivosPage implements OnInit {
   /* Creamos los array con los juegos activos e inactivos que solicitaremos a la API */
   id: number;
 
-  JuegosInactivos: Juego[] = [];
+  juegosInactivos: Juego[] = [];
   disablePrevBtn = true;
   disableNextBtn = false;
 
@@ -40,7 +40,7 @@ export class MisJuegosInactivosPage implements OnInit {
     console.log('Este es el id del alumno que se ha logado: ' + this.id);
     this.calculos.DameJuegosAlumno(this.id)
       .subscribe(listas => {
-        this.JuegosInactivos = listas.inactivos;
+        this.juegosInactivos = listas.inactivos;
       });
   }
 

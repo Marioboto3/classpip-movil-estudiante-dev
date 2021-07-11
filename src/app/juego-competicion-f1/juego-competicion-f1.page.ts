@@ -28,8 +28,8 @@ export class JuegoCompeticionF1Page implements OnInit {
   alumnosDelJuego: Alumno[];
   equiposDelJuego: Equipo[];
 
-  MiAlumno: Alumno;
-  MiEquipo: Equipo;
+  miAlumno: Alumno;
+  miEquipo: Equipo;
   posicionDeMiEquipo: number;
 
   alumnosEquipo: Alumno[];
@@ -43,7 +43,7 @@ export class JuegoCompeticionF1Page implements OnInit {
   infomialumno: TablaAlumnoJuegoDeCompeticion;
 
   jornadas: Jornada[];
-  JornadasCompeticion: TablaJornadas[];
+  jornadasCompeticion: TablaJornadas[];
 
 
   @ViewChild('barChart', { static: false }) barChart: ElementRef;
@@ -64,11 +64,11 @@ export class JuegoCompeticionF1Page implements OnInit {
   @ViewChild('content', { static: false }) content: IonContent;
 
   ngOnInit() {
-    this.MiAlumno = this.sesion.DameAlumno();
+    this.miAlumno = this.sesion.DameAlumno();
     this.juegoSeleccionado = this.sesion.DameJuego();
     console.log(this.juegoSeleccionado);
 
-    if (this.juegoSeleccionado.Modo === 'Individual') {
+    if (this.juegoSeleccionado.modo === 'Individual') {
       this.AlumnosDelJuego();
     } else {
       this.EquiposDelJuego();
@@ -81,18 +81,18 @@ export class JuegoCompeticionF1Page implements OnInit {
     const datos: number[] = [];
     for (let i = 0; i < this.jornadas.length; i++) {
       labels.push("J" + (i + 1));
-      if (this.jornadas[i].GanadoresFormulaUno !== undefined) {
+      if (this.jornadas[i].ganadoresFormulaUno !== undefined) {
         // La jornada se ha disputado
         // miramos si el jugador esta entre los que han puntuado
         let pos;
-        if (this.juegoSeleccionado.Modo === 'Individual') {
-          pos = this.jornadas[i].GanadoresFormulaUno.indexOf (this.MiAlumno.id);
+        if (this.juegoSeleccionado.modo === 'Individual') {
+          pos = this.jornadas[i].ganadoresFormulaUno.indexOf (this.miAlumno.id);
         } else {
-           pos = this.jornadas[i].GanadoresFormulaUno.indexOf (this.MiEquipo.id);
+           pos = this.jornadas[i].ganadoresFormulaUno.indexOf (this.miEquipo.id);
         }
         if (pos !== -1) {
             // si esta. Guardamos los puntos que sacó en esa jorada.
-            datos.push(this.juegoSeleccionado.Puntos[pos]);
+            datos.push(this.juegoSeleccionado.puntos[pos]);
         } else {
           datos.push(0);
         }
@@ -166,13 +166,13 @@ export class JuegoCompeticionF1Page implements OnInit {
           console.log('miro en: ' + this.equiposDelJuego[i]);
           // tslint:disable-next-line:prefer-for-of
           for (let j = 0; j < res.length; j++) {
-            if (res[j].id === this.MiAlumno.id) {
+            if (res[j].id === this.miAlumno.id) {
               console.log(res);
-              this.MiEquipo = this.equiposDelJuego[i];
+              this.miEquipo = this.equiposDelJuego[i];
               console.log('tu equipo');
-              console.log(this.MiEquipo);
+              console.log(this.miEquipo);
               // tslint:disable-next-line:max-line-length
-              this.posicionDeMiEquipo = this.listaEquiposOrdenadaPorPuntos.findIndex (equipo => equipo.EquipoId === this.MiEquipo.id) + 1;
+              this.posicionDeMiEquipo = this.listaEquiposOrdenadaPorPuntos.findIndex (equipo => equipo.equipoId === this.miEquipo.id) + 1;
             }
           }
         });
@@ -187,7 +187,7 @@ export class JuegoCompeticionF1Page implements OnInit {
         // ordena la lista por puntos
         // tslint:disable-next-line:only-arrow-functions
         this.listaAlumnosOrdenadaPorPuntos = this.listaAlumnosOrdenadaPorPuntos.sort(function (obj1, obj2) {
-          return obj2.PuntosTotalesAlumno - obj1.PuntosTotalesAlumno;
+          return obj2.puntosTotalesAlumno - obj1.puntosTotalesAlumno;
         });
         console.log('ya tengo las inscripciones: ');
         this.TablaClasificacionTotal();
@@ -204,7 +204,7 @@ export class JuegoCompeticionF1Page implements OnInit {
         // ordenamos por puntos
         // tslint:disable-next-line:only-arrow-functions
         this.listaEquiposOrdenadaPorPuntos = this.listaEquiposOrdenadaPorPuntos.sort(function (obj1, obj2) {
-          return obj2.PuntosTotalesEquipo - obj1.PuntosTotalesEquipo;
+          return obj2.puntosTotalesEquipo - obj1.puntosTotalesEquipo;
         });
         console.log('ya tengo las inscripciones');
         this.TablaClasificacionTotal();
@@ -227,7 +227,7 @@ export class JuegoCompeticionF1Page implements OnInit {
   }
 
   TablaClasificacionTotal() {
-    if (this.juegoSeleccionado.Modo === 'Individual') {
+    if (this.juegoSeleccionado.modo === 'Individual') {
       this.rankingIndividualFormulaUno = this.calculos.PrepararTablaRankingIndividualFormulaUno(this.listaAlumnosOrdenadaPorPuntos,
         this.alumnosDelJuego);
       console.log('Ya tengo la tabla');
@@ -245,7 +245,7 @@ export class JuegoCompeticionF1Page implements OnInit {
 
   TablaClasificacionMiAlumno() {
     for (let i = 0; i < this.rankingIndividualFormulaUno.length; i++) {
-      if (this.rankingIndividualFormulaUno[i].id == this.MiAlumno.id) {
+      if (this.rankingIndividualFormulaUno[i].id == this.miAlumno.id) {
         console.log(this.rankingIndividualFormulaUno[i].id);
         this.infomialumno = this.rankingIndividualFormulaUno[i];
       }
@@ -259,11 +259,11 @@ export class JuegoCompeticionF1Page implements OnInit {
     console.log('Aquí estará la información del juego');
     console.log('Voy a pasar la información del juego seleccionado');
     this.sesion.TomaJuego(this.juegoSeleccionado);
-    this.JornadasCompeticion = this.calculos.GenerarTablaJornadasF1(this.juegoSeleccionado, this.jornadas,
+    this.jornadasCompeticion = this.calculos.GenerarTablaJornadasF1(this.juegoSeleccionado, this.jornadas,
       this.rankingIndividualFormulaUno, this.rankingEquiposFormulaUno);
     console.log('Voy a pasar la información de las jornadas del juego');
     this.sesion.TomaDatosJornadas(this.jornadas,
-      this.JornadasCompeticion);
+      this.jornadasCompeticion);
     this.sesion.TomaTablaAlumnoJuegoDeCompeticion(this.rankingIndividualFormulaUno);
     this.sesion.TomaTablaEquipoJuegoDeCompeticion(this.rankingEquiposFormulaUno);
     this.navCtrl.navigateForward('/informacion-jornadas');

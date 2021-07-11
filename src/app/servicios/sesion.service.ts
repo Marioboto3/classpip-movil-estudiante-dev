@@ -1,15 +1,40 @@
 import { Injectable } from '@angular/core';
-import { Profesor, Grupo, Juego, Equipo, Alumno, Coleccion, Cromo, Punto, Insignia, TablaAlumnoJuegoDeCompeticion,
-         TablaJornadas, Jornada, TablaEquipoJuegoDeCompeticion, JuegoDeAvatar } from '../clases';
+import {
+  Profesor, Grupo, Juego, Equipo, Alumno, Coleccion, Cromo, Punto, Insignia, TablaAlumnoJuegoDeCompeticion,
+  TablaJornadas, Jornada, TablaEquipoJuegoDeCompeticion, JuegoDeAvatar
+} from '../clases';
 import { AnonymousSubject } from 'rxjs/internal/Subject';
 import { ReplaySubject } from 'rxjs';
-import {JuegoDeEvaluacion} from '../clases/JuegoDeEvaluacion';
+import { JuegoDeEvaluacion } from '../clases/JuegoDeEvaluacion';
+import { JuegoDeEscapeRoom } from '../clases/JuegoDeEscapeRoom';
+import { ObjetoEscape } from '../clases/objetoEscape';
+import { ObjetoEnigma } from '../clases/ObjetoEnigma';
+import { ObjetoGlobalEscape } from '../clases/ObjetoGlobalEscape';
+import { ObjetoPista } from '../clases/ObjetoPista';
+import { AlumnoJuegoDeEscapeRoom } from '../clases/AlumnoJuegoDeEscapeRoom';
+import { EscenaDeJuego } from '../clases/EscenaDeJuego';
+import { EscenarioEscapeRoom } from '../clases/EscenarioEscapeRoom';
+import { ObjetoJuego } from '../clases/ObjetoJuego';
+import { Llave } from '../clases/Llave';
+import { Pista } from '../clases/Pista';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SesionService {
 
+  prueba: boolean;
+  objetosEnigma: ObjetoEnigma[];
+  objetosEnigmaSegundoEscenario: ObjetoEnigma[];
+
+  objetosEscape: ObjetoEscape[];
+  objetosEscapeSegundoEscenario: ObjetoEscape[];
+
+  objetosGlobalesPrimerEscenario: ObjetoGlobalEscape [];
+  objetosGlobalesSegundoEscenario: ObjetoGlobalEscape [];
+
+  llave: ObjetoGlobalEscape;
+  objetosMochila: ObjetoGlobalEscape [] = [];
   alumno: Alumno;
   alumnoObservable = new ReplaySubject(1);
   profesor: Profesor;
@@ -30,6 +55,11 @@ export class SesionService {
   inscripcionAlumnoJuego: any;
   equipoSeleccionado: any;
   inscripcionEquipoJuego: any;
+  objetoEnigma: ObjetoEnigma;
+  objetoEnigmaSegundoEscenario: ObjetoEnigma;
+  alumnoEscapeRoom: AlumnoJuegoDeEscapeRoom;
+
+  objetosDepositadosBascula: ObjetoEscape[] = [];
 
   alumnosDelJuego: any;
   listaAlumnosOrdenadaPorPuntos: any;
@@ -38,7 +68,10 @@ export class SesionService {
   listaEquiposOrdenadaPorPuntos: any;
   rankingEquiposJuegoDePuntos: any;
 
+  juegoEscapeRoom: JuegoDeEscapeRoom;
 
+  estancia: string;
+  pistasGuardadas: ObjetoPista [] = [];
   alumnoJuegoDeColeccion: Alumno;
   alumnosJuegoDeColeccion: Alumno[];
   inscripcionAlumno: any;
@@ -51,14 +84,14 @@ export class SesionService {
   cromosSinRepetidos: any[];
   cromosQueNoTengo: any[];
 
-  TablaAlumnoJuegoDeCompeticion: TablaAlumnoJuegoDeCompeticion[];
-  TablaEquipoJuegoDeCompeticion: TablaEquipoJuegoDeCompeticion[];
+  tablaAlumnoJuegoDeCompeticion: TablaAlumnoJuegoDeCompeticion[];
+  tablaEquipoJuegoDeCompeticion: TablaEquipoJuegoDeCompeticion[];
   jornadas: any;
   JornadasCompeticion: any;
 
-  PrivilegiosAlumno: any;
+  privilegiosAlumno: any;
   // listaEquiposGrupo: any;
-
+  estado: boolean;
   elem;
   pos;
   cromosQueTengo;
@@ -67,6 +100,22 @@ export class SesionService {
   cromosQueNoTengoImagenDelante;
   cromosQueNoTengoImagenDetras;
   nickName;
+
+  escenaActual: number;
+
+  mapEscenasPorJuego: Map<number, Map<number, EscenaDeJuego>> = new Map<number, Map<number, EscenaDeJuego>>();
+  mapEscenarioPorEscena: Map<number, EscenarioEscapeRoom> = new Map<number, EscenarioEscapeRoom>();
+  mapObjetosPorEscena: Map<number, Map<number, ObjetoJuego>> = new Map<number, Map<number, ObjetoJuego>>();
+  mapInformacionGlobalDelObjetoJuego: Map<number, ObjetoGlobalEscape> = new Map<number, ObjetoGlobalEscape>();
+  mapEscenas: Map<number, EscenaDeJuego> = new Map<number, EscenaDeJuego>();
+  mapObjetosJuego:  Map<number, ObjetoJuego> = new Map<number, ObjetoJuego>();
+  mapObjetosEscapeFromObjetosJuego: Map<number, Map<number, ObjetoEscape>> = new Map<number, Map<number, ObjetoEscape>>(); //todos
+  mapObjetosEnigmaFromObjetosJuego: Map<number, Map<number, ObjetoEnigma>> = new Map<number, Map<number, ObjetoEnigma>>(); //todos
+  mapPosicionObjetosDeEscena: Map<number, any> = new Map<number, any>(); //escena actual
+  mapLlavePorEscena: Map<number, Llave> = new Map<number, Llave>();
+  mapPistaPorEscena: Map<number, Pista> = new Map<number, Pista>();
+  mapObjetosRequeridosPorEscena: Map<number, Map<number,ObjetoEscape>> = new Map<number, Map<number,ObjetoEscape>>();
+  mapPosicionObjetosDeTodasLasEscenas: Map<number, Map<number, any>> = new Map<number, Map<number, any>>(); //escena actual
 
   constructor() { }
   public TomaProfesor(profesor: Profesor) {
@@ -87,10 +136,10 @@ export class SesionService {
   //   return this.profesor;
   // }
 
-  public TomaAlumnosJuegoDeColeccion(alumnos: Alumno []) {
+  public TomaAlumnosJuegoDeColeccion(alumnos: Alumno[]) {
     this.alumnosJuegoDeColeccion = alumnos;
   }
-  public DameAlumnosJuegoDeColeccion(): Alumno [] {
+  public DameAlumnosJuegoDeColeccion(): Alumno[] {
     return this.alumnosJuegoDeColeccion;
   }
 
@@ -109,6 +158,178 @@ export class SesionService {
     this.listaGrupos = listaGrupos;
   }
 
+  //ESCAPE ROOM
+
+  public TomaAlumnoEscape(alumno: AlumnoJuegoDeEscapeRoom) {
+    this.alumnoEscapeRoom = alumno;
+  }
+  public DameAlumnoEscape(): AlumnoJuegoDeEscapeRoom {
+    return this.alumnoEscapeRoom[0];
+  }
+  public DameAlumnoEscapeRoom(): AlumnoJuegoDeEscapeRoom {
+    return this.alumnoEscapeRoom;
+  }
+  public TomaMapEscenasPorJuego(map: Map<number, Map<number, EscenaDeJuego>>) {
+    this.mapEscenasPorJuego = map;
+  }
+  public DameMapEscenasPorJuego(): any {
+    return this.mapEscenasPorJuego;
+  }
+  public TomaMapEscenas(map: Map<number, EscenaDeJuego>) {
+    this.mapEscenas = map;
+  }
+  public DameMapEscenas(): any {
+    return this.mapEscenas;
+  }
+  public DameEscenaActualId(): number {
+    return this.escenaActual;
+  }
+  public TomaEscenaActualId(escenaActualId: number){
+    this.escenaActual = escenaActualId;
+  }
+  public TomaMapLlaveEscena(map: Map<number, Llave>) {
+    this.mapLlavePorEscena = map;
+  }
+  public DameMapLlaveEscena(): any {
+    return this.mapLlavePorEscena;
+  }
+  public TomaMapObjetosRequeridosPorEscena(map: Map<number, Map<number,ObjetoEscape>> ) {
+    this.mapObjetosRequeridosPorEscena = map;
+  }
+  public DameMapObjetosRequeridosPorEscena(): any {
+    return this.mapObjetosRequeridosPorEscena;
+  }
+  public TomaMapPistaEscena(map: Map<number, Pista>) {
+    this.mapPistaPorEscena = map;
+  }
+  public DameMapPistaEscena(): any {
+    return this.mapPistaPorEscena;
+  }
+  public TomaMapObjetosJuego(map: Map<number, ObjetoJuego>) {
+    this.mapObjetosJuego = map;
+  }
+  public DameMapObjetosJuego(): any {
+    return this.mapObjetosJuego;
+  }
+  public TomaMapObjetosEscapeFromObjetosJuego(map: Map<number, Map<number, ObjetoEscape>>) {
+    this.mapObjetosEscapeFromObjetosJuego = map;
+  }
+  public DameMapObjetosEscapeFromObjetosJuego(): any {
+    return this.mapObjetosEscapeFromObjetosJuego;
+  }
+  public TomaMapObjetosEnigmaFromObjetosJuego(map:  Map<number, Map<number, ObjetoEnigma>>) {
+    this.mapObjetosEnigmaFromObjetosJuego = map;
+  }
+  public DameMapObjetosEnigmaFromObjetosJuego(): any {
+    return this.mapObjetosEnigmaFromObjetosJuego;
+  }
+  public TomaMapEscenarioPorEscena(map: Map<number, EscenarioEscapeRoom>){
+   this.mapEscenarioPorEscena = map;
+  }
+  public DameMapEscenarioPorEscena(): any {
+    return this.mapEscenarioPorEscena;
+  }
+  public TomaMapObjetosPorEscena(map: Map<number, Map<number, ObjetoJuego>>) {
+    this.mapObjetosPorEscena = map;
+  }
+  public DameMapObjetosPorEscena(): any {
+    return this.mapObjetosPorEscena;
+  }
+  public TomaMapPosicionObjetosDeEscena(map: Map<number, any>) {
+    this.mapPosicionObjetosDeEscena = map;
+  }
+  public DameMapPosicionObjetosDeEscena(): any {
+    return this.mapPosicionObjetosDeEscena;
+  }
+  public TomaMapPosicionObjetosDeTodasLasEscenas(map:  Map<number, Map<number, any>>) {
+    this.mapPosicionObjetosDeTodasLasEscenas = map;
+  }
+  public DameMapPosicionObjetosDeTodasLasEscenas(): any {
+    return this.mapPosicionObjetosDeTodasLasEscenas;
+  }
+  public TomaMapInformacionGlobalDelObjetoJuego(map: Map<number, ObjetoGlobalEscape>) {
+    this.mapInformacionGlobalDelObjetoJuego = map;
+  }
+  public DameMapInformacionGlobalDelObjetoJuego(): any {
+    return this.mapInformacionGlobalDelObjetoJuego;
+  }
+  public TomaObjetosEscape(objetosEscape: ObjetoEscape[]) {
+    this.objetosEscape = objetosEscape;
+  } 
+  public DamePistasGuardadas(): ObjetoPista[] {
+    return this.pistasGuardadas;
+  }
+  public TomaPistasGuardadas(pistas: ObjetoPista[]) {
+    this.pistasGuardadas = pistas;
+  }
+  public DameObjetosMochila(): ObjetoGlobalEscape[] {
+    return this.objetosMochila;
+  }
+  public TomaObjetosMochila(objetosGlobales: ObjetoGlobalEscape[]) {
+    this.objetosMochila = objetosGlobales;
+  }
+  public DameObjetosGlobalesPrimerEscenario(): ObjetoGlobalEscape[] {
+    return this.objetosGlobalesPrimerEscenario;
+  }
+  public TomaObjetosGlobalesPrimerEscenario(objetosGlobales: ObjetoGlobalEscape[]) {
+    this.objetosGlobalesPrimerEscenario = objetosGlobales;
+  }
+  public DameObjetosGlobalesSegundoEscenario(): ObjetoGlobalEscape[] {
+    return this.objetosGlobalesSegundoEscenario;
+  }
+  public TomaObjetosGlobalesSegundoEscenario(objetosGlobales: ObjetoGlobalEscape[]) {
+    this.objetosGlobalesSegundoEscenario = objetosGlobales;
+  }
+  public DameObjetosEscape(): ObjetoEscape[] {
+    return this.objetosEscape;
+  }
+  public DameObjetosEscapeSegundoEscenario(): ObjetoEscape[] {
+    return this.objetosEscapeSegundoEscenario;
+  }
+  public TomaObjetosEscapeSegundoEscenario(objetosEscape: ObjetoEscape[]) {
+    this.objetosEscapeSegundoEscenario = objetosEscape;
+  }
+  public TomaObjetosEnigma(objetosEnigma: ObjetoEnigma[]) {
+    this.objetosEnigma = objetosEnigma;
+  }
+  public DameObjetosEnigma(): ObjetoEnigma[] {
+    return this.objetosEnigma;
+  }
+  public DameObjetosEnigmaSegundoEscenario(): ObjetoEnigma[] {
+    return this.objetosEnigmaSegundoEscenario;
+  }
+  public TomaObjetosEnigmaSegundoEscenario(objetosEnigma: ObjetoEnigma[]) {
+    this.objetosEnigmaSegundoEscenario = objetosEnigma;
+  }
+  public TomaObjetoEnigmaSegundoEscenario(objetoEnigma: ObjetoEnigma) {
+    this.objetosEnigmaSegundoEscenario.push(objetoEnigma);
+    this.objetoEnigmaSegundoEscenario = objetoEnigma;
+  }
+
+  public TomaObjetoEnigma(objetoEnigma: ObjetoEnigma) {
+    this.objetosEnigma.push(objetoEnigma);
+    this.objetoEnigma = objetoEnigma;
+  }
+
+  public DameObjetoEnigma(): ObjetoEnigma {
+    return this.objetoEnigma;
+  }
+  public TomaLlave(llave: ObjetoGlobalEscape) {
+    this.llave = llave;
+  }
+
+  public DameLlave(): ObjetoGlobalEscape {
+    return this.llave;
+  }
+
+  public TomaListaObjetosDepositadosBascula(objetos: ObjetoEscape[]) {
+    this.objetosDepositadosBascula = objetos;
+  }
+
+  public DameListaObjetosDepositadosBascula(): ObjetoEscape[] {
+    return this.objetosDepositadosBascula;
+  }
+
   public DameListaGrupos(): any {
     return this.listaGrupos;
   }
@@ -125,12 +346,49 @@ export class SesionService {
   //   return this.listaEquiposGrupo;
   // }
 
+  public cambiaElEstadoDelObjeto(estado: boolean, objeto: string) {
+    /*this.objetosGlobalesPrimerEscenario.forEach(element => {
+      if (element.nombre == objeto) {
+        element.recogido = estado;
+      }
+    });
+    console.log("this.objetosEscape", this.objetosEscape);
+  */}
+  public cambiaElEstadoDelObjetoSegundoEscenario(estado: boolean, objeto: string) {
+    /*console.log("Objetos escape segundo escenario: ", this.objetosEnigmaSegundoEscenario);
+    this.objetosGlobalesSegundoEscenario.forEach(element => {
+      console.log("elemento: ", element);
+      if (element.nombre == objeto) {
+        element.recogido = estado;
+      }
+    });
+    console.log("this.objetosEscape", this.objetosEscapeSegundoEscenario);
+  */}
+
+
   public TomaJuego(juego: Juego) {
     this.juego = juego;
   }
-
   public DameJuego(): Juego {
     return this.juego;
+  }
+  public DameEstanciaEscenario() {
+    return this.estancia;
+  }
+  public TomaEstanciaEscenario(escenario: string) {
+    this.estancia = escenario;
+  }
+  public TomaEstadoEscapeRoom(estado: boolean) {
+    this.estado = estado;
+  }
+  public DameEstadoEscapeRoom(): boolean {
+    return this.estado;
+  }
+  public TomaJuegoEscapeRoom(juegoDeEscapeRoom: JuegoDeEscapeRoom) {
+    this.juegoEscapeRoom = juegoDeEscapeRoom;
+  }
+  public DameJuegoEscapeRoom(): JuegoDeEscapeRoom {
+    return this.juegoEscapeRoom;
   }
   public TomaJuegoAvatar(juego: JuegoDeAvatar) {
     this.juegodeAvatar = juego;
@@ -150,52 +408,42 @@ export class SesionService {
   public DameAlumnosEquipo(): Alumno[] {
     return this.alumnosEquipo;
   }
-
   public TomaAlumnosGrupo(alumnos: Alumno[]) {
     this.alumnosGrupo = alumnos;
   }
   public DameAlumnosGrupo(): Alumno[] {
     return this.alumnosGrupo;
   }
-
   public TomaColeccion(coleccion: Coleccion) {
     this.coleccion = coleccion;
   }
   public DameColeccion(): Coleccion {
     return this.coleccion;
   }
-
   public TomaCromos(cromosColeccion: Cromo[]) {
     this.cromos = cromosColeccion;
   }
-
   public DameCromos(): Cromo[] {
     return this.cromos;
   }
-
   public TomaCromosSinRepetidos(MisCromos: any[]) {
     this.cromosSinRepetidos = MisCromos;
   }
   public TomaCromosQueNoTengo(cromos: any[]) {
     this.cromosQueNoTengo = cromos;
   }
-
   public DameCromosQueNoTengo(): any[] {
-    return  this.cromosQueNoTengo;
+    return this.cromosQueNoTengo;
   }
-
   public DameCromosSinRepetidos(): any[] {
     return this.cromosSinRepetidos;
   }
-
   public TomaCromo(cromo: Cromo) {
     this.cromo = cromo;
   }
-
   public DameCromo(): Cromo {
     return this.cromo;
   }
-
   public TomaDatosEvolucionAlumnoJuegoPuntos(posicion: any,
     tiposPuntosDelJuego: any,
     nivelesDelJuego: any,
@@ -207,7 +455,6 @@ export class SesionService {
     this.alumnoSeleccionado = alumnoSeleccionado;
     this.inscripcionAlumnoJuego = inscripcionAlumnoJuego;
   }
-
   public DameDatosEvolucionAlumnoJuegoPuntos(): any {
     const datos = {
       posicion: this.posicion,
@@ -218,7 +465,6 @@ export class SesionService {
     };
     return datos;
   }
-
   public TomaDatosEvolucionEquipoJuegoPuntos(
     posicion: any,
     equipoSeleccionado: any,
@@ -230,9 +476,7 @@ export class SesionService {
     this.inscripcionEquipoJuego = inscripcionEquipoJuego;
     this.nivelesDelJuego = nivelesDelJuego;
     this.tiposPuntosDelJuego = tiposPuntosDelJuego;
-
   }
-
   public DameDatosEvolucionEquipoJuegoPuntos(): any {
     const datos = {
       posicion: this.posicion,
@@ -243,7 +487,6 @@ export class SesionService {
     };
     return datos;
   }
-
   public TomaInformacionJuego(nivelesDelJuego: any,
     tiposPuntosDelJuego: any) {
     this.nivelesDelJuego = nivelesDelJuego;
@@ -256,8 +499,6 @@ export class SesionService {
     };
     return datos;
   }
-
-
   public TomaDatosParaAsignarPuntos(
     tiposPuntosDelJuego: any,
     nivelesDelJuego: any,
@@ -268,7 +509,6 @@ export class SesionService {
     listaEquiposOrdenadaPorPuntos: any,
     rankingEquiposJuegoDePuntos: any
   ) {
-
     this.tiposPuntosDelJuego = tiposPuntosDelJuego;
     this.nivelesDelJuego = nivelesDelJuego;
     this.alumnosDelJuego = alumnosDelJuego;
@@ -280,9 +520,7 @@ export class SesionService {
     console.log('Sesion ' + this.rankingEquiposJuegoDePuntos);
     console.log('Sesion ' + this.equiposDelJuego);
     console.log('Sesion ' + this.listaEquiposOrdenadaPorPuntos);
-
   }
-
   public DameDatosParaAsignarPuntos(): any {
     const datos = {
       tiposPuntosDelJuego: this.tiposPuntosDelJuego,
@@ -295,29 +533,23 @@ export class SesionService {
       rankingEquiposJuegoDePuntos: this.rankingEquiposJuegoDePuntos
     };
     console.log('Sesion regreso ' + datos.rankingEquiposJuegoDePuntos);
-
     return datos;
   }
   public DameRankingEquipos(): any {
     return this.rankingEquiposJuegoDePuntos;
   }
-
   public TomaAlumnosDelJuego(alumnos: any) {
     this.alumnosDelJuego = alumnos;
   }
-
   public DameAlumnosDelJuego(): any {
     return this.alumnosDelJuego;
   }
-
   public DameEquiposDelJuego(): any {
     return this.equiposDelJuego;
   }
-
   public TomaEquiposDelJuego(equipos: any) {
     this.equiposDelJuego = equipos;
   }
-
   // public TomaAlumno(alumno: Alumno) {
   //   this.alumno = alumno;
   // }
@@ -327,80 +559,61 @@ export class SesionService {
   public EnviameAlumno(): any {
     return this.alumnoObservable;
   }
-
   public TomaAlumno(alumno: Alumno) {
     this.alumno = alumno;
     this.alumnoObservable.next(alumno);
   }
-
-
   // public  DameProfesor(): any {
   //   return this.profesor;
   // }
-
-
   public TomaInscripcionAlumno(inscripcionAlumno: any) {
     this.inscripcionAlumno = inscripcionAlumno;
   }
-
   public DameInscripcionAlumno(): any {
     return this.inscripcionAlumno;
   }
-
   public TomaInscripcionEquipo(inscripcionEquipo: any) {
     this.inscripcionEquipo = inscripcionEquipo;
   }
-
   public DameInscripcionEquipo(): any {
     return this.inscripcionEquipo;
   }
-
   public TomaImagenLogoEquipo(imagenLogoEquipo: any) {
     this.imagenLogoEquipo = imagenLogoEquipo;
   }
-
   public DameImagenLogoEquipo(): any {
     return this.imagenLogoEquipo;
   }
-
   public TomaTipoPunto(punto: any) {
     this.punto = punto;
   }
-
   public DameTipoPunto(): any {
     return this.punto;
   }
-
   public TomaInsignia(insignia: any) {
     this.insignia = insignia;
   }
-
   public DameInsignia(): any {
     return this.insignia;
   }
-
   public TomaTablaAlumnoJuegoDeCompeticion(Tabla: TablaAlumnoJuegoDeCompeticion[]) {
-    this.TablaAlumnoJuegoDeCompeticion = Tabla;
+    this.tablaAlumnoJuegoDeCompeticion = Tabla;
   }
-
   public DameTablaAlumnoJuegoDeCompeticion(): TablaAlumnoJuegoDeCompeticion[] {
-    const Tabla = this.TablaAlumnoJuegoDeCompeticion;
+    const Tabla = this.tablaAlumnoJuegoDeCompeticion;
     return Tabla;
   }
-
   public TomaDatosJornadas(
     jornadas: Jornada[],
     JornadasCompeticion: TablaJornadas[]
   ) {
-  this.JornadasCompeticion = JornadasCompeticion;
-  this.jornadas = jornadas;
-  console.log ('jornadas:');
-  console.log ( this.JornadasCompeticion);
-  console.log ('TablaJornadas:');
-  console.log ( this.jornadas);
-
-}
-
+    this.JornadasCompeticion = JornadasCompeticion;
+    this.jornadas = jornadas;
+    console.log('jornadas:');
+    console.log(this.JornadasCompeticion);
+    console.log('TablaJornadas:');
+    console.log(this.jornadas);
+  }
   public DameDatosJornadas(): any {
     const datos = {
       jornadas: this.jornadas,
@@ -412,18 +625,13 @@ export class SesionService {
 
     return datos;
   }
-
   public TomaTablaEquipoJuegoDeCompeticion(Tabla: TablaEquipoJuegoDeCompeticion[]) {
-    this.TablaEquipoJuegoDeCompeticion = Tabla;
+    this.tablaEquipoJuegoDeCompeticion = Tabla;
   }
-
   public DameTablaEquipoJuegoDeCompeticion(): TablaEquipoJuegoDeCompeticion[] {
-    const Tabla = this.TablaEquipoJuegoDeCompeticion;
+    const Tabla = this.tablaEquipoJuegoDeCompeticion;
     return Tabla;
   }
-
-
-
   public TomaInfoParaRegaloCromo(
     elem,
     pos,
@@ -435,52 +643,44 @@ export class SesionService {
     cromosQueNoTengoImagenDelante,
     cromosQueNoTengoImagenDetras,
     coleccion) {
-
-      this.elem = elem;
-      this.pos = pos;
-      this.cromosSinRepetidos = cromosSinRepetidos;
-      this.cromosQueTengo = cromosQueTengo;
-      this.cromosQueTengoImagenDelante = cromosQueTengoImagenDelante;
-      this.cromosQueTengoImagenDetras = cromosQueTengoImagenDetras;
-      this.cromosQueNoTengo = cromosQueNoTengo;
-      this.cromosQueNoTengoImagenDelante = cromosQueNoTengoImagenDelante;
-      this.cromosQueNoTengoImagenDetras = cromosQueNoTengoImagenDetras;
-      this.coleccion = coleccion;
-    }
-
-    public DameInfoParaRegaloCromo(): any {
-      const datos = {
-        elem: this.elem,
-        pos: this.pos,
-        cromosSinRepetidos: this.cromosSinRepetidos,
-        cromosQueTengo: this.cromosQueTengo,
-        cromosQueTengoImagenDelante: this.cromosQueTengoImagenDelante,
-        cromosQueTengoImagenDetras: this.cromosQueTengoImagenDetras,
-        cromosQueNoTengo: this.cromosQueNoTengo,
-        cromosQueNoTengoImagenDelante: this.cromosQueNoTengoImagenDelante ,
-        cromosQueNoTengoImagenDetras: this.cromosQueNoTengoImagenDetras,
-        coleccion: this.coleccion
-      };
-      return datos;
-
-    }
-
+    this.elem = elem;
+    this.pos = pos;
+    this.cromosSinRepetidos = cromosSinRepetidos;
+    this.cromosQueTengo = cromosQueTengo;
+    this.cromosQueTengoImagenDelante = cromosQueTengoImagenDelante;
+    this.cromosQueTengoImagenDetras = cromosQueTengoImagenDetras;
+    this.cromosQueNoTengo = cromosQueNoTengo;
+    this.cromosQueNoTengoImagenDelante = cromosQueNoTengoImagenDelante;
+    this.cromosQueNoTengoImagenDetras = cromosQueNoTengoImagenDetras;
+    this.coleccion = coleccion;
+  }
+  public DameInfoParaRegaloCromo(): any {
+    const datos = {
+      elem: this.elem,
+      pos: this.pos,
+      cromosSinRepetidos: this.cromosSinRepetidos,
+      cromosQueTengo: this.cromosQueTengo,
+      cromosQueTengoImagenDelante: this.cromosQueTengoImagenDelante,
+      cromosQueTengoImagenDetras: this.cromosQueTengoImagenDetras,
+      cromosQueNoTengo: this.cromosQueNoTengo,
+      cromosQueNoTengoImagenDelante: this.cromosQueNoTengoImagenDelante,
+      cromosQueNoTengoImagenDetras: this.cromosQueNoTengoImagenDetras,
+      coleccion: this.coleccion
+    };
+    return datos;
+  }
   public TomaPrivilegiosAlumno(Priv: any) {
-    this.PrivilegiosAlumno = Priv;
+    this.privilegiosAlumno = Priv;
   }
-
   public DamePrivilegiosAlumno() {
-    return this.PrivilegiosAlumno;
+    return this.privilegiosAlumno;
   }
-
   public TomaNickName(nick: string) {
     this.nickName = nick;
   }
-
   public DameNickName(): string {
     return this.nickName;
   }
-
   public TomaJuegoEvaluacion(juegoDeEvaluacion: JuegoDeEvaluacion) {
     this.juegoDeEvaluacion = juegoDeEvaluacion;
   }

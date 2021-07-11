@@ -19,14 +19,14 @@ export class JuegoPuntosPage implements OnInit {
   infoPuntosView: boolean = false;
   infoView: boolean = false;
   juegoSeleccionado: Juego;
-  MiAlumno: Alumno;
-  MiEquipo: Equipo;
-  MiHistorialPuntos: any[] = [];
-  EsteAlumnoJuegoDePuntos: any[] = [];
-  MiNivel: Nivel;
-  NombreNivel: string;
-  MiAlumnoJDP: number;
-  TodosLosPuntos: Punto[] = [];
+  miAlumno: Alumno;
+  miEquipo: Equipo;
+  miHistorialPuntos: any[] = [];
+  esteAlumnoJuegoDePuntos: any[] = [];
+  miNivel: Nivel;
+  nombreNivel: string;
+  miAlumnoJDP: number;
+  todosLosPuntos: Punto[] = [];
   nivelesDelJuego: Nivel[];
 
   alumnosDelJuego: Alumno[];
@@ -47,7 +47,7 @@ export class JuegoPuntosPage implements OnInit {
   rankingEquiposJuegoDePuntos: TablaEquipoJuegoDePuntos[] = [];
 
   // EN el panel que muestra la info, enseñaremos los puntos de porfma preddeterminada
-  Tipo: String;
+  tipo: String;
 
   public hideMe: boolean = false;
   constructor(
@@ -63,22 +63,22 @@ export class JuegoPuntosPage implements OnInit {
 
   ngOnInit() {
     this.juegoSeleccionado = this.sesion.DameJuego();
-    this.MiAlumno = this.sesion.DameAlumno();
-    console.log(this.MiAlumno);
+    this.miAlumno = this.sesion.DameAlumno();
+    console.log(this.miAlumno);
     console.log(this.juegoSeleccionado.id);
     this.NivelesJuego();
     this.DamePuntosDelJuego();
-    if (this.juegoSeleccionado.Modo === 'Individual') {
-      this.calculos.DameHistorialMisPuntos(this.juegoSeleccionado.id, this.MiAlumno.id).subscribe(
+    if (this.juegoSeleccionado.modo === 'Individual') {
+      this.calculos.DameHistorialMisPuntos(this.juegoSeleccionado.id, this.miAlumno.id).subscribe(
         lista => {
           console.log(lista);
-          this.EsteAlumnoJuegoDePuntos = lista.AlumnoJDP;
-          console.log(this.EsteAlumnoJuegoDePuntos[0]);
-          this.MiHistorialPuntos = lista.Historial;
-          this.peticionesAPI.DameInscripcionAlumnoJuegoDePuntos(this.MiAlumno.id, this.juegoSeleccionado.id).subscribe(
+          this.esteAlumnoJuegoDePuntos = lista.AlumnoJDP;
+          console.log(this.esteAlumnoJuegoDePuntos[0]);
+          this.miHistorialPuntos = lista.Historial;
+          this.peticionesAPI.DameInscripcionAlumnoJuegoDePuntos(this.miAlumno.id, this.juegoSeleccionado.id).subscribe(
             AlumnoJDP => {
-              this.MiAlumnoJDP = AlumnoJDP[0].PuntosTotalesAlumno;
-              console.log(this.MiAlumnoJDP);
+              this.miAlumnoJDP = AlumnoJDP[0].PuntosTotalesAlumno;
+              console.log(this.miAlumnoJDP);
             });
         }
       );
@@ -95,11 +95,11 @@ export class JuegoPuntosPage implements OnInit {
       .subscribe(res => {
         console.log('miro en: ' + this.equiposDelJuego[i]);
         for (let j = 0; j < res.length; j++)
-          if (res[j].id === this.MiAlumno.id) {
+          if (res[j].id === this.miAlumno.id) {
             console.log(res);
-            this.MiEquipo = this.equiposDelJuego[i];
+            this.miEquipo = this.equiposDelJuego[i];
             console.log('tu equipo');
-            console.log(this.MiEquipo);
+            console.log(this.miEquipo);
           }
       });
     }
@@ -139,15 +139,15 @@ export class JuegoPuntosPage implements OnInit {
         for (let i = 0; i < this.nivelesDelJuego.length; i++) {
           console.log('entro a buscar nivel y foto');
           console.log(this.nivelesDelJuego[i]);
-          if (this.nivelesDelJuego[i].Imagen !== undefined) {
+          if (this.nivelesDelJuego[i].imagen !== undefined) {
             // Busca en la base de datos la imágen con el nombre registrado en equipo.FotoEquipo y la recupera
-            this.peticionesAPI.DameImagenNivel(this.nivelesDelJuego[i].Imagen)
+            this.peticionesAPI.DameImagenNivel(this.nivelesDelJuego[i].imagen)
               .subscribe(response => {
                 const blob = new Blob([response.blob()], { type: 'image/jpg' });
     
                 const reader = new FileReader();
                 reader.addEventListener('load', () => {
-                  this.nivelesDelJuego[i].Imagen = reader.result.toString();
+                  this.nivelesDelJuego[i].imagen = reader.result.toString();
                 }, false);
     
                 if (blob) {
@@ -157,7 +157,7 @@ export class JuegoPuntosPage implements OnInit {
     
             // Sino la imagenLogo será undefined para que no nos pinte la foto de otro equipo préviamente seleccionado
           } else {
-            this.nivelesDelJuego[i].Imagen = undefined;
+            this.nivelesDelJuego[i].imagen = undefined;
           }
         }
       });
@@ -166,8 +166,8 @@ export class JuegoPuntosPage implements OnInit {
 DamePuntosDelJuego() {
   this.peticionesAPI.DamePuntosJuegoDePuntos(this.juegoSeleccionado.id).subscribe(
     puntos => {
-      this.TodosLosPuntos = puntos;
-      console.log(this.TodosLosPuntos);
+      this.todosLosPuntos = puntos;
+      console.log(this.todosLosPuntos);
     }
   );
 }
@@ -180,7 +180,7 @@ RecuperarInscripcionesAlumnoJuego() {
       // ordena la lista por puntos
       // tslint:disable-next-line:only-arrow-functions
       this.listaAlumnosOrdenadaPorPuntos = this.listaAlumnosOrdenadaPorPuntos.sort(function (obj1, obj2) {
-        return obj2.PuntosTotalesAlumno - obj1.PuntosTotalesAlumno;
+        return obj2.puntosTotalesAlumno - obj1.puntosTotalesAlumno;
       });
       console.log('ya tengo las inscripciones');
       console.log(this.listaAlumnosOrdenadaPorPuntos);
@@ -200,11 +200,11 @@ RecuperarInscripcionesEquiposJuego() {
       // ordenamos por puntos
       // tslint:disable-next-line:only-arrow-functions
       this.listaEquiposOrdenadaPorPuntos = this.listaEquiposOrdenadaPorPuntos.sort(function (obj1, obj2) {
-        return obj2.PuntosTotalesEquipo - obj1.PuntosTotalesEquipo;
+        return obj2.puntosTotalesEquipo - obj1.puntosTotalesEquipo;
       });
       console.log('ya tengo las inscripciones');
       this.TablaClasificacionTotal();
-      console.log(this.MiEquipo);
+      console.log(this.miEquipo);
     });
 }
 
@@ -230,7 +230,7 @@ AlumnosDelEquipo(equipo: Equipo) {
 // Y NO COMPRENDO BIEN LA NECESIDAD DE LAS DOS
 TablaClasificacionTotal() {
 
-  if (this.juegoSeleccionado.Modo === 'Individual') {
+  if (this.juegoSeleccionado.modo === 'Individual') {
     this.rankingJuegoDePuntos = this.calculos.PrepararTablaRankingIndividual(
       this.listaAlumnosOrdenadaPorPuntos,
       this.alumnosDelJuego,
@@ -250,7 +250,7 @@ TablaClasificacionTotal() {
 
 MuestrameInfoEquipoSeleccionado(equipo: TablaEquipoJuegoDePuntos) {
   this.MuestraHistorial();
-  const equipoSeleccionado = this.equiposDelJuego.filter(res => res.Nombre === equipo.nombre)[0];
+  const equipoSeleccionado = this.equiposDelJuego.filter(res => res.nombre === equipo.nombre)[0];
 
 
   const posicion = this.rankingEquiposJuegoDePuntos.filter(res => res.nombre === equipo.nombre)[0].posicion;
@@ -262,7 +262,7 @@ MuestrameInfoEquipoSeleccionado(equipo: TablaEquipoJuegoDePuntos) {
     equipoSeleccionado,
     this.listaEquiposOrdenadaPorPuntos.filter(res => res.equipoId === equipoSeleccionado.id)[0],
     this.nivelesDelJuego,
-    this.TodosLosPuntos
+    this.todosLosPuntos
   );
   this.MostrarHistorialSeleccionado();
 }
@@ -271,7 +271,7 @@ MostrarHistorialSeleccionado() {
   const res = this.sesion.DameDatosEvolucionEquipoJuegoPuntos();
   this.equipoJuegoDePuntos = res.inscripcionEquipoJuego;
   // traigo el historial
-  this.calculos.PreparaHistorialEquipo(this.equipoJuegoDePuntos, this.TodosLosPuntos).
+  this.calculos.PreparaHistorialEquipo(this.equipoJuegoDePuntos, this.todosLosPuntos).
     subscribe(res => {
       this.historialequipo = res;
       console.log(this.historialequipo);
@@ -290,7 +290,7 @@ AccederAlumno(alumno: TablaAlumnoJuegoDePuntos) {
   // Informacion que se necesitara para ver la evolución del alumno
   this.sesion.TomaDatosEvolucionAlumnoJuegoPuntos (
     posicion,
-    this.TodosLosPuntos,
+    this.todosLosPuntos,
     this.nivelesDelJuego,
     alumnoSeleccionado,
     this.listaAlumnosOrdenadaPorPuntos.filter(res => res.alumnoId === alumnoSeleccionado.id)[0],
@@ -302,7 +302,7 @@ HistorialTotal() {
   const res = this.sesion.DameDatosEvolucionAlumnoJuegoPuntos();
   this.alumnoJuegoDePuntos = res.inscripcionAlumnoJuego;
   // traigo el historial
-  this.calculos.PreparaHistorialAlumno(this.alumnoJuegoDePuntos, this.TodosLosPuntos).
+  this.calculos.PreparaHistorialAlumno(this.alumnoJuegoDePuntos, this.todosLosPuntos).
     subscribe(res => {
       this.historialalumno = res;
       console.log(this.historialalumno);
@@ -346,6 +346,6 @@ cierraHistorial() {
 }
 
 ionViewWillEnter (){
-  this.Tipo = "Puntos";
+  this.tipo = "Puntos";
 }
 }

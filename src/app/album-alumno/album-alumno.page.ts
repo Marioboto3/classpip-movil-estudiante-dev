@@ -50,7 +50,7 @@ export class AlbumAlumnoPage implements OnInit {
     .subscribe(res => {
       if (res[0] !== undefined) {
         this.cromosColeccion = res;
-        this.cromosColeccion.sort((a, b) => a.Nombre.localeCompare(b.Nombre));
+        this.cromosColeccion.sort((a, b) => a.nombre.localeCompare(b.nombre));
         this.PreparaImagenesCromos();
         this.PreparaAlbum();
         console.log(res);
@@ -70,10 +70,10 @@ export class AlbumAlumnoPage implements OnInit {
 
       let cromo: Cromo;
       cromo = this.cromosColeccion[i];
-      this.imagenCromoDelante[i] = URL.ImagenesCromo + cromo.ImagenDelante;
+      this.imagenCromoDelante[i] = URL.ImagenesCromo + cromo.imagenDelante;
 
-      if (this.coleccion.DosCaras ) {
-        this.imagenCromoDetras[i] = URL.ImagenesCromo + cromo.ImagenDetras;
+      if (this.coleccion.dosCaras ) {
+        this.imagenCromoDetras[i] = URL.ImagenesCromo + cromo.imagenDetras;
       }
     }
   }

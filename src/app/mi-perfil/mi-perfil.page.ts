@@ -19,8 +19,8 @@ export class MiPerfilPage implements OnInit {
 
   base64Image: any;
   alumno: Alumno;
-  MiImagenAlumno: string[] = [];
-  MisAlumnosAMostrar: MiAlumnoAMostrarJuegoDePuntos[] = [];
+  miImagenAlumno: string[] = [];
+  misAlumnosAMostrar: MiAlumnoAMostrarJuegoDePuntos[] = [];
   imagenPerfil: string;
   contrasenaRep: string;
   cambio = false;

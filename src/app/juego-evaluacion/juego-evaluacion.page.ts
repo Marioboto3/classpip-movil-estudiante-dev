@@ -40,7 +40,7 @@ export class JuegoEvaluacionPage implements OnInit {
       if (typeof equipo === 'undefined') {
           return;
       }
-      return equipo.Nombre;
+      return equipo.nombre;
   }
 
   ngOnInit() {
@@ -52,7 +52,7 @@ export class JuegoEvaluacionPage implements OnInit {
               this.rubrica = rubrica;
               console.log(this.rubrica);
           });
-      if (this.juego.Modo === 'Individual') {
+      if (this.juego.modo === 'Individual') {
           this.peticionesAPI.DameAlumnosJuegoEvaluado(this.juego.id)
               .subscribe((alumnos: AlumnoJuegoEvaluado[]) => {
                   this.alumnosJuegoEvaluado = alumnos;
@@ -65,7 +65,7 @@ export class JuegoEvaluacionPage implements OnInit {
                           });
                   });
               });
-      } else if (this.juego.Modo === 'Equipos') {
+      } else if (this.juego.modo === 'Equipos') {
           this.peticionesAPI.DameEquipoDeAlumno(this.juego.grupoId, this.miAlumno.id)
               .subscribe((equipo: Equipo[]) => {
                   this.miEquipo = equipo[0];

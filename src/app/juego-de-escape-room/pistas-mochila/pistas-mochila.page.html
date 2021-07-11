@@ -1,0 +1,18 @@
+<ion-content class="containerMochila">
+  <button mat-mini-fab aria-label="miniFabButton" style="background-color: orange; position:fixed; margin-top: 10px;  margin-left: 10px;" (click)="volver()">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+
+  
+  <table id="tablaPistas">
+    <tr>
+      <th>Pistas</th>
+    </tr>
+    <tr>
+      <div *ngFor="let pista of pistasGuardadas">
+        <td (click)="mostrarPista(pista)">{{pista.nombre}}</td>
+      </div>
+    </tr>
+  </table>
+  
+</ion-content>

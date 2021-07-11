@@ -1,0 +1,7 @@
+<ion-content>
+  <div id="background" style="text-align: center;">
+      <ion-button style="margin-top: 150px;" color="warning" *ngIf="estado == false" (click)="nextpageEscojerPersonaje()">Empezar historia</ion-button>
+      <ion-button style="margin-top: 150px;" color="warning" *ngIf="estado != false" (click)="nextpageContinuar()">Continuar historia</ion-button>
+  </div>
+</ion-content>
+

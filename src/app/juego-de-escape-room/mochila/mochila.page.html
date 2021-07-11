@@ -1,0 +1,23 @@
+<ion-content class="containerMochila">
+  <button mat-mini-fab aria-label="miniFabButton"
+    style="background-color: orange; position:fixed; margin-top: 10px;  margin-left: 10px;" (click)="volver()">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+  <button mat-mini-fab aria-label="miniFabButton"
+    style="background-color: rgb(161, 155, 143); position: fixed; margin-top: 10px; margin-left: 60px; "
+    (click)="mostrarTodasLasPistas()">
+    <mat-icon>folder</mat-icon>
+  </button>
+  <table id="tablaObjetos">
+    <tr>
+      <th>Objeto</th>
+    </tr>
+    <tr>
+      <div *ngFor="let objeto of listaObjetosEscapeNoUsados">
+        <td (click)="ensenarObjeto(objeto)">{{objeto.nombre}}</td>
+      </div>
+    </tr>
+  </table>
+
+
+</ion-content>
