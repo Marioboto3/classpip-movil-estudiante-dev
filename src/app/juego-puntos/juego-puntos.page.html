@@ -9,20 +9,20 @@
 
 <ion-content class="puntos-content" #content>
   <!-- Si el juego es individual creamos un div con la información-->
-  <div *ngIf="juegoSeleccionado.Modo === 'Individual'" id="alumno-ranking" scrollY="true" class="info-alumno">
+  <div *ngIf="juegoSeleccionado.modo === 'Individual'" id="alumno-ranking" scrollY="true" class="info-alumno">
     <img class="logo" src="../../assets/img/puntosicon.svg" width="100px">
-    <h2> Hola {{MiAlumno.nombre}}, actualmente tienes</h2>
-    <h3> {{ MiAlumnoJDP }} pts</h3>
+    <h2> Hola {{miAlumno.nombre}}, actualmente tienes</h2>
+    <h3> {{ miAlumnoJDP }} pts</h3>
     <h2> en este juego de puntos </h2>
     <ion-list class="puntos-list-bg">
       <p>Se clasifican según:</p>
-      <ion-item *ngFor="let punto of MiHistorialPuntos; let i = index">
-        <h2>{{punto.Nombre}} :</h2>
-        <h2 slot="end"> {{punto.Puntos}} pts.</h2>
+      <ion-item *ngFor="let punto of miHistorialPuntos; let i = index">
+        <h2>{{punto.nombre}} :</h2>
+        <h2 slot="end"> {{punto.puntos}} pts.</h2>
       </ion-item>
       <ion-item>
         <h2><b>TOTAL : </b></h2>
-        <h2 slot="end"> {{MiAlumnoJDP}} Puntos</h2>
+        <h2 slot="end"> {{miAlumnoJDP}} Puntos</h2>
       </ion-item>
     </ion-list>
 
@@ -101,10 +101,10 @@
   </div>
 
   <!-- Si el juego es por equipos creamos un div con la información-->
-  <div *ngIf="juegoSeleccionado.Modo !== 'Individual'" class="info-equipo">
+  <div *ngIf="juegoSeleccionado.modo !== 'Individual'" class="info-equipo">
     <img class="logo" src="../../assets/img/puntosicon.svg" width="100px">
-    <h2> Hola {{MiAlumno.nombre}}, formas parte del equipo</h2>
-    <h3 *ngIf="MiEquipo !== undefined"> {{MiEquipo.Nombre}} </h3>
+    <h2> Hola {{miAlumno.nombre}}, formas parte del equipo</h2>
+    <h3 *ngIf="miEquipo !== undefined"> {{miEquipo.nombre}} </h3>
     <h2> en este juego de puntos </h2>
     <mat-accordion>
       <mat-expansion-panel class="ranking-acordeon" *ngFor="let equipo of rankingEquiposJuegoDePuntos">
@@ -139,12 +139,12 @@
         </div>
         <div class="alumnos-grupo">
           <div class="alumno-image" *ngFor="let alumno of alumnosEquipo">
-            <div *ngIf="alumno.id !== MiAlumno.id" class="border">
+            <div *ngIf="alumno.id !== miAlumno.id" class="border">
               <div class="img-box">
                 <img src="../../assets/img/usuario.svg">
               </div>
             </div>
-            <div *ngIf="alumno.id === MiAlumno.id" class="border-conectado">
+            <div *ngIf="alumno.id === miAlumno.id" class="border-conectado">
               <div class="img-box">
                 <img src="../../assets/img/usuario.svg">
               </div>
@@ -199,7 +199,7 @@
     </div>
 
     <div padding>
-      <ion-segment [(ngModel)]="Tipo" class="info-segment">
+      <ion-segment [(ngModel)]="tipo" class="info-segment">
         <ion-segment-button class="btn-segment" value="Puntos">
           Puntos
         </ion-segment-button>
@@ -209,16 +209,16 @@
       </ion-segment>
     </div>
 
-    <div [ngSwitch]="Tipo">
+    <div [ngSwitch]="tipo">
 
       <ng-container *ngSwitchCase="'Puntos'">
         <div class="infopuntos">
           <mat-accordion>
-            <mat-expansion-panel *ngFor="let punto of TodosLosPuntos; let i=index">
+            <mat-expansion-panel *ngFor="let punto of todosLosPuntos; let i=index">
               <mat-expansion-panel-header>
-                <b>{{punto.Nombre}}</b>
+                <b>{{punto.nombre}}</b>
               </mat-expansion-panel-header>
-              <p> {{TodosLosPuntos[i].Descripcion}} </p>
+              <p> {{todosLosPuntos[i].descripcion}} </p>
             </mat-expansion-panel>
           </mat-accordion>
         </div>
@@ -232,10 +232,10 @@
           <mat-accordion>
             <mat-expansion-panel *ngFor="let nivel of nivelesDelJuego">
               <mat-expansion-panel-header>
-                <b>{{nivel.Nombre}}</b>
+                <b>{{nivel.nombre}}</b>
               </mat-expansion-panel-header>
-              <p> {{nivel.PrivilegiosDelNivel}} </p>
-              <p> <b>Necesitas:</b> {{nivel.PuntosAlcanzar}} pts</p>
+              <p> {{nivel.privilegiosDelNivel}} </p>
+              <p> <b>Necesitas:</b> {{nivel.puntosAlcanzar}} pts</p>
             </mat-expansion-panel>
           </mat-accordion>
         </div>

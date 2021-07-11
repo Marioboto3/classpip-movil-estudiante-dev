@@ -9,7 +9,7 @@
 
 <ion-content>
   <!--JUEGO INDIVIDUAL-->
-  <ion-list *ngIf="juego.Modo === 'Individual'">
+  <ion-list *ngIf="juego.modo === 'Individual'">
     <ion-item *ngIf="juego.autoEvaluacion">
       <ion-label>{{miAlumno.nombre}} {{miAlumno.primerApellido}} {{miAlumno.segundoApellido}}</ion-label>
     </ion-item>
@@ -18,20 +18,22 @@
     </ion-item>
   </ion-list>
   <!--JUEGO EQUIPOS EVALUADOS POR ALUMNOS -->
-  <ion-list *ngIf="juego.Modo === 'Equipos' && equiposPorEquipos == false">
+  <ion-list *ngIf="juego.modo === 'Equipos' && equiposPorEquipos == false">
     <ion-item *ngIf="juego.autoEvaluacion">
-      <ion-label>Mi Equipo {{miEquipo.Nombre}}</ion-label>
+      <ion-label>Mi Equipo {{miEquipo.nombre}}</ion-label>
     </ion-item>
-    <ion-item *ngFor="let equipo of equiposJuegoEvaluado | filtrarEquipoEvaluador:{alumnoId:miAlumno.id, equipoId:null}">
+    <ion-item
+      *ngFor="let equipo of equiposJuegoEvaluado | filtrarEquipoEvaluador:{alumnoId:miAlumno.id, equipoId:null}">
       <ion-label>{{DameNombreEquipo(equipo.id)}}</ion-label>
     </ion-item>
   </ion-list>
   <!--JUEGO EQUIPOS EVALUADOS POR EQUIPOS -->
-  <ion-list *ngIf="juego.Modo === 'Equipos' && equiposPorEquipos == true">
+  <ion-list *ngIf="juego.modo === 'Equipos' && equiposPorEquipos == true">
     <ion-item *ngIf="juego.autoEvaluacion">
-      <ion-label>Mi Equipo {{miEquipo.Nombre}}</ion-label>
+      <ion-label>Mi Equipo {{miEquipo.nombre}}</ion-label>
     </ion-item>
-    <ion-item *ngFor="let equipo of equiposJuegoEvaluado | filtrarEquipoEvaluador:{alumnoId:null, equipoId: miEquipo.id}">
+    <ion-item
+      *ngFor="let equipo of equiposJuegoEvaluado | filtrarEquipoEvaluador:{alumnoId:null, equipoId: miEquipo.id}">
       <ion-label>{{DameNombreEquipo(equipo.id)}}</ion-label>
     </ion-item>
   </ion-list>

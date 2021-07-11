@@ -13,8 +13,8 @@
   <!--SE HACE DISTINCIÓN ENTRE TIPO DE JUEGO DE PUNTOS Y DE COLECCIONES-->
 
   <!--Para el caso de un juego de Puntos-->
-  <div *ngIf="juegoSeleccionado.Tipo === 'Juego De Puntos'">
-    <div *ngIf="juegoSeleccionado.Modo === 'Individual'">
+  <div *ngIf="juegoSeleccionado.tipo === 'Juego De Puntos'">
+    <div *ngIf="juegoSeleccionado.modo === 'Individual'">
 
       <ion-grid>
         <!--Se define la cabecera de la tabla del ranking del juego de Puntos-->
@@ -31,7 +31,7 @@
         </ion-row>
 
         <!--Se define el contenido de la tabla , es decir los nombbres y los puntos-->
-        <ion-row class="casillas-tabla" *ngFor="let item of MisAlumnosAMostrar">
+        <ion-row class="casillas-tabla" *ngFor="let item of misAlumnosAMostrar">
           <ion-col col-1>
             <p><b>{{item.nombre}}</b></p>
           </ion-col>
@@ -39,27 +39,27 @@
             <p><b>{{item.primerApellido}}</b></p>
           </ion-col>
           <ion-col col-3 style="margin-left:5%">
-            <p><b>{{item.PuntosTotalesAlumno}}</b></p>
+            <p><b>{{item.puntosTotalesAlumno}}</b></p>
           </ion-col>
         </ion-row>
       </ion-grid>
     </div>
 
-    <div *ngIf="juegoSeleccionado.Modo !== 'Individual'">
+    <div *ngIf="juegoSeleccionado.modo !== 'Individual'">
 
       <ion-grid>
 
-          <ion-col col-6>
-            <ion-item class="Informacion" (click)=VerInformacion();> Información
-              <ion-icon style="margin-right: 2%;" name="information" item-left></ion-icon>
-            </ion-item>
-          </ion-col>
+        <ion-col col-6>
+          <ion-item class="Informacion" (click)=VerInformacion();> Información
+            <ion-icon style="margin-right: 2%;" name="information" item-left></ion-icon>
+          </ion-item>
+        </ion-col>
 
-        <div *ngIf="NuestroHistorialPuntos[0];else Aviso_no_puntos">
+        <div *ngIf="nuestroHistorialPuntos[0];else Aviso_no_puntos">
           <ion-list class="puntos-list-bg">
-            <p>Tu equipo: <b>{{MisEquiposJuegoPuntosAMostrar[0].Nombre}}</b></p>
+            <p>Tu equipo: <b>{{misEquiposJuegoPuntosAMostrar[0].nombre}}</b></p>
             <p>Actualmente dispone de<br>los siguientes puntos:</p>
-            <ion-item *ngFor="let punto of NuestroHistorialPuntos">
+            <ion-item *ngFor="let punto of nuestroHistorialPuntos">
               <h2>{{punto.Nombre}} :</h2>
               <h2 slot="end"> {{punto.Puntos}} pts.</h2>
             </ion-item>
@@ -88,12 +88,12 @@
           </ion-row>
 
           <!--Se define el contenido de la tabla que recoge los alumnos del juego-->
-          <ion-row class="casillas-tabla" *ngFor="let item of MisEquiposJuegoPuntosAMostrar">
+          <ion-row class="casillas-tabla" *ngFor="let item of misEquiposJuegoPuntosAMostrar">
             <ion-col col-1>
-              <p><b>{{item.Nombre}}</b></p>
+              <p><b>{{item.nombre}}</b></p>
             </ion-col>
             <ion-col col-2 style="margin-left: 13%">
-              <p><b>{{item.PuntosTotalesEquipo}}</b></p>
+              <p><b>{{item.puntosTotalesEquipo}}</b></p>
             </ion-col>
           </ion-row>
         </div>
@@ -102,9 +102,9 @@
     </div>
   </div>
 
-  <div *ngIf="juegoSeleccionado.Tipo === 'Juego De Colección'">
+  <div *ngIf="juegoSeleccionado.tipo === 'Juego De Colección'">
     <!--Para el caso de Juego Individual-->
-    <div *ngIf="juegoSeleccionado.Modo === 'Individual'">
+    <div *ngIf="juegoSeleccionado.modo === 'Individual'">
       <ion-button (click)=IrIntercambiarCromos() class="intercambiar-btn" shape="round">
         Intercambiar Cromos
         <ion-icon style="color:  rgb(255, 255, 255);" name="albums" item-left></ion-icon>
@@ -125,7 +125,7 @@
         </ion-row>
 
         <!--Se define el contenido de la tabla que recoge los alumnos del juego-->
-        <ion-row class="casillas-tabla" *ngFor="let item of MisAlumnosJuegoColeccion">
+        <ion-row class="casillas-tabla" *ngFor="let item of misAlumnosJuegoColeccion">
           <ion-col col-3>
             <p><b>{{item.nombre}}</b></p>
           </ion-col>
@@ -140,7 +140,7 @@
 
     </div>
 
-    <div *ngIf="juegoSeleccionado.Modo !== 'Individual'">
+    <div *ngIf="juegoSeleccionado.modo !== 'Individual'">
       <!--Mediante el ion-searchbar permitimos filtrar los alumnos y buscar el deseado-->
       <ion-grid>
         <!--Se define la cabecera de la tabla que recoge los alumnos del juego-->
@@ -154,9 +154,9 @@
         </ion-row>
 
         <!--Se define el contenido de la tabla que recoge los alumnos del juego-->
-        <ion-row class="casillas-tabla" *ngFor="let item of MisEquiposJuegoColecciones">
+        <ion-row class="casillas-tabla" *ngFor="let item of misEquiposJuegoColecciones">
           <ion-col col-1 style="margin-left:2%">
-            <p><b>{{item.Nombre}}</b></p>
+            <p><b>{{item.nombre}}</b></p>
           </ion-col>
           <ion-col col-2 style="margin-top:6%;margin-left: 13%">
             <ion-icon style="color: rgb(0, 68, 107);" name="albums" (click)="VerCromosEquipo(item);"></ion-icon>

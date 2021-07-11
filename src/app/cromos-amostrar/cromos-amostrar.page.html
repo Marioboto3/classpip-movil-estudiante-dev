@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-title style="color: floralwhite;margin-top: 7%; margin-right: 10%;text-align: center;">Álbum</ion-title>
-    <img class = "ClasspipCabeceraimg" src="../../assets/icon/classpip1.png">
+    <img class="ClasspipCabeceraimg" src="../../assets/icon/classpip1.png">
     <ion-buttons slot="start" style="color: floralwhite;">
       <ion-back-button></ion-back-button>
     </ion-buttons>
@@ -10,7 +10,7 @@
 
 <ion-content>
   <ion-card *ngFor="let elem of listaCromosSinRepetidos;let i = index">
-    <img [src]="MisImagenesCromo[i]" >
+    <img [src]="misImagenesCromo[i]">
     <ion-card-content>
       <ion-card-title style="color: rgb(0, 68, 107);">
         <b>{{elem.cromo.Nombre}}</b>
@@ -20,8 +20,8 @@
       </p>
     </ion-card-content>
   </ion-card>
-  <ion-card class="MeFalta" *ngFor="let elem of CromosQueNoTengo;let i = index">
-    <img [src]="ImagenesCromosQueNoTengo[i]" >
+  <ion-card class="MeFalta" *ngFor="let elem of cromosQueNoTengo;let i = index">
+    <img [src]="imagenesCromosQueNoTengo[i]">
     <ion-card-content>
       <ion-card-title>
         {{elem.cromo.Nombre}}
@@ -32,5 +32,5 @@
     </ion-card-content>
   </ion-card>
 
-  
+
 </ion-content>

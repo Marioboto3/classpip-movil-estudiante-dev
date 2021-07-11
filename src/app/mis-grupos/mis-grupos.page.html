@@ -9,7 +9,7 @@
 
 <ion-content>
   <br>
-<!-- 
+  <!-- 
   <div padding>
     <ion-segment [(ngModel)]="Tipo">
       <ion-segment-button value="Alumnos">
@@ -20,59 +20,64 @@
       </ion-segment-button>
     </ion-segment>
   </div> -->
-<!-- 
+  <!-- 
   <div [ngSwitch]="Tipo"> -->
-  <mat-accordion  [multi]="false">
+  <mat-accordion [multi]="false">
     <div *ngFor="let elem of listaGruposYAlumnos;let i = index">
       <ion-row style="height: 5px"></ion-row>
       <!-- <ng-container *ngSwitchCase="'Alumnos'"> -->
-      <mat-expansion-panel   (opened) =  "TraeEquiposGrupo (listaGruposYAlumnos[i].Grupo); mostrarAlumnos = true">
-          <mat-expansion-panel-header >
-            <b>{{elem.Grupo}}</b>
-          </mat-expansion-panel-header>
-          <ion-list style="text-align:center">
-            <ion-button class="ranking-btn" (click)="mostrarAlumnos = true; mostrarEquipos = false">Ver alumnos</ion-button> 
-            <ion-button class="ranking-btn-rojo" (click)="mostrarAlumnos = false; mostrarEquipos = true" >Ver equipos</ion-button>
-            <br>
-            <label *ngIf = "mostrarEquipos" style = "font-size: smaller;">En <span style= "color:red">rojo</span> tu equipo</label>
-          </ion-list>
-          <div  *ngIf = "mostrarAlumnos" >
-            <ion-item *ngFor="let alum of listaGruposYAlumnos[i].Alumnos"> 
-              <ion-item lines = "none" style = "width: 20%">
-                <img  *ngIf = "alum.imagenPerfil" style = "width:40px; height: 40px;" [src]="alum.imagenPerfil">
-              </ion-item>
-              <ion-item lines = "none" style = "width: 80%">
-                <ion-label> {{alum.Nombre}} {{alum.primerApellido}} {{alum.segundoApellido}} </ion-label>
-              </ion-item>
+      <mat-expansion-panel (opened)="TraeEquiposGrupo (listaGruposYAlumnos[i].grupo); mostrarAlumnos = true">
+        <mat-expansion-panel-header>
+          <b>{{elem.Grupo}}</b>
+        </mat-expansion-panel-header>
+        <ion-list style="text-align:center">
+          <ion-button class="ranking-btn" (click)="mostrarAlumnos = true; mostrarEquipos = false">Ver alumnos
+          </ion-button>
+          <ion-button class="ranking-btn-rojo" (click)="mostrarAlumnos = false; mostrarEquipos = true">Ver equipos
+          </ion-button>
+          <br>
+          <label *ngIf="mostrarEquipos" style="font-size: smaller;">En <span style="color:red">rojo</span> tu
+            equipo</label>
+        </ion-list>
+        <div *ngIf="mostrarAlumnos">
+          <ion-item *ngFor="let alum of listaGruposYAlumnos[i].alumnos">
+            <ion-item lines="none" style="width: 20%">
+              <img *ngIf="alum.imagenPerfil" style="width:40px; height: 40px;" [src]="alum.imagenPerfil">
             </ion-item>
-          </div>
-          <div *ngIf = "mostrarEquipos" >
-           
-            <mat-accordion  [multi]="false">
-              <ion-item  *ngFor="let equipo of equiposDelGrupo ">
-                <mat-expansion-panel class="mat-elevation-z0" *ngIf = "EsMiEquipo (equipo)" style="width:100%; margin-left: -10%;" (opened)= "TraeAlumnosEquipo(equipo)" >
-                  <mat-expansion-panel-header>
+            <ion-item lines="none" style="width: 80%">
+              <ion-label> {{alum.nombre}} {{alum.primerApellido}} {{alum.segundoApellido}} </ion-label>
+            </ion-item>
+          </ion-item>
+        </div>
+        <div *ngIf="mostrarEquipos">
 
-                    <ion-grid>
-                      <ion-row>
-                        
-                       
-                        <ion-col>
-                          <img *ngIf= "equipo.FotoEquipo" [src]="equipo.FotoEquipo" style= "width: 50px; height: 50px">
-                          <img *ngIf= "!equipo.FotoEquipo" src="../../assets/img/interrogante.jpg" style= "opacity: 0.5 !important;width: 50px; height: 50px">      
-                        </ion-col>
-                        <ion-col> 
-                          <ion-item  lines = "none">
-                            <ion-label>
-                              <h2 style = "color: red; ">{{equipo.Nombre}} </h2>
-                            </ion-label>
-                          </ion-item>
-                        </ion-col>
-          
-                      </ion-row>
-                    </ion-grid>
-          
-<!-- 
+          <mat-accordion [multi]="false">
+            <ion-item *ngFor="let equipo of equiposDelGrupo ">
+              <mat-expansion-panel class="mat-elevation-z0" *ngIf="EsMiEquipo (equipo)"
+                style="width:100%; margin-left: -10%;" (opened)="TraeAlumnosEquipo(equipo)">
+                <mat-expansion-panel-header>
+
+                  <ion-grid>
+                    <ion-row>
+
+
+                      <ion-col>
+                        <img *ngIf="equipo.fotoEquipo" [src]="equipo.fotoEquipo" style="width: 50px; height: 50px">
+                        <img *ngIf="!equipo.fotoEquipo" src="../../assets/img/interrogante.jpg"
+                          style="opacity: 0.5 !important;width: 50px; height: 50px">
+                      </ion-col>
+                      <ion-col>
+                        <ion-item lines="none">
+                          <ion-label>
+                            <h2 style="color: red; ">{{equipo.nombre}} </h2>
+                          </ion-label>
+                        </ion-item>
+                      </ion-col>
+
+                    </ion-row>
+                  </ion-grid>
+
+                  <!-- 
 
                     <ion-item lines = "none" style= "width: 40%">
                       <ion-label>
@@ -85,53 +90,58 @@
                       <h2 style = "color: red; ">{{equipo.Nombre}} </h2>
                       </ion-label>
                     </ion-item> -->
-                  </mat-expansion-panel-header>
+                </mat-expansion-panel-header>
 
-                  
-                  <ion-list>
-                    <ion-item  lines = "none"*ngFor="let alum of alumnosEquipo">
 
-                      <ion-item lines = "none" style = "width: 60%">
-                        <ion-label style= "font-size: small;"> {{alum.nombre}} {{alum.primerApellido}} </ion-label>
-                      </ion-item>
-                      <ion-item lines = "none" style = "width: 40%">
-                        <img  *ngIf = "alum.imagenPerfil" style = "width:40px; height: 40px;" [src]="alum.imagenPerfil">
-                      </ion-item>
+                <ion-list>
+                  <ion-item lines="none" *ngFor="let alum of alumnosEquipo">
+
+                    <ion-item lines="none" style="width: 60%">
+                      <ion-label style="font-size: small;"> {{alum.nombre}} {{alum.primerApellido}} </ion-label>
                     </ion-item>
-                  </ion-list>
-                  <br>
-                  <ion-list style="text-align:center">
+                    <ion-item lines="none" style="width: 40%">
+                      <img *ngIf="alum.imagenPerfil" style="width:40px; height: 40px;" [src]="alum.imagenPerfil">
+                    </ion-item>
+                  </ion-item>
+                </ion-list>
+                <br>
+                <ion-list style="text-align:center">
 
-                    <ion-button *ngIf = "EsMiEquipo (equipo)" color="success" (click)="CambiarLogo(equipo);">Pon logo</ion-button>
-                    <ion-button *ngIf = "EsMiEquipo (equipo)" color="danger" (click)="QuitarLogo(equipo);">Quita logo</ion-button>
-                    <input #file id = "inputLogo" type="file" accept= 'image/*' (change)="SeleccionarLogo($event)" style="display:none">
-                  </ion-list>
-               
-                </mat-expansion-panel>
-      
-                <mat-expansion-panel class="mat-elevation-z0" *ngIf = "!EsMiEquipo (equipo)" style="width:100%; margin-left: -10%;"  (opened)= "TraeAlumnosEquipo(equipo)" >
-                  <mat-expansion-panel-header>
-                    <ion-grid>
-                      <ion-row>
-                        
-                       
-                        <ion-col>
-                          <img *ngIf= "equipo.FotoEquipo" [src]="equipo.FotoEquipo" style= "width: 50px; height: 50px">
-                          <img *ngIf= "!equipo.FotoEquipo" src="../../assets/img/interrogante.jpg" style= "opacity: 0.5 !important;width: 50px; height: 50px">      
-                        </ion-col>
-                        <ion-col> 
-                          <ion-item  lines = "none">
-                            <ion-label>
-                            <h2>{{equipo.Nombre}} </h2>
-                            </ion-label>
-                          </ion-item>
-                        </ion-col>
-          
-                      </ion-row>
-                    </ion-grid>
-          
+                  <ion-button *ngIf="EsMiEquipo (equipo)" color="success" (click)="CambiarLogo(equipo);">Pon logo
+                  </ion-button>
+                  <ion-button *ngIf="EsMiEquipo (equipo)" color="danger" (click)="QuitarLogo(equipo);">Quita logo
+                  </ion-button>
+                  <input #file id="inputLogo" type="file" accept='image/*' (change)="SeleccionarLogo($event)"
+                    style="display:none">
+                </ion-list>
 
-<!-- 
+              </mat-expansion-panel>
+
+              <mat-expansion-panel class="mat-elevation-z0" *ngIf="!EsMiEquipo (equipo)"
+                style="width:100%; margin-left: -10%;" (opened)="TraeAlumnosEquipo(equipo)">
+                <mat-expansion-panel-header>
+                  <ion-grid>
+                    <ion-row>
+
+
+                      <ion-col>
+                        <img *ngIf="equipo.fotoEquipo" [src]="equipo.fotoEquipo" style="width: 50px; height: 50px">
+                        <img *ngIf="!equipo.fotoEquipo" src="../../assets/img/interrogante.jpg"
+                          style="opacity: 0.5 !important;width: 50px; height: 50px">
+                      </ion-col>
+                      <ion-col>
+                        <ion-item lines="none">
+                          <ion-label>
+                            <h2>{{equipo.nombre}} </h2>
+                          </ion-label>
+                        </ion-item>
+                      </ion-col>
+
+                    </ion-row>
+                  </ion-grid>
+
+
+                  <!-- 
                     <ion-item  lines = "none"style= "width: 40%">
                     <ion-label>
                     
@@ -144,33 +154,33 @@
                       <h2>{{equipo.Nombre}} </h2>
                       </ion-label>
                     </ion-item> -->
-                  </mat-expansion-panel-header>
-                  <ion-list>
-                    <ion-item  lines = "none" *ngFor="let alum of alumnosEquipo">
+                </mat-expansion-panel-header>
+                <ion-list>
+                  <ion-item lines="none" *ngFor="let alum of alumnosEquipo">
 
-                      <ion-item lines = "none" style = "width: 60%">
-                        <ion-label style= "font-size: small;"> {{alum.nombre}} {{alum.primerApellido}} </ion-label>
-                      </ion-item>
-                      <ion-item lines = "none" style = "width: 40%">
-                        <img  *ngIf = "alum.imagenPerfil" style = "width:40px; height: 40px;" [src]="alum.imagenPerfil">
-                      </ion-item>
+                    <ion-item lines="none" style="width: 60%">
+                      <ion-label style="font-size: small;"> {{alum.nombre}} {{alum.primerApellido}} </ion-label>
                     </ion-item>
-                  </ion-list>
-                </mat-expansion-panel>
-              </ion-item>
-            </mat-accordion>
+                    <ion-item lines="none" style="width: 40%">
+                      <img *ngIf="alum.imagenPerfil" style="width:40px; height: 40px;" [src]="alum.imagenPerfil">
+                    </ion-item>
+                  </ion-item>
+                </ion-list>
+              </mat-expansion-panel>
+            </ion-item>
+          </mat-accordion>
 
 
 
 
-          </div>
-         
-        </mat-expansion-panel>
+        </div>
+
+      </mat-expansion-panel>
       <!-- </ng-container> -->
     </div>
   </mat-accordion>
-    <!-- <mat-accordion #accordion="matAccordion" [multi]="true"> -->
-<!--    
+  <!-- <mat-accordion #accordion="matAccordion" [multi]="true"> -->
+  <!--    
     <div *ngFor="let elem of listaGruposYEquipos;let i = index;">
       <ion-row style="height: 5px"></ion-row>
       <ng-container *ngSwitchCase="'Equipos'">
