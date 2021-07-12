@@ -50,6 +50,7 @@ export class PrimerEscenarioPage implements OnInit {
 
   escenaActual: EscenaDeJuego;
   escenarioActual: EscenarioEscapeRoom;
+  mapa: string;
 
   primerEscenario: number = 1;
 
@@ -216,7 +217,8 @@ export class PrimerEscenarioPage implements OnInit {
           this.varEscenario = "containerCocina";
         }
         else {
-          this.varEscenario = "containerHabitacion";
+          this.varEscenario = "containerCocina";
+          this.mapa = "cocina";
         }
       }
 
@@ -499,7 +501,7 @@ export class PrimerEscenarioPage implements OnInit {
     let objetoE: ObjetoEnigma;
 
     this.alertController.create({
-      header: 'Enigma de' + objeto.nombre,
+      header: 'Enigma de ' + objeto.nombre,
       subHeader: 'Responde con el código correcto.',
       message: objeto.pregunta,
       inputs: [

@@ -1,5 +1,5 @@
 #containerCocina{
-  background: url("../../../assets/escape-room/cocina.jpg");
+  background: url('http://localhost:3000/api/Imagenes/ImagenesEscenarioEscape/download/cocina.jpg');
   background-size: cover;
   height: 100%;
 }
@@ -10,6 +10,11 @@
 }
 #containerHabitacion{
   background: url("../../../assets/escape-room/imagenBase.jpg");
+  background-size: cover;
+  height: 100%;
+}
+#containerCelda{
+  background: url('http://localhost:3000/api/Imagenes/ImagenesEscenarioEscape/download/celda.jpg');
   background-size: cover;
   height: 100%;
 }
